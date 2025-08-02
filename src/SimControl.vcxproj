@@ -127,7 +127,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FalconReader.cpp" />
     <ClCompile Include="SimControl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="F16Data.h" />
+    <ClInclude Include="FalconReader.h" />
+    <ClInclude Include="lib\DataReader.h" />
+    <ClInclude Include="lib\FlightData.h" />
+    <ClInclude Include="lib\f16Arduino.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

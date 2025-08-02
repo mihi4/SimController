@@ -1,5 +1,5 @@
 #pragma once
-
+include <f16Arduino.h>;
 
 class F16Data
 {
@@ -8,9 +8,7 @@ public:
 	// **********************
 	// common sim data
 	// **********************
-	
-
-
+	char powerStates; // goes with PowerBits and in Flightdata.h
 
 	// **********************
 	// RAUX data
@@ -46,5 +44,19 @@ public:
 	// **********************
 
 	
+	// **********************
+	// CENTER CONSOLE data
+	// **********************
+
+	
+	// **********************
+	// LAUX data
+	// **********************
+
+
+	// **********************
+	// LCONS data
+	// **********************
+
 };
 
