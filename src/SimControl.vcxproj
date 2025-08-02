@@ -127,13 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="FalconReader.cpp" />
     <ClCompile Include="SimControl.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="F16Data.h" />
-    <ClInclude Include="FalconReader.h" />
     <ClInclude Include="lib\DataReader.h" />
+    <ClInclude Include="lib\DCSReader.h" />
+    <ClInclude Include="lib\F16Data.h" />
+    <ClInclude Include="lib\FalconReader.h" />
     <ClInclude Include="lib\FlightData.h" />
     <ClInclude Include="lib\f16Arduino.h" />
   </ItemGroup>

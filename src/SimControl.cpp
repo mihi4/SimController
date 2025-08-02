@@ -4,18 +4,36 @@
 #include <iostream>
 #include <Windows.h>
 
-int main()
-{
+#include "lib/FalconReader.h"
+#include "lib/DCSReader.h"
+
+
+int main(int argc, char* argv[])
+{   
     std::cout << "Hello World! Press LSHIFT/LCTRL/LALT + BACKSPACE to quit\n";
+    if (argc > 1) {
+        if (strcmp(argv[1], "BMS") == 0 ) {
+            std::cout << "Looking for BMS\n";
+        }
+        if (strcmp(argv[1], "DCS") == 0) {
+            std::cout << "Looking for DCS\n";
+        }
+    }
+    for (int i = 1; i < argc; i++) {
+        std::cout << "Parameter Number " << i << " Had the Value " << argv[i] << "." << std::endl;
+    }
+    Sleep(1400);
+    std::cout << "FOUND IT!            \n";
     while (true) {  // Loop function ;-)
         std::cout << ".";
         if ( (GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)){ break;  }
+        
         Sleep(200);
     }
     
     std::cout << "\n\nquitting!\n";
 
-    exit(0);
+    return(0);
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
