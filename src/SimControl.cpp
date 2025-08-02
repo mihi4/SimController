@@ -2,10 +2,20 @@
 //
 
 #include <iostream>
+#include <Windows.h>
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    std::cout << "Hello World! Press LSHIFT/LCTRL/LALT + BACKSPACE to quit\n";
+    while (true) {  // Loop function ;-)
+        std::cout << ".";
+        if ( (GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)){ break;  }
+        Sleep(200);
+    }
+    
+    std::cout << "\n\nquitting!\n";
+
+    exit(0);
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
