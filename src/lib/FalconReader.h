@@ -1,11 +1,12 @@
 #pragma once
-#include "DataReader.h"
+#include "lib/DataReader.h"
+#include "lib/FlightData.h"
+
 class FalconReader :
     public DataReader
 {
 public:
-    readF16Data() {
-
+    void readF16Data() {
 
     }
 };

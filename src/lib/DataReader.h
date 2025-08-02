@@ -1,7 +1,9 @@
 #pragma once
+#include "F16Data.h";
+
 class DataReader
 {
 public:
-    virtual readF16Data();
+    virtual void readF16Data();
 };
 
