@@ -24,4 +24,6 @@ private:
 
     miUtility util;
 
+    void setCautionLightbits();
+
 };

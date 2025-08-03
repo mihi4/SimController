@@ -38,8 +38,18 @@ bool BMSReader::connectToSim() {
     return false;
 }
 
-void BMSReader::setCautionLights() {
-
+void BMSReader::setCautionLightbits() {
+    if (flightData->IsSet2(flightData->FwdFuelLow)) {
+        std::cout << "fwdLow ON ";
+    } else {
+        std::cout << "fwdLow OFF";
+    }
+    if (flightData->lightBits2 & flightData->AftFuelLow) {
+        std::cout << " - aftLow ON \n";
+    }
+    else {
+        std::cout << " - aftLow OFF\n";
+    }
 }
 
 void  BMSReader::readF16Data(F16Data* data) {
@@ -61,4 +71,5 @@ void  BMSReader::readF16Data(F16Data* data) {
     data->epuFuel = (unsigned short) util.map((long)flightData->epuFuel*100, 0, 10000, 0, 65535);
     data->cabinPress = (unsigned short)flightData2->cabinAlt;
 
+    setCautionLightbits();
 }

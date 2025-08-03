@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
 {   
     F16Data data;
     bool simConnected = false;
-    miUtility util;
+    //miUtility util;
     // 
     if (checkParameter(argc)) {
         std::cout << "Wrong parameter! Usage: SimControl.exe BMS|DCS|MSFS";
@@ -65,14 +65,16 @@ int main(int argc, char* argv[])
         std::cout << "!!!!   ERROR creating DataReader   !!!!";
         return 0;
     }
+    
+
 
     std::cout << "************************************************************\n";
     std::cout << "*                                                          *\n";
     std::cout << "* Hello World! Press LSHIFT/LCTRL/LALT + BACKSPACE to quit *\n";
     std::cout << "*                                                          *\n";
     std::cout << "************************************************************\n";
- 
-    Sleep(1500);
+
+    Sleep(1000);
         
     while (true) {  // Loop function ;-)        
         if (!simConnected) {
@@ -85,7 +87,7 @@ int main(int argc, char* argv[])
                         
         if (simConnected) {
             reader->readF16Data(&data);
-            std::cout << "EPU " << data.epuFuel << " cabinPress " << data.cabinPress << "\n";
+            
             //std::cout << "mapping" << util.map(data.fuelFWD, 0, 42000, 0, 65534) << "\n";
         }
 
