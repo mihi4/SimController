@@ -56,5 +56,8 @@
     <ClInclude Include="lib\ceserial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="lib\miUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

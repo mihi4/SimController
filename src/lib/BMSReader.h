@@ -22,6 +22,6 @@ private:
     HANDLE gSharedMemHandle2 = NULL;
     void* gSharedMemPtr2 = NULL;
 
-    
+    miUtility util;
 
 };

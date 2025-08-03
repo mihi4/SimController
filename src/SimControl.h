@@ -2,10 +2,12 @@
 
 #include <iostream>
 #include <Windows.h>
+#include "lib/miUtils.h"
 
 #include "lib/BMSReader.h"
 #include "lib/DCSReader.h"
 #include "lib/MSFSReader.h"
+
 
 #define BMS 1
 #define DCS 2 // reader not implemented ye

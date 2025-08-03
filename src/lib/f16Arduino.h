@@ -9,6 +9,12 @@
 #define STBYGENON               32
 #define PLANEFLYING	            64   // true, if player is attached to plane, FLYING in enum FlyStates
 
+// CAUTION PANEL lights
+
+
+
+
+
 
 // variable numbers to use to configure data to get from F16Data.h
 #define POWERSTATES         1

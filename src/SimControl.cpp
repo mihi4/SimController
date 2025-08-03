@@ -39,10 +39,13 @@ std::unique_ptr<DataReader> createDataReader(short selectedSim) {
     }
 }
 
+
+
 int main(int argc, char* argv[])
 {   
     F16Data data;
     bool simConnected = false;
+    miUtility util;
     // 
     if (checkParameter(argc)) {
         std::cout << "Wrong parameter! Usage: SimControl.exe BMS|DCS|MSFS";
@@ -78,19 +81,18 @@ int main(int argc, char* argv[])
                 simConnected = true;
                 std::cout << "connected!\n";
             }
-            else {
-                std::cout << "\rno conn, retrying...\r";
-            }
         }
-
-
-        if ( (GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)){ break;  }
                         
         if (simConnected) {
             reader->readF16Data(&data);
-//            std::cout << "AFT" << data.fuelAFT << "\r";
+            std::cout << "EPU " << data.epuFuel << " cabinPress " << data.cabinPress << "\n";
+            //std::cout << "mapping" << util.map(data.fuelFWD, 0, 42000, 0, 65534) << "\n";
         }
-        Sleep(50);
+
+        // check for quit keycommand LCTRL+LSHIFT+LALT+BACKSPACE
+        if ((GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)) { break; }
+
+        Sleep(100);
         
     }
     
