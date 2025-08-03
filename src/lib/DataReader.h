@@ -6,6 +6,7 @@ class DataReader
 {
 public:
     virtual void readF16Data(F16Data * data) { };
-    virtual ~DataReader() { }
+    virtual bool connectToSim() { return false; };
+    virtual ~DataReader() { };
 };
 
