@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="lib\BMSReader.cpp" />
     <ClCompile Include="lib\Controller.cpp" />
     <ClCompile Include="SimControl.cpp" />
   </ItemGroup>
