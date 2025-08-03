@@ -6,17 +6,7 @@ class BMSReader :
     public DataReader
 {
 public:
-    void readF16Data() {
-        std::cout << "Reading from BMS!\n";
-    }
+    void readF16Data(F16Data * data);
     BMSReader(); // default constructor
     ~BMSReader(); // default constructor
 };
-
-BMSReader::BMSReader(void) {
-    std::cout << "BMSReader created\n";
-}
-
-BMSReader::~BMSReader(void) {
-    std::cout << "BMSReader deleted\n";
-}
