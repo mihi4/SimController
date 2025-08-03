@@ -42,6 +42,7 @@ std::unique_ptr<DataReader> createDataReader(short selectedSim) {
 int main(int argc, char* argv[])
 {   
     F16Data data;
+    bool simConnected = false;
     // 
     if (checkParameter(argc)) {
         std::cout << "Wrong parameter! Usage: SimControl.exe BMS|DCS|MSFS";
@@ -69,13 +70,27 @@ int main(int argc, char* argv[])
     std::cout << "************************************************************\n";
  
     Sleep(1500);
-    
-    std::cout << "\n";
+        
     while (true) {  // Loop function ;-)        
+        if (!simConnected) {
+            std::cout << "connecting to sim...";
+            if (reader->connectToSim()) {
+                simConnected = true;
+                std::cout << "connected!\n";
+            }
+            else {
+                std::cout << "\rno conn, retrying...\r";
+            }
+        }
+
+
         if ( (GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)){ break;  }
                         
-        reader->readF16Data(&data);
-        Sleep(200);
+        if (simConnected) {
+            reader->readF16Data(&data);
+//            std::cout << "AFT" << data.fuelAFT << "\r";
+        }
+        Sleep(50);
         
     }
     
