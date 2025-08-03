@@ -127,15 +127,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="lib\Controller.cpp" />
     <ClCompile Include="SimControl.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="lib\Controller.h" />
+    <ClInclude Include="lib\ceserial.h" />
     <ClInclude Include="lib\DataReader.h" />
     <ClInclude Include="lib\DCSReader.h" />
     <ClInclude Include="lib\F16Data.h" />
-    <ClInclude Include="lib\FalconReader.h" />
+    <ClInclude Include="lib\BMSReader.h" />
     <ClInclude Include="lib\FlightData.h" />
     <ClInclude Include="lib\f16Arduino.h" />
+    <ClInclude Include="lib\MSFSReader.h" />
+    <ClInclude Include="SimControl.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -18,6 +18,9 @@
     <ClCompile Include="SimControl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="lib\Controller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\FlightData.h">
@@ -35,7 +38,19 @@
     <ClInclude Include="lib\F16Data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lib\FalconReader.h">
+    <ClInclude Include="lib\BMSReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SimControl.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\MSFSReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\Controller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\ceserial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,39 +1,88 @@
 // SimControl.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
+#include "SimControl.h"
 
-#include <iostream>
-#include <Windows.h>
+bool checkParameter(int argNum) {
+    if (argNum == 2) return false;
+    return true;
+}
 
-#include "lib/FalconReader.h"
-#include "lib/DCSReader.h"
+char parseSimParameter(char* argv[]) {
+    std::cout << "Parsing " << argv[1] << std::endl;
+    if (strcmp(argv[1], "BMS") == 0) {
+        // std::cout << "parsed BMS\n";
+        return BMS;
+    } else if (strcmp(argv[1], "DCS") == 0) {
+        // std::cout << "parsed DCS\n";
+        return DCS;
+    } else if (strcmp(argv[1], "MSFS") == 0) {
+        // std::cout << "parsed MSFS\n";
+        return MSFS;
+    } else {
+        return NULL;
+    }
+ 
+}
 
+std::unique_ptr<DataReader> createDataReader(short selectedSim) {
+
+    if (selectedSim == BMS) {
+        return std::make_unique<BMSReader>();
+    } else if (selectedSim == DCS) {
+        return std::make_unique<DCSReader>();
+    }
+    else if (selectedSim == MSFS) {
+        return std::make_unique<MSFSReader>();
+    }
+    else {
+        return nullptr;
+    }
+}
 
 int main(int argc, char* argv[])
 {   
-    std::cout << "Hello World! Press LSHIFT/LCTRL/LALT + BACKSPACE to quit\n";
-    if (argc > 1) {
-        if (strcmp(argv[1], "BMS") == 0 ) {
-            std::cout << "Looking for BMS\n";
-        }
-        if (strcmp(argv[1], "DCS") == 0) {
-            std::cout << "Looking for DCS\n";
-        }
+    F16Data f16data;
+    // 
+    if (checkParameter(argc)) {
+        std::cout << "Wrong parameter! Usage: SimControl.exe BMS|DCS|MSFS";
+        return 0;
     }
-    for (int i = 1; i < argc; i++) {
-        std::cout << "Parameter Number " << i << " Had the Value " << argv[i] << "." << std::endl;
+
+    short selectedSim = parseSimParameter(argv);
+    if (!selectedSim) {
+        std::cout << "Sim parameter not supported, Usage: SimControl.exe BMS|DCS|MSFS";
+        return 0;
     }
-    Sleep(1400);
-    std::cout << "FOUND IT!            \n";
-    while (true) {  // Loop function ;-)
-        std::cout << ".";
+
+
+    auto reader = createDataReader(selectedSim);
+
+    if (!reader) {
+        std::cout << "!!!!   ERROR creating DataReader   !!!!";
+        return 0;
+    }
+
+    std::cout << "************************************************************\n";
+    std::cout << "*                                                          *\n";
+    std::cout << "* Hello World! Press LSHIFT/LCTRL/LALT + BACKSPACE to quit *\n";
+    std::cout << "*                                                          *\n";
+    std::cout << "************************************************************\n";
+ 
+    Sleep(1500);
+    
+    std::cout << "\n";
+    while (true) {  // Loop function ;-)        
         if ( (GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)){ break;  }
         
+        reader->readF16Data();
+
+
         Sleep(200);
     }
     
-    std::cout << "\n\nquitting!\n";
+    std::cout << "\n\nquitting!\n";    
 
-    return(0);
+    return 0;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
