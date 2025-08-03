@@ -67,7 +67,7 @@ void  BMSReader::readF16Data(F16Data* data) {
     data->hydB = (unsigned short)flightData2->hydPressureB;
 
     // EPU
-    std::cout << "fdEPU " << flightData->epuFuel << "fdCab " << flightData2->cabinAlt << "\n";
+    //std::cout << "fdEPU " << flightData->epuFuel << "fdCab " << flightData2->cabinAlt << "\n";
     data->epuFuel = (unsigned short) util.map((long)flightData->epuFuel*100, 0, 10000, 0, 65535);
     data->cabinPress = (unsigned short)flightData2->cabinAlt;
 
