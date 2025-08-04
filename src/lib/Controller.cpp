@@ -1,7 +1,7 @@
 #include "Controller.h"
 
 
-Controller::Controller(std::string name, std::string comPort, long baudrate, unsigned short dataVars[]) {
+Controller::Controller(std::string name, std::string comPort, long baudrate = 115200, unsigned short dataVars[] = 0) {
     ceSerial serialPort(comPort,baudrate, 8,'N', 1);
     controllerName = name;
     int varCount = sizeof(dataVars);
