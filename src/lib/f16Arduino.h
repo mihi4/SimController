@@ -47,6 +47,11 @@
 #define CPCABIN     0x40000000
 #define CPOXYLOW    0x80000000
 
+// INSTRUMENT PANEL light bit order
+
+
+
+
 // variable numbers to use to configure data to get from F16Data.h
 #define POWERSTATES         1
 

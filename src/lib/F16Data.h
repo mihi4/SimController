@@ -43,6 +43,8 @@ public:
 	// INSTRUMENT PANEL data
 	// **********************
 
+	unsigned char hudLights = 0; // AOA and NWS indexers
+
 	
 	// **********************
 	// CENTER CONSOLE data
