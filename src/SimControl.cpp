@@ -75,17 +75,6 @@ int main(int argc, char* argv[])
     std::cout << "************************************************************\n";
 
     Sleep(1000);
-    
-    unsigned long tempCP = 0;
-
-    std::cout << "tempCP start: " << util.getBinaryRep(tempCP) << "\n";
-    Sleep(500);
-    tempCP |= CPSEAT;
-    std::cout << "tempCP: " << util.getBinaryRep(tempCP) << "\n";
-    tempCP |= CPFWDFUEL;
-    std::cout << "tempCP: " << util.getBinaryRep(tempCP) << "\n";
-    tempCP = 0xFFFFFFFF;
-    std::cout << "tempCP: " << util.getBinaryRep(tempCP) << "\n";
 
     while (true) {  // Loop function ;-)        
         if (!simConnected) {
@@ -98,7 +87,7 @@ int main(int argc, char* argv[])
                         
         if (simConnected) {
             reader->readF16Data(&data);
-            
+            std::cout << "cautionPanel: " << util.getBinaryRep(data.cautionPanelLights) << "\n";
             //std::cout << "mapping" << util.map(data.fuelFWD, 0, 42000, 0, 65534) << "\n";
         }
 

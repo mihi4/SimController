@@ -24,8 +24,12 @@ private:
 
     miUtility util;
 
-    void setCautionLightbits(F16Data* data);
+    void setCautionLightbits(F16Data* data, FlightData* flightdata);
     void setCPBit(F16Data* data, unsigned long bit);
     void clearCPBit(F16Data* data, unsigned long bit);
+
+    void checkCPBit(F16Data* data, FlightData* flightdata, FlightData::LightBits bmsBit, int scBit);
+    void checkCPBit(F16Data* data, FlightData* flightdata, FlightData::LightBits2 bmsBit, int scBit);
+    void checkCPBit(F16Data* data, FlightData* flightdata, FlightData::LightBits3 bmsBit, int scBit);
     
 };

@@ -22,7 +22,6 @@ BMSReader::~BMSReader(void) {
 }
 
 bool BMSReader::connectToSim() {
-    return true;  // FIXXXME remove
 
     if ((gSharedMemPtr) && (gSharedMemPtr2)) return true; // are pointers already mapped?
     
@@ -47,39 +46,83 @@ void BMSReader::clearCPBit(F16Data* data, unsigned long bit) {
     data->cautionPanelLights &= ~bit;
 }
 
-void BMSReader::setCautionLightbits(F16Data* data) {
+/* sets the value of the corresponding internal bit to the value of the BMS bit */
+void BMSReader::checkCPBit(F16Data* data, FlightData* flightdata, FlightData::LightBits bmsBit, int scBit) {   
+        if (flightdata->IsSet(bmsBit)) {
+            setCPBit(data, scBit);
+        }
+        else {
+            clearCPBit(data, scBit);
+        }
+}
+
+void BMSReader::checkCPBit(F16Data* data, FlightData* flightdata, FlightData::LightBits2 bmsBit, int scBit) {
+    if (flightdata->IsSet2(bmsBit)) {
+        setCPBit(data, scBit);
+    }
+    else {
+        clearCPBit(data, scBit);
+    }
+}
+
+void BMSReader::checkCPBit(F16Data* data, FlightData* flightdata, FlightData::LightBits3 bmsBit, int scBit) {
+    if (flightdata->IsSet3(bmsBit)) {
+        setCPBit(data, scBit);
+    }
+    else {
+        clearCPBit(data, scBit);
+    }
+}
+
+
+void BMSReader::setCautionLightbits(F16Data* data, FlightData* flightdata) {
 
     // check if MAL/IND LIGHT button is pressed and light up everything
+   // 
     if ((flightData->lightBits & flightData->AllLampBitsOn) && (flightData->lightBits2 & flightData->AllLampBits2On) && (flightData->lightBits3 & flightData->AllLampBits3On)) {
         data->cautionPanelLights = 0xFFFFFFFF;
         return;
     }
-    
 
-
+    // lightbits
+    checkCPBit(data, flightData, flightdata->CONFIG, CPSTORESCFG);
+    checkCPBit(data, flightData, flightdata->FltControlSys, CPFLCS);
+    //checkCPBit(data, flightData, flightdata->LEFlaps,
+    checkCPBit(data, flightData, flightdata->EngineFault, CPENGINE);
+    checkCPBit(data, flightData, flightdata->Overheat, CPOVERHEAT);
+    //checkCPBit(data, flightData, flightdata->FuelLow, 
+    checkCPBit(data, flightData, flightdata->Avionics, CPAVIONICS);
+    checkCPBit(data, flightData, flightdata->RadarAlt, CPRADARALT);
+    checkCPBit(data, flightData, flightdata->IFF, CPIFF);
+    //checkCPBit(data, flightData, flightdata->ECM, 
+    checkCPBit(data, flightData, flightdata->Hook, CPHOOK);
+    checkCPBit(data, flightData, flightdata->NWSFail, CPNWS);
+    checkCPBit(data, flightData, flightdata->CabinPress, CPCABIN);
     
+    //lightbits2
     
+    checkCPBit(data, flightData, flightdata->FwdFuelLow, CPFWDFUEL);
+    checkCPBit(data, flightData, flightdata->AftFuelLow, CPAFTFUEL);
+    checkCPBit(data, flightData, flightdata->SEC, CPSEC);
+    checkCPBit(data, flightData, flightdata->OXY_LOW, CPOXYLOW);
+    checkCPBit(data, flightData, flightdata->PROBEHEAT, CPPROBEHEAT);
+    checkCPBit(data, flightData, flightdata->SEAT_ARM, CPSEAT);
+    checkCPBit(data, flightData, flightdata->BUC, CPBUC);
+    checkCPBit(data, flightData, flightdata->FUEL_OIL_HOT, CPFUELOIL);
+    checkCPBit(data, flightData, flightdata->ANTI_SKID, CPANTISKID);
+    
+    // lightbits3
+    checkCPBit(data, flightData, flightdata->Elec_Fault, CPELECSYS);
+    //checkCPBit(data, flightData, flightdata->Lef_Fault, 
+    checkCPBit(data, flightData, flightdata->cadc, CPCADC);
+    checkCPBit(data, flightData, flightdata->ATF_Not_Engaged, CPATF);
+    checkCPBit(data, flightData, flightdata->Inlet_Icing, CPINLET);
+       
     return;
-
-    /*
-    if (flightData->IsSet2(flightData->FwdFuelLow)) {
-        std::cout << "fwdLow ON ";
-    } else {
-        std::cout << "fwdLow OFF";
-    }
-    if (flightData->lightBits2 & flightData->AftFuelLow) {
-        std::cout << " - aftLow ON \n";
-    }
-    else {
-        std::cout << " - aftLow OFF\n";
-    } */
 }
 
 void BMSReader::readF16Data(F16Data* data) {
     // std::cout << "Reading from BMS!\n";
-    setCautionLightbits(data);
-
-    return;  // FIXXXME remove
 
     flightData = (FlightData*)gSharedMemPtr;
     flightData2 = (FlightData2*)gSharedMemPtr2;
@@ -98,5 +141,7 @@ void BMSReader::readF16Data(F16Data* data) {
     data->epuFuel = (unsigned short) util.map((long)flightData->epuFuel*100, 0, 10000, 0, 65535);
     data->cabinPress = (unsigned short)flightData2->cabinAlt;
 
+    // CautionPanel
+    setCautionLightbits(data, flightData);
     
 }
