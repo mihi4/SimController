@@ -24,6 +24,8 @@ private:
 
     miUtility util;
 
-    void setCautionLightbits();
+    void setCautionLightbits(F16Data* data);
+    void setCPBit(F16Data* data, unsigned long bit);
+    void deleteCPBit(F16Data* data, unsigned long bit);
 
 };

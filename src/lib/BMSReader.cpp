@@ -22,6 +22,7 @@ BMSReader::~BMSReader(void) {
 }
 
 bool BMSReader::connectToSim() {
+    return true;
 
     if ((gSharedMemPtr) && (gSharedMemPtr2)) return true; // are pointers already mapped?
     
@@ -38,7 +39,31 @@ bool BMSReader::connectToSim() {
     return false;
 }
 
-void BMSReader::setCautionLightbits() {
+void BMSReader::setCPBit(F16Data* data, unsigned long bit) {
+
+
+}
+
+void BMSReader::deleteCPBit(F16Data* data, unsigned long bit) {
+
+
+}
+
+void BMSReader::setCautionLightbits(F16Data* data) {
+
+    // check if MAL/IND LIGHT button is pressed and light up everything
+    if ((flightData->lightBits & flightData->AllLampBitsOn) && (flightData->lightBits2 & flightData->AllLampBits2On) && (flightData->lightBits3 & flightData->AllLampBits3On)) {
+        data->cautionPanelLights = 0xFFFFFFFF;
+        return;
+    }
+    
+
+
+    
+    
+    return;
+
+    /*
     if (flightData->IsSet2(flightData->FwdFuelLow)) {
         std::cout << "fwdLow ON ";
     } else {
@@ -49,11 +74,15 @@ void BMSReader::setCautionLightbits() {
     }
     else {
         std::cout << " - aftLow OFF\n";
-    }
+    } */
 }
 
-void  BMSReader::readF16Data(F16Data* data) {
+void BMSReader::readF16Data(F16Data* data) {
     // std::cout << "Reading from BMS!\n";
+    setCautionLightbits(data);
+
+    return;
+
     flightData = (FlightData*)gSharedMemPtr;
     flightData2 = (FlightData2*)gSharedMemPtr2;
     
@@ -71,5 +100,5 @@ void  BMSReader::readF16Data(F16Data* data) {
     data->epuFuel = (unsigned short) util.map((long)flightData->epuFuel*100, 0, 10000, 0, 65535);
     data->cabinPress = (unsigned short)flightData2->cabinAlt;
 
-    setCautionLightbits();
+    
 }
