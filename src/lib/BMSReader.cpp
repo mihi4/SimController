@@ -22,7 +22,7 @@ BMSReader::~BMSReader(void) {
 }
 
 bool BMSReader::connectToSim() {
-    return true;
+    return true;  // FIXXXME remove
 
     if ((gSharedMemPtr) && (gSharedMemPtr2)) return true; // are pointers already mapped?
     
@@ -40,13 +40,11 @@ bool BMSReader::connectToSim() {
 }
 
 void BMSReader::setCPBit(F16Data* data, unsigned long bit) {
-
-
+    data->cautionPanelLights |= bit;
 }
 
-void BMSReader::deleteCPBit(F16Data* data, unsigned long bit) {
-
-
+void BMSReader::clearCPBit(F16Data* data, unsigned long bit) {
+    data->cautionPanelLights &= ~bit;
 }
 
 void BMSReader::setCautionLightbits(F16Data* data) {
@@ -81,7 +79,7 @@ void BMSReader::readF16Data(F16Data* data) {
     // std::cout << "Reading from BMS!\n";
     setCautionLightbits(data);
 
-    return;
+    return;  // FIXXXME remove
 
     flightData = (FlightData*)gSharedMemPtr;
     flightData2 = (FlightData2*)gSharedMemPtr2;

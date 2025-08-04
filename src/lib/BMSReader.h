@@ -26,6 +26,6 @@ private:
 
     void setCautionLightbits(F16Data* data);
     void setCPBit(F16Data* data, unsigned long bit);
-    void deleteCPBit(F16Data* data, unsigned long bit);
-
+    void clearCPBit(F16Data* data, unsigned long bit);
+    
 };
