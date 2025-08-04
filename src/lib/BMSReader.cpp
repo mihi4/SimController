@@ -79,9 +79,29 @@ void BMSReader::setCautionLightbits(F16Data* data, FlightData* flightdata) {
 
     // check if MAL/IND LIGHT button is pressed and light up everything
    // 
-    if ((flightData->lightBits & flightData->AllLampBitsOn) && (flightData->lightBits2 & flightData->AllLampBits2On) && (flightData->lightBits3 & flightData->AllLampBits3On)) {
-        data->cautionPanelLights = 0xFFFFFFFF;
-        return;
+    std::cout << "1: " << flightData->lightBits << " 2: " << flightData->lightBits2 << " 3: " << flightData->lightBits3 << "\r";
+    //if ((flightData->IsSet(flightData->AllLampBitsOn)) && (flightData->IsSet2(flightData->AllLampBits2On)) && (flightData->IsSet3(flightData->AllLampBits3On))) {{
+    if ( flightData->IsSet(flightData->LEFlaps)) {  // it looks like the AllLampBits check does not work, use not available bit for it
+        /*data->cautionPanelLights = 0xFFFFFFFF;
+        return; */
+        setCPBit(data, CPLINE1);
+        setCPBit(data, CPLINE2);
+        setCPBit(data, CPLINE3);
+        setCPBit(data, CPLINE4);
+        setCPBit(data, CPLINE5);
+        setCPBit(data, CPLINE6);
+        setCPBit(data, CPNUCLEAR);
+        setCPBit(data, CPEEC);
+    }
+    else {
+        clearCPBit(data, CPLINE1);
+        clearCPBit(data, CPLINE2);
+        clearCPBit(data, CPLINE3);
+        clearCPBit(data, CPLINE4);
+        clearCPBit(data, CPLINE5);
+        clearCPBit(data, CPLINE6);
+        clearCPBit(data, CPNUCLEAR);
+        clearCPBit(data, CPEEC);
     }
 
     // lightbits
@@ -98,7 +118,7 @@ void BMSReader::setCautionLightbits(F16Data* data, FlightData* flightdata) {
     checkCPBit(data, flightData, flightdata->Hook, CPHOOK);
     checkCPBit(data, flightData, flightdata->NWSFail, CPNWS);
     checkCPBit(data, flightData, flightdata->CabinPress, CPCABIN);
-    
+    checkCPBit(data, flightData, flightdata->EQUIP_HOT, CPEQUIPHOT); 
     //lightbits2
     
     checkCPBit(data, flightData, flightdata->FwdFuelLow, CPFWDFUEL);

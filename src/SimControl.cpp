@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
                         
         if (simConnected) {
             reader->readF16Data(&data);
-            std::cout << "cautionPanel: " << util.getBinaryRep(data.cautionPanelLights) << "\n";
+            std::cout << "cautionPanel: " << util.getBinaryRep(data.cautionPanelLights) << "\r";
             //std::cout << "mapping" << util.map(data.fuelFWD, 0, 42000, 0, 65534) << "\n";
         }
 
