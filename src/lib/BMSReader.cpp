@@ -141,12 +141,42 @@ void BMSReader::setCautionLightbits(F16Data* data, FlightData* flightdata) {
     return;
 }
 
+void BMSReader::checkPowerbit(F16Data* data, FlightData2* flightData2, FlightData2::PowerBits bmsBit, int scBit) {
+    if (flightData2->IsSetPower(bmsBit)) {
+        data->powerStates |= scBit;
+    }
+    else {
+        data->powerStates &= ~scBit;
+    }
+}
+
+void BMSReader::setPowerbits(F16Data* data, FlightData2* flightData2) {
+    
+    checkPowerbit(data, flightData2, flightData2->MainGenerator, MAINGENON);
+    checkPowerbit(data, flightData2, flightData2->StandbyGenerator, STBYGENON);
+    checkPowerbit(data, flightData2, flightData2->BusPowerBattery, BUSBAT);
+    checkPowerbit(data, flightData2, flightData2->BusPowerEmergency, BUSEMER);
+    checkPowerbit(data, flightData2, flightData2->BusPowerEssential, BUSESSENTIAL);
+    checkPowerbit(data, flightData2, flightData2->BusPowerNonEssential, BUSNONESSENTIAL);
+   
+}
+
 void BMSReader::readF16Data(F16Data* data) {
     // std::cout << "Reading from BMS!\n";
 
     flightData = (FlightData*)gSharedMemPtr;
     flightData2 = (FlightData2*)gSharedMemPtr2;
-    
+        
+    // use PLANEFLYING to see, if cockpit is active
+    if (flightData->IsSetHsi(flightData->Flying)) {
+        data->powerStates |= PLANEFLYING;
+    }
+    else {
+        data->powerStates &= ~PLANEFLYING;
+    }
+    // set powerbits
+    setPowerbits(data, flightData2);
+
     // fuel data    
     data->fuelFWD = (unsigned short)flightData->fwd; // util.map((long)flightData->fwd, 0, 42000, 0, 65535);
     data->fuelAFT = (unsigned short)flightData->aft;  // util.map((long)flightData->aft, 0, 42000, 0, 65535);

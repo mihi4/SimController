@@ -24,10 +24,13 @@ private:
 
     miUtility util;
 
+    
+    void checkPowerbit(F16Data* data, FlightData2* flightData2, FlightData2::PowerBits bmsBit, int scBit);
+    void setPowerbits(F16Data* data, FlightData2* flightData2);
     void setCautionLightbits(F16Data* data, FlightData* flightdata);
     void setCPBit(F16Data* data, unsigned long bit);
     void clearCPBit(F16Data* data, unsigned long bit);
-
+    // overloaded function for different lightbits
     void checkCPBit(F16Data* data, FlightData* flightdata, FlightData::LightBits bmsBit, int scBit);
     void checkCPBit(F16Data* data, FlightData* flightdata, FlightData::LightBits2 bmsBit, int scBit);
     void checkCPBit(F16Data* data, FlightData* flightdata, FlightData::LightBits3 bmsBit, int scBit);
