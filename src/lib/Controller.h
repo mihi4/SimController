@@ -11,6 +11,9 @@ public:
 private:
     ceSerial serialPort;
     long baudrate;
+    unsigned short* datafields;
+    std::string controllerName;
+
 
 
 };
