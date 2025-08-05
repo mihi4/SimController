@@ -1,14 +1,18 @@
 #pragma once
-#include <cmath>
+
+
+/********************************************************
+    common functions/data used in Arduino and PC code
+*********************************************************/
 
 // bits for airplane power data and sim status
-#define BUSBAT					1    // true if at least the battery bus is powered
-#define BUSEMER					2     // true if at least the emergency bus is powered
-#define BUSESSENTIAL	 		4    // true if at least the essential bus is powered
-#define BUSNONESSENTIAL			8    // true if at least the non-essential bus is powered
-#define MAINGENON               16
-#define STBYGENON               32
-#define PLANEFLYING	            64   // true, if player is attached to plane, FLYING in enum FlyStates
+#define BUSBAT					0x01    // true if at least the battery bus is powered
+#define BUSEMER					0x02     // true if at least the emergency bus is powered
+#define BUSESSENTIAL	 		0x04    // true if at least the essential bus is powered
+#define BUSNONESSENTIAL			0x08    // true if at least the non-essential bus is powered
+#define MAINGENON               0x10
+#define STBYGENON               0x20
+#define PLANEFLYING	            0x40   // true, if player is attached to plane, FLYING in enum FlyStates
 
 // CAUTION PANEL lights bit order
 // different order because of soldering on hardware
@@ -50,9 +54,9 @@
 // INSTRUMENT PANEL light bit order
 
 
+// variable numbers to use to configure data to get from F16Data.h 
+// let's see if 255 values are enough ;-) (light- and statusbits are stored in 1- or 2-byte vars
 
-
-// variable numbers to use to configure data to get from F16Data.h
 #define POWERSTATES         1
 
 // **********************
@@ -61,26 +65,26 @@
 
 // ---- FQTI ----
 #define FUELFWD             10
-#define FUELAFT             20
-#define FUELTOTAL           30
+#define FUELAFT             11
+#define FUELTOTAL           12
 
 // ---- HYD PRESS ----
-#define HYDA                40
-#define HYDB                50
+#define HYDA                13
+#define HYDB                14
 
 // ---- EPU FUEL ----
-#define EPUFUEL             60
+#define EPUFUEL             15
 
 // ---- CABIN PRESSURE ALT ----
-#define CABINPRESS          70
+#define CABINPRESS          16
 
 // ---- CAUTION PANEL ----
-#define CAUTIONPANELLIGHTS  80
+#define CAUTIONPANELLIGHTS  17
 
 // ---- PFD ----
-#define PFDLINE1            100
-#define PFDLINE2            101
-#define PFDLINE3            102
-#define PFDLINE4            103
-#define PFDLINE5            104
+#define PFDLINE1            18
+#define PFDLINE2            19
+#define PFDLINE3            20
+#define PFDLINE4            21
+#define PFDLINE5            22
 

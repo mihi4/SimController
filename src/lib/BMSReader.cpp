@@ -79,7 +79,7 @@ void BMSReader::setCautionLightbits(F16Data* data, FlightData* flightdata) {
 
     // check if MAL/IND LIGHT button is pressed and light up everything
    // 
-    std::cout << "1: " << flightData->lightBits << " 2: " << flightData->lightBits2 << " 3: " << flightData->lightBits3 << "\r";
+    //std::cout << "1: " << flightData->lightBits << " 2: " << flightData->lightBits2 << " 3: " << flightData->lightBits3 << "\r";
     //if ((flightData->IsSet(flightData->AllLampBitsOn)) && (flightData->IsSet2(flightData->AllLampBits2On)) && (flightData->IsSet3(flightData->AllLampBits3On))) {{
     if ( flightData->IsSet(flightData->LEFlaps)) {  // it looks like the AllLampBits check does not work, use not available bit for it
         /*data->cautionPanelLights = 0xFFFFFFFF;

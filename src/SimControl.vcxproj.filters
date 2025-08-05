@@ -29,7 +29,7 @@
     <ClInclude Include="lib\FlightData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lib\f16Arduino.h">
+    <ClInclude Include="lib\f16common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="lib\DataReader.h">

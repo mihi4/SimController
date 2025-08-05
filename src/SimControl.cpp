@@ -12,23 +12,27 @@ char parseSimParameter(char* argv[]) {
     if (strcmp(argv[1], "BMS") == 0) {
         // std::cout << "parsed BMS\n";
         return BMS;
-    } else if (strcmp(argv[1], "DCS") == 0) {
+    }
+    else if (strcmp(argv[1], "DCS") == 0) {
         // std::cout << "parsed DCS\n";
         return DCS;
-    } else if (strcmp(argv[1], "MSFS") == 0) {
+    }
+    else if (strcmp(argv[1], "MSFS") == 0) {
         // std::cout << "parsed MSFS\n";
         return MSFS;
-    } else {
+    }
+    else {
         return NULL;
     }
- 
+
 }
 
 std::unique_ptr<DataReader> createDataReader(short selectedSim) {
 
     if (selectedSim == BMS) {
         return std::make_unique<BMSReader>();
-    } else if (selectedSim == DCS) {
+    }
+    else if (selectedSim == DCS) {
         return std::make_unique<DCSReader>();
     }
     else if (selectedSim == MSFS) {
@@ -39,13 +43,39 @@ std::unique_ptr<DataReader> createDataReader(short selectedSim) {
     }
 }
 
+void setupControllers(Controller* controller, short cNum) {  // cNum is the number of controllers in the eventual config file
+    unsigned char fields[] = { FUELAFT, FUELFWD, FUELTOTAL, HYDA, HYDB, EPUFUEL, CABINPRESS, CAUTIONPANELLIGHTS };
+    Controller c1("RightAUX", "\\\\.\\COM1", 115200, sizeof(fields)); 
+    //c1.datafields = fields;
+    for (int i = 0; i < cNum; i++) {
+        c1.setDataField(i, fields[i]);
+    }
+    controller[0] = c1;
+    
+}
+
+void updateControllers(Controller* allCs) {
+    int cNum = sizeof(allCs);
+    for (int i = 0; i << cNum; i++) {
+        allCs[i].sendDataUpdate("schaumamoi");
+    }
+
+}
 
 
 int main(int argc, char* argv[])
 {   
-    F16Data data;
-    bool simConnected = false;
-    miUtility util;
+    std::cout << "*************************************************************\n";
+    std::cout << "*                                                           *\n";
+    std::cout << "* Hello, Pilot! Press LSHIFT/LCTRL/LALT + BACKSPACE to quit *\n";
+    std::cout << "*                                                           *\n";
+    std::cout << "*************************************************************\n";
+
+    Sleep(200);
+    /*********************************************
+       check if commandline parameter fit 
+       if not, print message and quit
+    **********************************************/
     // 
     if (checkParameter(argc)) {
         std::cout << "Wrong parameter! Usage: SimControl.exe BMS|DCS|MSFS";
@@ -58,7 +88,6 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-
     auto reader = createDataReader(selectedSim);
 
     if (!reader) {
@@ -66,38 +95,58 @@ int main(int argc, char* argv[])
         return 0;
     }
     
+    /*********************************************
+      setup the needed variables and objects
+    **********************************************/
 
+    F16Data data;
+    miUtility util;
+    
+    bool simConnected = false;    
 
-    std::cout << "************************************************************\n";
-    std::cout << "*                                                          *\n";
-    std::cout << "* Hello World! Press LSHIFT/LCTRL/LALT + BACKSPACE to quit *\n";
-    std::cout << "*                                                          *\n";
-    std::cout << "************************************************************\n";
+    /* 
+    for first iteration create Arduinos in code, later read from config file
+    */    
+    char controllerNum = 1;
+    Controller * allControllers = new Controller[controllerNum];
+       
+    std::cout << "setting up Controllers\n";
+    setupControllers(allControllers, controllerNum);
+    std::cout << "Controller creation done\n";
+    //Controller c1("RightAUX", "COM1", 115200, { FUELAFT, FUELFWD, FUELTOTAL, HYDA, HYDB, EPUFUEL, CABINPRESS, CAUTIONPANELLIGHTS });
 
-    Sleep(1000);
+    /****************************************
+     
+                    main loop
+    
+    *****************************************/
 
-    while (true) {  // Loop function ;-)        
+    while (true) {
         if (!simConnected) {
-            std::cout << "connecting to sim...";
+            std::cout << "connecting to sim...\r";
             if (reader->connectToSim()) {
                 simConnected = true;
-                std::cout << "connected!\n";
+                std::cout << "\nConnected to " << argv[1] << "\n";
             }
         }
                         
-        if (simConnected) {
+        if (reader->connectToSim()) {
             reader->readF16Data(&data);
-            std::cout << "cautionPanel: " << util.getBinaryRep(data.cautionPanelLights) << "\r";
+            
+            updateControllers(allControllers);
             //std::cout << "mapping" << util.map(data.fuelFWD, 0, 42000, 0, 65534) << "\n";
         }
 
         // check for quit keycommand LCTRL+LSHIFT+LALT+BACKSPACE
         if ((GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)) { break; }
 
-        Sleep(100);
+        Sleep(10);
         
     }
     
+    std::cout << "Cleanup...\n";
+    delete[] allControllers;
+
     std::cout << "\n\nquitting!\n";    
 
     return 0;

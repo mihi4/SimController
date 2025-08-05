@@ -8,6 +8,7 @@
 #include "lib/DCSReader.h"
 #include "lib/MSFSReader.h"
 
+#include "lib/Controller.h"
 
 #define BMS 1
 #define DCS 2 // reader not implemented ye

@@ -139,7 +139,7 @@
     <ClInclude Include="lib\F16Data.h" />
     <ClInclude Include="lib\BMSReader.h" />
     <ClInclude Include="lib\FlightData.h" />
-    <ClInclude Include="lib\f16Arduino.h" />
+    <ClInclude Include="lib\f16common.h" />
     <ClInclude Include="lib\miUtils.h" />
     <ClInclude Include="lib\MSFSReader.h" />
     <ClInclude Include="SimControl.h" />
