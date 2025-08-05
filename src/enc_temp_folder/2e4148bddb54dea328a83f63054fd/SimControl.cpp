@@ -26,7 +26,7 @@ char parseSimParameter(char* argv[]) {
     }
 
 }
- 
+
 std::unique_ptr<DataReader> createDataReader(short selectedSim) {
 
     if (selectedSim == BMS) {
