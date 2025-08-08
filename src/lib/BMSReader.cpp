@@ -22,6 +22,7 @@ BMSReader::~BMSReader(void) {
 }
 
 bool BMSReader::connectToSim() {
+    return true;
 
     if ((gSharedMemPtr) && (gSharedMemPtr2)) return true; // are pointers already mapped?
     
@@ -163,6 +164,10 @@ void BMSReader::setPowerbits(F16Data* data, FlightData2* flightData2) {
 
 void BMSReader::readF16Data(F16Data* data) {
     // std::cout << "Reading from BMS!\n";
+    
+    int finalNum = rand() % (4200 - 0 + 1) + 0;
+    data->fuelFWD = finalNum; 
+    return;
 
     flightData = (FlightData*)gSharedMemPtr;
     flightData2 = (FlightData2*)gSharedMemPtr2;

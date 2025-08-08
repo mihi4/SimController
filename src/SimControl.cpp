@@ -43,21 +43,24 @@ std::unique_ptr<DataReader> createDataReader(short selectedSim) {
     }
 }
 
-void setupControllers(Controller* controller, short cNum) {  // cNum is the number of controllers in the eventual config file
-    unsigned char fields[] = { FUELAFT, FUELFWD, FUELTOTAL, HYDA, HYDB, EPUFUEL, CABINPRESS, CAUTIONPANELLIGHTS };
-    Controller c1("RightAUX", "\\\\.\\COM1", 115200, sizeof(fields)); 
+void setupControllers(std::vector<Controller> allCs) {  // cNum is the number of controllers in the eventual config file
+    std::vector<unsigned char> fields = { FUELAFT, FUELFWD, FUELTOTAL, HYDA, HYDB, EPUFUEL, CABINPRESS, CAUTIONPANELLIGHTS };   
+    // short varCount = fields.size();  // sizeof(fields) / sizeof(fields[0]);
+    //std::cout << "varcount: " << varCount << "\n";
+    Controller c1("RightAUX", "\\\\.\\COM1", 115200, fields); 
+    // std::cout << "controllername: " << c1.getName() << "\n";
     //c1.datafields = fields;
-    for (int i = 0; i < cNum; i++) {
+    for (int i = 0; i < fields.size(); i++) {
         c1.setDataField(i, fields[i]);
     }
-    controller[0] = c1;
+    allCs[0] = c1;
     
 }
 
-void updateControllers(Controller* allCs) {
-    int cNum = sizeof(allCs);
-    for (int i = 0; i << cNum; i++) {
-        allCs[i].sendDataUpdate("schaumamoi");
+void updateControllers(std::vector<Controller> allCs) {
+    
+    for (int i = 0; i < allCs.size(); i++) {
+        allCs[i].updateController();
     }
 
 }
@@ -108,13 +111,14 @@ int main(int argc, char* argv[])
     for first iteration create Arduinos in code, later read from config file
     */    
     char controllerNum = 1;
-    Controller * allControllers = new Controller[controllerNum];
+    std::vector<Controller> allControllers;
+    //Controller * allControllers = new Controller[controllerNum];
        
-    std::cout << "setting up Controllers\n";
-    setupControllers(allControllers, controllerNum);
-    std::cout << "Controller creation done\n";
+    std::cout << "### Setting up Controllers\n";
+    setupControllers(allControllers);
+    std::cout << "--- Controller creation done\n";
     //Controller c1("RightAUX", "COM1", 115200, { FUELAFT, FUELFWD, FUELTOTAL, HYDA, HYDB, EPUFUEL, CABINPRESS, CAUTIONPANELLIGHTS });
-
+    //srand(time(NULL)); // Seed the time
     /****************************************
      
                     main loop
@@ -134,18 +138,16 @@ int main(int argc, char* argv[])
             reader->readF16Data(&data);
             
             updateControllers(allControllers);
-            //std::cout << "mapping" << util.map(data.fuelFWD, 0, 42000, 0, 65534) << "\n";
+            //std::cout << "mapping" << util.map(data.fuelFWD, 0, 42000, 0, 65534) << "\r";
         }
 
         // check for quit keycommand LCTRL+LSHIFT+LALT+BACKSPACE
         if ((GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)) { break; }
 
-        Sleep(10);
+        Sleep(200);
         
     }
     
-    std::cout << "Cleanup...\n";
-    delete[] allControllers;
 
     std::cout << "\n\nquitting!\n";    
 

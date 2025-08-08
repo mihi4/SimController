@@ -1,29 +1,31 @@
 #pragma once
 #include "ceserial.h"
 #include <iostream>
+#include <vector>
 
 class Controller
 {
 public:
-    Controller(std::string name, std::string comPort, long baudrate, char datafieldCount);
+    Controller(std::string name, std::string comPort, long baudrate, std::vector<unsigned char> datafieldsIn);
     Controller();
     ~Controller();
     std::string getName();
     
     void setDataField(int pos, int value);
-    unsigned char* getDatafields();
+    std::vector<unsigned char> getDatafields();
 
     void connect();
 
-    void sendDataUpdate(std::string updateString);
+    void sendDataUpdate(std::vector<char> updateString);
+    void updateController(); 
     
-    unsigned char* datafields;
 private:
     ceSerial serialPort;
     long baudrate;
     
     std::string controllerName;
 
+    std::vector<unsigned char> datafields;
 
 
 };

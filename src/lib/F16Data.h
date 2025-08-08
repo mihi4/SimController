@@ -33,11 +33,11 @@ public:
 	unsigned long cautionPanelLights = 0; // 32 bits, one bit per lamp
     
 	// ---- PFD ----
-	char pfdLine1[25];
-	char pfdLine2[25];
-	char pfdLine3[25];
-	char pfdLine4[25];
-	char pfdLine5[25];
+	std::string pfdLine1 = "                    ";
+	std::string pfdLine2 = "                    ";
+	std::string pfdLine3 = "                    ";
+	std::string pfdLine4 = "                    ";
+	std::string pfdLine5 = "                    ";
 
 	// **********************
 	// INSTRUMENT PANEL data
