@@ -2,6 +2,8 @@
 //
 #include "SimControl.h"
 
+std::vector<Controller> allControllers;
+
 bool checkParameter(int argNum) {
     if (argNum == 2) return false;
     return true;
@@ -43,7 +45,7 @@ std::unique_ptr<DataReader> createDataReader(short selectedSim) {
     }
 }
 
-void setupControllers(std::vector<Controller> allCs) {  // cNum is the number of controllers in the eventual config file
+void setupControllers() {  // cNum is the number of controllers in the eventual config file
     std::vector<unsigned char> fields = { FUELAFT, FUELFWD, FUELTOTAL, HYDA, HYDB, EPUFUEL, CABINPRESS, CAUTIONPANELLIGHTS };   
     // short varCount = fields.size();  // sizeof(fields) / sizeof(fields[0]);
     //std::cout << "varcount: " << varCount << "\n";
@@ -53,14 +55,15 @@ void setupControllers(std::vector<Controller> allCs) {  // cNum is the number of
     for (int i = 0; i < fields.size(); i++) {
         c1.setDataField(i, fields[i]);
     }
-    allCs[0] = c1;
+    bool check = c1.connect();
+    allControllers.push_back(c1);
     
 }
 
-void updateControllers(std::vector<Controller> allCs) {
-    
-    for (int i = 0; i < allCs.size(); i++) {
-        allCs[i].updateController();
+void updateControllers(F16Data * data, F16Data * prevData) {
+    int size = allControllers.size();
+    for (int i = 0; i < size; i++) {
+        allControllers[i].updateController(data, prevData);
     }
 
 }
@@ -103,6 +106,7 @@ int main(int argc, char* argv[])
     **********************************************/
 
     F16Data data;
+    F16Data prevData;
     miUtility util;
     
     bool simConnected = false;    
@@ -111,11 +115,14 @@ int main(int argc, char* argv[])
     for first iteration create Arduinos in code, later read from config file
     */    
     char controllerNum = 1;
-    std::vector<Controller> allControllers;
+    
     //Controller * allControllers = new Controller[controllerNum];
        
     std::cout << "### Setting up Controllers\n";
-    setupControllers(allControllers);
+    setupControllers();
+    int size = allControllers.size();
+    std::cout << "main size after setup is " << size << std::endl;
+
     std::cout << "--- Controller creation done\n";
     //Controller c1("RightAUX", "COM1", 115200, { FUELAFT, FUELFWD, FUELTOTAL, HYDA, HYDB, EPUFUEL, CABINPRESS, CAUTIONPANELLIGHTS });
     //srand(time(NULL)); // Seed the time
@@ -135,10 +142,11 @@ int main(int argc, char* argv[])
         }
                         
         if (reader->connectToSim()) {
-            reader->readF16Data(&data);
-            
-            updateControllers(allControllers);
+            reader->readF16Data(&data);            
+            updateControllers(&data, &prevData);
             //std::cout << "mapping" << util.map(data.fuelFWD, 0, 42000, 0, 65534) << "\r";
+        } else {
+            simConnected = false; // try again next run
         }
 
         // check for quit keycommand LCTRL+LSHIFT+LALT+BACKSPACE

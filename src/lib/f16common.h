@@ -51,6 +51,23 @@
 #define CPCABIN     0x40000000
 #define CPOXYLOW    0x80000000
 
+/* Command Structure between PC - Arduino
+
+common:
+'<'<byte command>[command parameter]'>'
+
+Data Update
+<U<byte varnum><byte varlength><databyte><databyte>...<databyte>>
+
+
+*/
+#define CMDUPDATE 'U'
+#define CMDSTART '<'
+#define CMDEND '>'
+
+
+
+
 // INSTRUMENT PANEL light bit order
 
 
