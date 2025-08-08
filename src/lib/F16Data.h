@@ -8,7 +8,7 @@ public:
 	// **********************
 	// common sim data
 	// **********************
-	char powerStates = 0; // goes with PowerBits and hsibits in Flightdata.h
+	unsigned char powerStates = 0; // goes with PowerBits and hsibits in Flightdata.h
 
 	// **********************
 	// RAUX data
@@ -30,7 +30,7 @@ public:
 	unsigned short cabinPress = 0; // 0..65535, pointer position
 
 	// ---- CAUTION PANEL ----
-	unsigned long cautionPanelLights = 0; // 32 bits, one bit per lamp
+	unsigned int cautionPanelLights = 0; // 32 bits, one bit per lamp
     
 	// ---- PFD ----
 	std::string pfdLine1 = "                    ";

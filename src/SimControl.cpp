@@ -46,7 +46,7 @@ std::unique_ptr<DataReader> createDataReader(short selectedSim) {
 }
 
 void setupControllers() {  // cNum is the number of controllers in the eventual config file
-    std::vector<unsigned char> fields = { FUELAFT, FUELFWD, FUELTOTAL, HYDA, HYDB, EPUFUEL, CABINPRESS, CAUTIONPANELLIGHTS };   
+    std::vector<unsigned char> fields = { POWERSTATES, FUELTOTAL }; // , FUELAFT, FUELFWD, FUELTOTAL };
     // short varCount = fields.size();  // sizeof(fields) / sizeof(fields[0]);
     //std::cout << "varcount: " << varCount << "\n";
     Controller c1("RightAUX", "\\\\.\\COM1", 115200, fields); 
@@ -130,8 +130,8 @@ int main(int argc, char* argv[])
      
                     main loop
     
-    *****************************************/
-
+    *****************************************/    
+    
     while (true) {
         if (!simConnected) {
             std::cout << "connecting to sim...\r";
@@ -142,8 +142,11 @@ int main(int argc, char* argv[])
         }
                         
         if (reader->connectToSim()) {
-            reader->readF16Data(&data);            
+            
+            reader->readF16Data(&data);         
+            
             updateControllers(&data, &prevData);
+            
             //std::cout << "mapping" << util.map(data.fuelFWD, 0, 42000, 0, 65534) << "\r";
         } else {
             simConnected = false; // try again next run
@@ -152,7 +155,7 @@ int main(int argc, char* argv[])
         // check for quit keycommand LCTRL+LSHIFT+LALT+BACKSPACE
         if ((GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)) { break; }
 
-        Sleep(200);
+        Sleep(300);
         
     }
     
