@@ -110,25 +110,25 @@ void Controller::addVarDataToUpdateString(int varNum, std::vector<char> &updateS
     switch (varNum) {
     case POWERSTATES:
         if (data->powerStates != prevData->powerStates) {
-            std::cout << "powerstates, var = " << varNum << ", size: " << sizeof(data->powerStates) << ".\n";
+            // std::cout << "powerstates, var = " << varNum << ", size: " << sizeof(data->powerStates) << ".\n";
             buildVarString(varNum, data->powerStates, updateString);
         }
-        prevData->powerStates = data->powerStates;
+        //prevData->powerStates = data->powerStates;
         break;
     case FUELFWD:
         //std::cout << "fuel prev: " << prevData->fuelFWD << " fuel now " << data->fuelFWD;
         if (data->fuelFWD != prevData->fuelFWD) {
-            std::cout << "fuelFWD, var = " << varNum << ", size: " << sizeof(data->fuelFWD) << ".\n";
+            // std::cout << "fuelFWD, var = " << varNum << ", size: " << sizeof(data->fuelFWD) << ".\n";
             buildVarString(varNum, data->fuelFWD, updateString);
         }
-        prevData->fuelFWD = data->fuelFWD;
+        //prevData->fuelFWD = data->fuelFWD;
     case FUELTOTAL:
         //std::cout << "fuel prev: " << prevData->fuelFWD << " fuel now " << data->fuelFWD;
         if (data->fuelTotal != prevData->fuelTotal) {            
-            std::cout << "fueltotal, var = " << varNum << ", size: " << sizeof(data->fuelTotal) << ". value: " << std::to_string(data->fuelTotal) << "\n";
+            //std::cout << "fueltotal, var = " << varNum << ", size: " << sizeof(data->fuelTotal) << ". value: " << std::to_string(data->fuelTotal) << "\n";
             buildVarString(varNum, data->fuelTotal, updateString);
         }
-        prevData->fuelTotal = data->fuelTotal;
+        //prevData->fuelTotal = data->fuelTotal;
     default:
         break;
     }     
@@ -137,13 +137,12 @@ void Controller::addVarDataToUpdateString(int varNum, std::vector<char> &updateS
 
 void Controller::updateController(F16Data* data, F16Data* prevData) {
     //std::cout << "updating " << controllerName << "\n";    
-    if (data == prevData) {
-        std::cout << "nothing to send\n";
-        return;        
-    } else {
         unsigned short fieldCount = datafields.size();
 #
         std::vector<char> updateString;
+
+        // this and lower part removed to create separate update commands for each variable. 
+        // better to do it all in one update command?  FIXXXME
 
         //updateString.push_back(CMDSTART);
         //updateString.push_back(CMDUPDATE);
@@ -156,8 +155,5 @@ void Controller::updateController(F16Data* data, F16Data* prevData) {
 
         //updateString.push_back('>');
         //updateString.push_back('\0');
-        prevData = data;
-    }
-    
 
 }

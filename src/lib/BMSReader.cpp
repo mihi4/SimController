@@ -178,21 +178,21 @@ void BMSReader::readF16Data(F16Data* data) {
     setPowerbits(data, flightData2);
 
     // fuel data    
-    //data->fuelFWD = (unsigned short)flightData->fwd; // util.map((long)flightData->fwd, 0, 42000, 0, 65535);
-    //data->fuelAFT = (unsigned short)flightData->aft;  // util.map((long)flightData->aft, 0, 42000, 0, 65535);
+    data->fuelFWD = (unsigned short)flightData->fwd; // util.map((long)flightData->fwd, 0, 42000, 0, 65535);
+    data->fuelAFT = (unsigned short)flightData->aft;  // util.map((long)flightData->aft, 0, 42000, 0, 65535);
     data->fuelTotal = ((unsigned short)flightData->total)/100;
     
     // HYD PRESS
-   //data->hydA = (unsigned short)flightData2->hydPressureA;
-   // data->hydB = (unsigned short)flightData2->hydPressureB;
+    data->hydA = (unsigned short)flightData2->hydPressureA;
+    data->hydB = (unsigned short)flightData2->hydPressureB;
 
     // EPU
     //std::cout << "fdEPU " << flightData->epuFuel << "fdCab " << flightData2->cabinAlt << "\n";
     
-    //data->epuFuel = (unsigned short) util.map((long)flightData->epuFuel*100, 0, 10000, 0, 65535);
-    //data->cabinPress = (unsigned short)flightData2->cabinAlt;
+    data->epuFuel = (unsigned short) util.map((long)flightData->epuFuel*100, 0, 10000, 0, 65535);
+    data->cabinPress = (unsigned short)flightData2->cabinAlt;
 
     // CautionPanel
-    //setCautionLightbits(data, flightData);
+    setCautionLightbits(data, flightData);
     
 }

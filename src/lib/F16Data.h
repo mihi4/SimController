@@ -4,6 +4,26 @@
 class F16Data
 {
 public:
+	int isSameAs(const F16Data& d) const {
+		return
+			powerStates == d.powerStates &&
+			fuelFWD == d.fuelFWD &&
+			fuelAFT == d.fuelAFT &&
+			fuelTotal == d.fuelTotal &&
+			hydA == d.hydA &&
+			hydB == d.hydB &&
+			epuFuel == d.epuFuel &&
+			cabinPress == d.cabinPress &&
+			cautionPanelLights == d.cautionPanelLights &&
+			pfdLine1 == d.pfdLine1 &&
+			pfdLine2 == d.pfdLine2 &&
+			pfdLine3 == d.pfdLine3 &&
+			pfdLine4 == d.pfdLine4 &&
+			pfdLine5 == d.pfdLine5 &&
+			hudLights == d.hudLights
+
+			;
+	}
 
 	// **********************
 	// common sim data

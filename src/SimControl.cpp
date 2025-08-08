@@ -144,9 +144,10 @@ int main(int argc, char* argv[])
         if (reader->connectToSim()) {
             
             reader->readF16Data(&data);         
-            
-            updateControllers(&data, &prevData);
-            
+            if (!prevData.isSameAs(data)) {  // only send data if anything has changed 
+                updateControllers(&data, &prevData);
+            }
+            prevData = data;
             //std::cout << "mapping" << util.map(data.fuelFWD, 0, 42000, 0, 65534) << "\r";
         } else {
             simConnected = false; // try again next run
