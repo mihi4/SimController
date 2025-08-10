@@ -114,3 +114,8 @@ returns <OK.nameOfController.numberOfVars/bytes.[byte var1][byte var2]...[byte v
 #define PFDLINE4            21
 #define PFDLINE5            22
 
+#define VARA	65
+#define VARB	66
+#define VARC	67
+#define VARD	68
+
