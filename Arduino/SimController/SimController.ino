@@ -28,7 +28,7 @@ f16var vars[] = {
 };
 const char varCount = sizeof(vars)/sizeof(vars[0]);
 
-#include "SCSerial.h"
+//#include "SCSerial.h"
 #include "SCComms.h"
 
 void setup() {
@@ -36,7 +36,7 @@ void setup() {
 	SERIALCOM.begin(BAUDRATE);
 	while (!SERIALCOM) {}
 	SERIALCOM.println("Arduino is ready");
-  char buf[20];
+  /* char buf[20];
   itoa(varCount, buf, 10);
   SERIALCOM.print("varCount is ");SERIALCOM.println(buf);
   for (char i=0; i<varCount; i++){
@@ -44,7 +44,7 @@ void setup() {
     SERIALCOM.print(vars[i].number);
     SERIALCOM.print(" varMod: ");SERIALCOM.print(vars[i].module);
     SERIALCOM.print(" varIndex: ");SERIALCOM.println(vars[i].index);
-	}
+	}*/
 	
 	
 }
@@ -52,8 +52,9 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
 	ReadSerial();
-	//recvBytesWithStartEndMarkers();
-    showNewData();
+	parseSerialCommand();
+	
+    //showNewData();
 }
 
 
