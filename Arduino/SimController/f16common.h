@@ -89,14 +89,6 @@ returns <OK>
 #define MOD7219      30
 #define MODDED       79
 
-unsigned short shortFromBytes(char bytes[2]) {
-    return (bytes[0] << 8) | bytes[1];
-}
-
-
-
-
-
 // INSTRUMENT PANEL light bit order
 
 
