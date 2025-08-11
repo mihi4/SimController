@@ -1,88 +1,50 @@
  
 #include <Arduino.h>
+#include <avr/wdt.h> // to use for software reset; FIXXXME - really needed?
 #include "f16common.h"
 
+typedef struct {
+  unsigned char number;
+  unsigned char module;
+  unsigned char index;
+  unsigned char type;
+} f16var;
+
+// function definitions
 void parseSerialCommand();
-static const char scName[] = "RightAuxController";
+
+// global vars
+static const char scName[] = "RightAux";
 int scNameSize = sizeof(scName)/sizeof(scName[0]);
 
-char vars[] = { VARA, VARB, VARC, VARD };
+/* var format:
+  VarName, VarBytes, Module, Index of Value in module (255 if not needed)
+*/
+f16var vars[] = { 
+    {VARA, MODSERVO, 0, VARSHORT}, 
+    {VARB, MODSERVO, 1, VARSHORT}, 
+    {VARC, MODMM5451, 255, VARLONG},
+    {VARD, MOD7219, 3, VARINT }
+};
 const char varCount = sizeof(vars)/sizeof(vars[0]);
 
-
 #include "SCSerial.h"
-
-
-void sendConnectReply(){
-	//std::string 
-	char buf[50] = { CMDSTART, 'O', 'K', '.' };
-	strncat(buf, scName, scNameSize);
-	char delimiter[2] = { '.', (char)varCount };	
-	strncat(buf, delimiter, 2);	
-	strncat(buf, vars, varCount);
-	strncat(buf, ">", 1);
-	
-	SERIALCOM.println(buf);	
-}
-
-void parseUpateCommand() {
-	char varNumber = receivedBytes[1];
-	
-	bool checkVarNum = false;
-	for (char i = 0; i<varCount; i++) {
-		if (vars[i] == varNumber) checkVarNum = true;
-	}
-	if (checkVarNum) {
-		SERIALCOM.println("Var found");
-		char byteCount = receivedBytes[2];		
-		
-		// Add part to read in bytes, creat the short/int/long and call update in specific module
-		// Maybe store value in a special struct or class array of all values with appropriat module (and additional parameter)
-		
-		
-	} else {
-		SERIALCOM.println("Var not found in List");		
-	}
-	
-	
-	
-	
-	return;	
-}
-
-void resetController () {  // this function should reset the arduino
-	SERIALCOM.println("resetting Arduino!");
-	delay(200);
-}
-
-void parseSerialCommand() {
-	switch (receivedBytes[0]) {
-		case 'C':
-			SERIALCOM.println("Connect command!");
-			sendConnectReply();
-			break;
-		case 'U':
-			SERIALCOM.println("Update command!");
-			parseUpateCommand();
-			break;
-		case 'R':
-			SERIALCOM.println("Reset command!");
-			resetController();
-			break;
-		default:
-			SERIALCOM.println("NO KNOWN COMMAND!");
-			break;
-	}
-		
-	//if (receivedBytes[0] == 'C') SERIALCOM.println("Connect command!");
-	
-}
+#include "SCComms.h"
 
 void setup() {
   // put your setup code here, to run once:
 	SERIALCOM.begin(BAUDRATE);
 	while (!SERIALCOM) {}
 	SERIALCOM.println("Arduino is ready");
+  char buf[20];
+  itoa(varCount, buf, 10);
+  SERIALCOM.print("varCount is ");SERIALCOM.println(buf);
+  for (char i=0; i<varCount; i++){
+    SERIALCOM.print("varNum: ");
+    SERIALCOM.print(vars[i].number);
+    SERIALCOM.print(" varMod: ");SERIALCOM.print(vars[i].module);
+    SERIALCOM.print(" varIndex: ");SERIALCOM.println(vars[i].index);
+	}
 	
 	
 }
