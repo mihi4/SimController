@@ -64,8 +64,11 @@ common:
 
 #### Connect ####
 <C>
-returns <OK.nameOfController.numberOfVars/bytes.[byte var1][byte var2]...[byte varLast]>
+returns <HI.nameOfController.numberOfVars/bytes.[byte var1][byte var2]...[byte varLast]>
 
+#### Check, if still Here ####
+<H>
+returns <OK>
 
 
 
@@ -74,7 +77,17 @@ returns <OK.nameOfController.numberOfVars/bytes.[byte var1][byte var2]...[byte v
 #define CMDSTART '<'
 #define CMDEND '>'
 
+/* module defines */
+#define VARCHAR     1  
+#define VARSHORT    2
+#define VARINT      4
+#define VARLONG     8
+#define VARSTRING   255
 
+#define MODSERVO     40
+#define MODMM5451    13
+#define MOD7219      30
+#define MODDED       79
 
 
 // INSTRUMENT PANEL light bit order
@@ -113,4 +126,10 @@ returns <OK.nameOfController.numberOfVars/bytes.[byte var1][byte var2]...[byte v
 #define PFDLINE3            20
 #define PFDLINE4            21
 #define PFDLINE5            22
+
+#define VARA	65
+#define VARB	66
+#define VARC	67
+#define VARD	68
+#define VARD	70
 
