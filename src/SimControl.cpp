@@ -30,8 +30,22 @@ char parseSimParameter(char* argv[]) {
 }
  
 std::unique_ptr<DataReader> createDataReader(short selectedSim) {
+    switch (selectedSim) {
+    case BMS:
+        return std::make_unique<BMSReader>();
+        break;
+    case DCS:
+        return std::make_unique<DCSReader>();
+        break;
+    case MSFS:
+        return std::make_unique<MSFSReader>();
+        break;
+    default:
+        return nullptr;
+        break;
+    }
 
-    if (selectedSim == BMS) {
+    /*if (selectedSim == BMS) {
         return std::make_unique<BMSReader>();
     }
     else if (selectedSim == DCS) {
@@ -42,7 +56,7 @@ std::unique_ptr<DataReader> createDataReader(short selectedSim) {
     }
     else {
         return nullptr;
-    }
+    }*/
 }
 
 void setupControllers() {  // cNum is the number of controllers in the eventual config file
