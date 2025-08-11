@@ -57,9 +57,9 @@ void Controller::setDataField(int pos, int value) {
 }
 
 void Controller::addDataField(unsigned char value) {
-
     datafields.push_back(value);
 }
+
 std::vector<unsigned char> Controller::getDatafields() {
     return datafields;
 }
