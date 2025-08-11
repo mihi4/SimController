@@ -57,14 +57,14 @@ void parseUpateCommand() {
 }
 
 void resetController () {  // this function should reset the arduino
-	SERIALCOM.println("resetting Arduino!");
-	delay(200);
-    //asm volatile ("jmp 0x7800");;
+	
+	
+    /*asm volatile ("jmp 0x7800");;
 	do                          
 	{                           
         wdt_enable(WDTO_15MS);  
         for(;;){}               
-	} while(0);
+	} while(0);*/
 }
 
 void parseSerialCommand() {
