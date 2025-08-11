@@ -9,6 +9,14 @@ Controller::Controller(std::string name, std::string comPort, long baudrate = 11
     std::cout << "my contructor, datafieldcount:--" << varCount << "--\n";
 }
 
+Controller::Controller(std::string name, std::string comPort, long baudrate = 115200) {
+    ceSerial serialPort(comPort, baudrate, 8, 'N', 1);
+    controllerName = name;
+    datafields = {}; // new unsigned char[datafieldCount];
+    int varCount = datafields.size();
+    std::cout << "my contructor, datafieldcount:--" << varCount << "--\n";
+}
+
 Controller::Controller() {
     // close serial port  
     std::cout << "standard contructor\n";
@@ -48,6 +56,10 @@ void Controller::setDataField(int pos, int value) {
     datafields[pos] = value;
 }
 
+void Controller::addDataField(unsigned char value) {
+
+    datafields.push_back(value);
+}
 std::vector<unsigned char> Controller::getDatafields() {
     return datafields;
 }
@@ -75,19 +87,26 @@ std::vector<unsigned char> Controller::splitValue(int value, int size) {
     return bytes;
 }
 
-void Controller::buildVarString(int varNum, unsigned char value, std::vector<char>& updateString) {
-    // std::cout << "buildChar. valsize: " << sizeof(value) << " strSize: " << updateString.size() << std::endl;
+void Controller::buildVarStringBegin(int varNum, unsigned char size, std::vector<char>& updateString) {
     updateString.push_back(CMDSTART);
     updateString.push_back(CMDUPDATE);
 
     updateString.push_back(varNum);
-    updateString.push_back(sizeof(value));
-    updateString.push_back(value);
-
+    updateString.push_back(size);
+}
+void Controller::buildVarStringEnd(std::vector<char>& updateString) {
     updateString.push_back(CMDEND);
     updateString.push_back('\0');
 
 }
+
+void Controller::buildVarString(int varNum, unsigned char value, std::vector<char>& updateString) {
+    // std::cout << "buildChar. valsize: " << sizeof(value) << " strSize: " << updateString.size() << std::endl;
+    buildVarStringBegin(varNum, sizeof(value), updateString);
+    updateString.push_back(value);
+    buildVarStringEnd(updateString); 
+}
+
 void Controller::buildVarString(int varNum, unsigned short value, std::vector<char>& updateString) {
     // std::cout << "buildShort. valsize: " << sizeof(value) << " strSize: " << updateString.size() << std::endl;
     updateString.push_back(varNum);
