@@ -76,14 +76,18 @@ returns <OK>
 <E1> 
 WRONG VAR; data variable sent not found in local var list
 
+<E2>
+WRONG COMMAND; command sent from app not recognized
 */
 
 #define ER_WRONGVAR "<E1>"
+#define ER_WRONGCMD "<E2>"
 
 
 #define CMDUPDATE 'U'
 #define CMDSTART '<'
 #define CMDEND '>'
+#define CMDESC 0x1B  // use ESC to escape value 62 ('>') in byte order
 
 /* module defines */
 #define VARCHAR     1  

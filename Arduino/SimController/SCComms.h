@@ -70,9 +70,11 @@ void sendConnectReply(){
 }
 
 void sendReadBackString(String message) {
-    String msg = "<R";
-    msg.concat(message);
-    msg.concat(">");
+    String msg = "";
+    msg.concat(CMDSTART);
+	msg.concat("R");
+	msg.concat(message);
+    msg.concat(CMDEND);
     SERIALCOM.println(msg);
 }
 
@@ -143,16 +145,7 @@ void parseUpateCommand() {
 void resetController () {  // this function should reset the arduino
 	
 	//FIXXXME 
-    sendReadBackString("reset start");
-    char bytes[4] = { 'A', 'B', 'C', 'D' };
-    unsigned long test = longFromBytes(bytes);
-    
-    SERIALCOM.print("testval: ");SERIALCOM.println(test, DEC);
-    
-    
-    sendReadBackString("reset end");
-    
-   
+    sendReadBackString("reset called");
 
    /*asm volatile ("jmp 0x7800");;
 	do                          
@@ -166,23 +159,23 @@ void parseSerialCommand() {
 	if (newData == true) {
 		switch (receivedBytes[0]) {
 			case 'C':
-				SERIALCOM.println("Connect command!");
+				//SERIALCOM.println("Connect command!");
 				sendConnectReply();
 				break;
 			case 'U':
-				SERIALCOM.println("Update command!");
+				//SERIALCOM.println("Update command!");
 				parseUpateCommand();
 				break;
 			case 'R':
-				SERIALCOM.println("Reset command!");
+				//SERIALCOM.println("Reset command!");
 				resetController();
 				break;
 			case 'H':  // check, if Arduino is still present
-				SERIALCOM.println("CheckHere command!");
+				//SERIALCOM.println("CheckHere command!");
 				sendCheckReply();
 				break;             
 			default:
-				SERIALCOM.println("NO KNOWN COMMAND!");
+				SERIALCOM.println(ER_WRONGCMD);
 				break;
 		}    
         newData = false;
@@ -197,29 +190,51 @@ void parseSerialCommand() {
 void ReadSerial() {
 	static boolean recvInProgress = false;
     static byte ndx = 0;
-    char startMarker = '<';
-    char endMarker = '>';
+    char startMarker = CMDSTART;
+    char endMarker = CMDEND;
     byte rb;
    
+    // FIXXXME still to do: implement escape char for '>' (value 62); maybe use ESC (27) for it?
 
+	boolean escapeFound = false;
+	byte escapeBytenum = -2;
+	
     while (SERIALCOM.available() > 0 && newData == false) {
         rb = SERIALCOM.read();
-
+		
         if (recvInProgress) {
             if (rb != endMarker) {
-                receivedBytes[ndx] = rb;
-                ndx++;
+				if (rb == CMDESC) {
+					SERIALCOM.println("escape found");
+					//escapeFound = true;             
+					if (escapeBytenum == (ndx-1)) {
+						SERIALCOM.println("2nd escape found");
+						receivedBytes[escapeBytenum] = rb;
+					} else {
+						escapeBytenum = ndx;
+						SERIALCOM.print("escapeBytenum: ");SERIALCOM.println(escapeBytenum);
+						ndx++;
+					}					
+				} else {
+					receivedBytes[ndx] = rb;
+					ndx++;
+				}
                 if (ndx >= numBytes) {
                     ndx = numBytes - 1;
                 }
             }
             else {
-                receivedBytes[ndx] = '\0'; // terminate the string
-                recvInProgress = false;
-                numReceived = ndx;  // save the number for use when printing
-                ndx = 0;
-                newData = true;
-				
+				if (escapeBytenum == (ndx-1)) {  // was previous byte escaping byte?					
+					receivedBytes[escapeBytenum] = rb;
+				} else {
+					receivedBytes[ndx] = '\0'; // terminate the string
+					recvInProgress = false;
+					numReceived = ndx;  // save the number for use when printing
+					ndx = 0;
+					newData = true;
+				}				
+				//escapeFound = false;
+				escapeBytenum = -2;
             }
         }
         else if (rb == startMarker) {
