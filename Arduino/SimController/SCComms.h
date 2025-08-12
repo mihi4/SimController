@@ -1,5 +1,3 @@
-#define BAUDRATE 115200
-
  #ifdef DUE_NATIVE
     #define SERIALCOM SerialUSB   //enable communication over the native port of the DUE
   #else
@@ -121,34 +119,7 @@ void parseUpateCommand() {
             } else {
                 SERIALCOM.println("default");
             }
-            
-            /*
-            switch (byteCount) {
-                case 4:
-                    SERIALCOM.println("calling ifromBytes");
-                    char bytes[VARINT] = {0};
-                    for (int i=0; i<VARINT; i++) {
-                        bytes[i] = receivedBytes[3+i];
-                    }
-                    dataValue = intFromBytes(bytes);
-                    break;
-                case 1:
-                    SERIALCOM.println("varchar");
-                    dataValue = receivedBytes[3];
-                    break;
-                case 2:
-                    SERIALCOM.println("varshort");
-                    char shortBytes[VARSHORT] = {0};
-                    for (int i=0; i<VARSHORT; i++) {
-                        shortBytes[i] = receivedBytes[3+i];
-                    }
-                    dataValue = shortFromBytes(shortBytes);
-                    break;                
-                default:
-                    SERIALCOM.println("default");
-                    break;
-            } */           
-        
+
             SERIALCOM.print("byteCount: ");SERIALCOM.println(byteCount, DEC);
             SERIALCOM.print("varData - number: ");
             SERIALCOM.print(vars[varIndex].number);SERIALCOM.print(" mod: ");
@@ -158,16 +129,12 @@ void parseUpateCommand() {
             SERIALCOM.print(" value: ");SERIALCOM.print(dataValue, BIN);SERIALCOM.print(",");SERIALCOM.println(dataValue, DEC);
         }
 
-        
-        
-        
-        
 		// Add part to read in bytes, creat the short/int/long and call update in specific module
 		// Maybe store value in a special struct or class array of all values with appropriat module (and additional parameter)
 		
 		
 	} else {
-		SERIALCOM.println("Var not found in List");		
+		SERIALCOM.println(ER_WRONGVAR);  // send error message to pc
 	}
 		
 	return;	
