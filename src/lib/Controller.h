@@ -23,6 +23,10 @@ public:
     void sendDataUpdate(std::vector<char> updateString);
     void updateController(F16Data * data, F16Data * prevData); 
     
+    void setConnected(bool status);
+    bool isConnected();
+
+
 private:
 
     ceSerial serialPort;
@@ -30,6 +34,7 @@ private:
     
     std::string controllerName;
     std::vector<unsigned char> datafields;
+    bool connected = false;
 
     std::vector<unsigned char> splitValue(int value, int size);
 

@@ -64,6 +64,12 @@ std::vector<unsigned char> Controller::getDatafields() {
     return datafields;
 }
 
+
+void Controller::setConnected(bool status) { connected = status; }
+
+bool Controller::isConnected() { return connected; }
+
+
 std::string Controller::getName() { return controllerName;  }
 
 bool Controller::connect()
