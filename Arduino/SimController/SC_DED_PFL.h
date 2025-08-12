@@ -21,7 +21,7 @@
   #define PRE_BOOT_PAUSE 500
   #define POST_BOOT_PAUSE 1500
   #define DED_DRAW_PAUSE 200
-  #define DEDINDEX 40  // index of first datenfeld used
+  #define DEDINDEX 0  // index of first datenfeld used
   #define DIMPIN A1
   
 unsigned long DED_last_comm = millis();
