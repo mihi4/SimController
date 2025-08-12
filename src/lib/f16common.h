@@ -71,8 +71,16 @@ returns <HI.nameOfController.numberOfVars/bytes.[byte var1][byte var2]...[byte v
 returns <OK>
 
 
+*********** ERROR CODES from Arduino **********
+
+<E1>
+WRONG VAR; data variable sent not found in local var list
 
 */
+
+#define ER_WRONGVAR "<E1>"
+
+
 #define CMDUPDATE 'U'
 #define CMDSTART '<'
 #define CMDEND '>'
@@ -80,15 +88,15 @@ returns <OK>
 /* module defines */
 #define VARCHAR     1  
 #define VARSHORT    2
-#define VARINT      4
-#define VARLONG     8
+#define VARINT      2
+#define VARLONG     4   // unsigned long = 8 byte in win, 4 bytes on Arduino!!!
 #define VARSTRING   255
 
+#define MODNONE     255
 #define MODSERVO     40
 #define MODMM5451    13
 #define MOD7219      30
 #define MODDED       79
-
 
 // INSTRUMENT PANEL light bit order
 
@@ -131,5 +139,5 @@ returns <OK>
 #define VARB	66
 #define VARC	67
 #define VARD	68
-#define VARD	70
+
 
