@@ -3,11 +3,11 @@
   //#define LED               //drive LEDs
   //#define LEDMatrix         //drive LED Matrix using a MAX7219 controller
   //#define LCD               //drive LCD display
-  #define LED_MM5451
-  #define SSegMAX7219       //drive 7-Segment displays via MAX7219 controller
+  //#define LED_MM5451
+  //#define SSegMAX7219       //drive 7-Segment displays via MAX7219 controller
   //#define SSegTM1637        //drive 7-Segment displays via TM1367 controller
   //#define SLx2016           //drive 4-digit 5x7 dotmatrix modules
-  #define ServoMotor        //drive servo motors directly connected to the arduino
+  //#define ServoMotor        //drive servo motors directly connected to the arduino
   //#define ServoPWM          //drive multiple servo motors via pwm shield
   //#define StepperBYJ        //drive stepper motor 28BYJ-48
   //#define StepperX27        //drive stepper motor X27.168
@@ -32,11 +32,15 @@
 
 //BASIC SETTINGS
   #define BAUDRATE 115200 // 57600 //    115200       // serial connection speed
-  #define POLLTIME 100           // set time between PULL data requests
-  #define PULLTIMEOUT 30         // set time to wait for a requested data update; default: 30ms
-  //#define PRIORITIZE_OUTPUT    //uncomment this to put a stress on fast update of outputs (should be used for motors to allow smoother movements)
-  //#define PRIORITIZE_INPUT     //uncomment this to put a stress on fast er poll of inputs (switches/Buttons) 
-  //const char ID[]= "RightAuxController"; //Set the ID for this arduino program. Use any string. The program will use this ID to check in with the BMSAIT windows application
+  // #define POLLTIME 100           // set time between PULL data requests
+  // #define PULLTIMEOUT 30         // set time to wait for a requested data update; default: 30ms
+  // #define PRIORITIZE_OUTPUT    //uncomment this to put a stress on fast update of outputs (should be used for motors to allow smoother movements)
+  // #define PRIORITIZE_INPUT     //uncomment this to put a stress on fast er poll of inputs (switches/Buttons) 
+  // const char ID[]= "RightAuxController"; //Set the ID for this arduino program. Use any string. The program will use this ID to check in with the BMSAIT windows application
+  
+static const char scName[] = "RightAux";
+int scNameSize = sizeof(scName)/sizeof(scName[0]);  
+  
   
   /* var format:
   VarName, VarBytes, Module, Index of Value in module (255 if not needed)

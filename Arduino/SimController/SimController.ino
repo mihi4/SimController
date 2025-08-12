@@ -15,14 +15,21 @@ void parseSerialCommand();
 void outputVar(char varIndex, unsigned long value);
 
 // global vars
-static const char scName[] = "RightAux";
-int scNameSize = sizeof(scName)/sizeof(scName[0]);
+
 
 #include "SC_UserConfig.h"
 #include "SCComms.h"
 
-#include "SC_DED_PFL.h"
-//#include "SC_LED_MM5451.h"
+#ifdef DED_PFS
+	#include "SC_DED_PFL.h"
+#endif
+#ifdef LED_MM5451
+	#include "SC_LED_MM5451.h"
+#endif
+#ifdef SSegMAX7219
+	#include "SC_SSegMAX7219.h"
+#endif
+
 
 void outputVar(char varIndex, unsigned long value) {
     switch (vars[varIndex].module) {
