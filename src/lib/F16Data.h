@@ -36,7 +36,7 @@ public:
 
 	// ---- FQTI ----
 	unsigned short fuelFWD = 0;  // 0..4200
-	unsigned short fuelAFT = 0;  // 0..00
+	unsigned short fuelAFT = 0;  // 0..4200
 	unsigned char fuelTotal = 0; // 0...255, in hundreds of pounds, 22 = 2200 total fuel
 
 	// ---- HYD PRESS ----
