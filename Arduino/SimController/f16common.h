@@ -80,8 +80,8 @@ returns <OK>
 /* module defines */
 #define VARCHAR     1  
 #define VARSHORT    2
-#define VARINT      4
-#define VARLONG     8
+#define VARINT      2
+#define VARLONG     4   // unsigned long = 8 byte in win, 4 bytes on Arduino!!!
 #define VARSTRING   255
 
 #define MODSERVO     40
