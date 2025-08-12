@@ -12,6 +12,7 @@ typedef struct {
 
 // function definitions
 void parseSerialCommand();
+void outputVar(char varIndex, unsigned long value);
 
 // global vars
 static const char scName[] = "RightAux";
@@ -23,13 +24,33 @@ int scNameSize = sizeof(scName)/sizeof(scName[0]);
 f16var vars[] = { 
     {VARA, MODSERVO, 0, VARCHAR}, 
     {VARB, MODSERVO, 1, VARSHORT}, 
-    {VARC, MODMM5451, 0, VARINT},
+    {VARC, MODMM5451, 0, VARLONG},
     {VARD, MODDED, 255, VARSTRING }
 };
 const char varCount = sizeof(vars)/sizeof(vars[0]);
 
+//char DEDLines[] = { char[25], char[25], char[25], char[25], char[25] };
+
+
 //#include "SCSerial.h"
 #include "SCComms.h"
+
+void outputVar(char varIndex, unsigned long value) {
+    switch (vars[varIndex].module) {
+        case MODSERVO:
+            
+            
+            break;
+        case MODMM5451:
+        
+        
+            break;                
+    }
+    
+}
+
+void outputDEDLine
+
 
 void setup() {
   // put your setup code here, to run once:

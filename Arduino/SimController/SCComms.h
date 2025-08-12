@@ -15,15 +15,21 @@ byte numReceived = 0;
 boolean newData = false;
 
 unsigned short shortFromBytes(char bytes[2]) {
+     SERIALCOM.println("shortFromBytes");
     return (bytes[0] << 8) | bytes[1];
 }
 
-unsigned int intFromBytes(char bytes[4]) {
-
-}
-
-unsigned long longFromBytes(char bytes[8]) {
-
+unsigned long longFromBytes(char bytes[4]) {     
+    for (int i=0; i<4; i++) {
+        SERIALCOM.print(bytes[i], HEX);SERIALCOM.print(" ");
+    }
+    SERIALCOM.println();
+    unsigned long retVal = ((unsigned long) bytes[0] << 24)
+                        | ((unsigned long) bytes[1] << 16)
+                        | ((unsigned long) bytes[2] << 8)
+                        | (unsigned long) bytes[3];    
+    SERIALCOM.print("retVal: ");SERIALCOM.println(retVal, DEC);
+    return retVal;
 }
 
 
@@ -65,6 +71,13 @@ void sendConnectReply(){
 	SERIALCOM.println(buf);	*/
 }
 
+void sendReadBackString(String message) {
+    String msg = "<R";
+    msg.concat(message);
+    msg.concat(">");
+    SERIALCOM.println(msg);
+}
+
 void sendCheckReply(){
 		
 	SERIALCOM.println("<OK>");	
@@ -73,16 +86,81 @@ void sendCheckReply(){
 void parseUpateCommand() {
 	char varNumber = receivedBytes[1];
 	
-	bool checkVarNum = false;
+	char varIndex = -1;
 	for (char i = 0; i<varCount; i++) {
-		if (vars[i].number == varNumber) checkVarNum = true;
+		if (vars[i].number == varNumber) varIndex = i;
 	}
-	if (checkVarNum) {
+	if (varIndex > -1) {
 		SERIALCOM.println("Var found");
 		char byteCount = receivedBytes[2];
+        
+        //FIXXXME 
+        byteCount = vars[varIndex].type;        
+        
+        if (byteCount == vars[varIndex].type) {  // type = number of bytes, except VARSTRING
+            
+            unsigned long dataValue = 0;
+            SERIALCOM.println(dataValue);
+            if (byteCount == VARCHAR) {
+                SERIALCOM.println("varchar");
+                dataValue = receivedBytes[3];
+            } else if (byteCount == VARSHORT) {
+                SERIALCOM.println("varshort");
+                char shortBytes[VARSHORT] = {0};
+                for (int i=0; i<VARSHORT; i++) {
+                    shortBytes[i] = receivedBytes[3+i];
+                }
+                dataValue = shortFromBytes(shortBytes);
+            } else if (byteCount == VARLONG) {
+                SERIALCOM.println("calling longfromBytes");
+                char bytes[VARINT] = {0};
+                for (int i=0; i<VARLONG; i++) {
+                    bytes[i] = receivedBytes[3+i];
+                }
+                dataValue = longFromBytes(bytes);
+            } else {
+                SERIALCOM.println("default");
+            }
+            
+            /*
+            switch (byteCount) {
+                case 4:
+                    SERIALCOM.println("calling ifromBytes");
+                    char bytes[VARINT] = {0};
+                    for (int i=0; i<VARINT; i++) {
+                        bytes[i] = receivedBytes[3+i];
+                    }
+                    dataValue = intFromBytes(bytes);
+                    break;
+                case 1:
+                    SERIALCOM.println("varchar");
+                    dataValue = receivedBytes[3];
+                    break;
+                case 2:
+                    SERIALCOM.println("varshort");
+                    char shortBytes[VARSHORT] = {0};
+                    for (int i=0; i<VARSHORT; i++) {
+                        shortBytes[i] = receivedBytes[3+i];
+                    }
+                    dataValue = shortFromBytes(shortBytes);
+                    break;                
+                default:
+                    SERIALCOM.println("default");
+                    break;
+            } */           
+        
+            SERIALCOM.print("byteCount: ");SERIALCOM.println(byteCount, DEC);
+            SERIALCOM.print("varData - number: ");
+            SERIALCOM.print(vars[varIndex].number);SERIALCOM.print(" mod: ");
+            SERIALCOM.print(vars[varIndex].module);SERIALCOM.print(" index: ");
+            SERIALCOM.print(vars[varIndex].index);SERIALCOM.print(" type: ");
+            SERIALCOM.println(vars[varIndex].type);
+            SERIALCOM.print(" value: ");SERIALCOM.print(dataValue, BIN);SERIALCOM.print(",");SERIALCOM.println(dataValue, DEC);
+        }
 
-        SERIALCOM.print("byteCount: ");SERIALCOM.println(byteCount, DEC);
-		if ((char)byteCount>5) SERIALCOM.println("too many vars");
+        
+        
+        
         
 		// Add part to read in bytes, creat the short/int/long and call update in specific module
 		// Maybe store value in a special struct or class array of all values with appropriat module (and additional parameter)
@@ -97,8 +175,19 @@ void parseUpateCommand() {
 
 void resetController () {  // this function should reset the arduino
 	
-	
-    /*asm volatile ("jmp 0x7800");;
+	//FIXXXME 
+    sendReadBackString("reset start");
+    char bytes[4] = { 'A', 'B', 'C', 'D' };
+    unsigned long test = longFromBytes(bytes);
+    
+    SERIALCOM.print("testval: ");SERIALCOM.println(test, DEC);
+    
+    
+    sendReadBackString("reset end");
+    
+   
+
+   /*asm volatile ("jmp 0x7800");;
 	do                          
 	{                           
         wdt_enable(WDTO_15MS);  
