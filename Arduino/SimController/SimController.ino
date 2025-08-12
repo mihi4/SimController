@@ -44,16 +44,17 @@ void setup() {
   // put your setup code here, to run once:
 	SERIALCOM.begin(BAUDRATE);
 	while (!SERIALCOM) {}
+	delay(500);
 	SERIALCOM.println("Arduino is ready");
-  /* char buf[20];
-  itoa(varCount, buf, 10);
-  SERIALCOM.print("varCount is ");SERIALCOM.println(buf);
-  for (char i=0; i<varCount; i++){
-    SERIALCOM.print("varNum: ");
-    SERIALCOM.print(vars[i].number);
-    SERIALCOM.print(" varMod: ");SERIALCOM.print(vars[i].module);
-    SERIALCOM.print(" varIndex: ");SERIALCOM.println(vars[i].index);
-	}*/
+
+
+	SERIALCOM.print("varCount is ");SERIALCOM.println(varCount, DEC);
+	for (char i=0; i<varCount; i++){
+		SERIALCOM.print("varNum: ");
+		SERIALCOM.print(vars[i].number);
+		SERIALCOM.print(" varMod: ");SERIALCOM.print(vars[i].module);
+		SERIALCOM.print(" varIndex: ");SERIALCOM.println(vars[i].index);
+	}
 	
 	
 }
