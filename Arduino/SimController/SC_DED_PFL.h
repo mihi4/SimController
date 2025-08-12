@@ -87,8 +87,8 @@ void ReadDED()
             {delay(1);}
           if (SERIALCOM.available()>=24)
           {
-            SERIALCOM.readBytes(datenfeld[i2-48+2].wert,24);
-            datenfeld[i2-48+2].wert[24]='\0';
+            SERIALCOM.readBytes(DEDLines[i2-48+2],24);
+            DEDLines[i2-48+2][24]='\0';
             treffer++;
           }
           else
@@ -131,7 +131,7 @@ void ClearDED()
   char emptyLine[]="                        ";
   for (byte linie=DEDINDEX;linie<DEDINDEX+5;linie++)
   {
-    memmove(datenfeld[linie].wert,emptyLine,sizeof(emptyLine));
+    memmove(DEDLines[linie],emptyLine,sizeof(emptyLine));
   }
 //SendMessage("ClearDED end",1);
 //debugTime('a');
@@ -150,7 +150,7 @@ void RealDED()
 
       for (byte line = 0; line < 5; line++)
       {
-        displayDED.drawStr(DED_H_CONST, line * DED_CHAR_H + DED_V_CONST, datenfeld[line+DEDINDEX].wert);
+        displayDED.drawStr(DED_H_CONST, line * DED_CHAR_H + DED_V_CONST, DEDLines[line+DEDINDEX]);
       }
     #if defined(DUE) || defined(DUE_NATIVE) //|| defined(MEGA)
       displayDED.sendBuffer(); //strong arduinos: command for full buffered mode
@@ -257,9 +257,9 @@ void UpdateDED()
   }
   */
   
-  /*if (datenfeld[0].wert[0]!='T')  //PC is not in 3D
+  /*if (DEDLines[0][0]!='T')  //PC is not in 3D
   { SendMessage("2D",1); DrawDED(false);}          //show testscreen
-  else if (datenfeld[1].wert[0]!='T')
+  else if (DEDLines[1][0]!='T')
   {
     ClearDED();               //PC is in 3D, Avionics are off
     DrawDED(true);
