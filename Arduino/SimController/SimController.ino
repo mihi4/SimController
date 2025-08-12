@@ -23,8 +23,8 @@ int scNameSize = sizeof(scName)/sizeof(scName[0]);
 f16var vars[] = { 
     {VARA, MODSERVO, 0, VARSHORT}, 
     {VARB, MODSERVO, 1, VARSHORT}, 
-    {VARC, MODMM5451, 255, VARLONG},
-    {VARD, MOD7219, 3, VARINT }
+    {VARC, MODMM5451, 0, VARINT},
+    {VARD, MODDED, 255, VARSTRING }
 };
 const char varCount = sizeof(vars)/sizeof(vars[0]);
 
