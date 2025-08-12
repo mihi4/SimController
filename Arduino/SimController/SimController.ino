@@ -18,39 +18,20 @@ void outputVar(char varIndex, unsigned long value);
 static const char scName[] = "RightAux";
 int scNameSize = sizeof(scName)/sizeof(scName[0]);
 
-/* var format:
-  VarName, VarBytes, Module, Index of Value in module (255 if not needed)
-*/
-f16var vars[] = { 
-    {VARA, MODSERVO, 0, VARCHAR}, 
-    {VARB, MODSERVO, 1, VARSHORT}, 
-    {VARC, MODMM5451, 0, VARLONG},
-    {VARD, MODDED, 255, VARSTRING }
-};
-const char varCount = sizeof(vars)/sizeof(vars[0]);
-
-//char DEDLines[] = { char[25], char[25], char[25], char[25], char[25] };
-
-
-//#include "SCSerial.h"
+#include "SC_UserConfig.h"
 #include "SCComms.h"
+
+#include "SC_DED_PFL.h"
+//#include "SC_LED_MM5451.h"
 
 void outputVar(char varIndex, unsigned long value) {
     switch (vars[varIndex].module) {
         case MODSERVO:
-            
-            
             break;
         case MODMM5451:
-        
-        
             break;                
-    }
-    
+    }    
 }
-
-void outputDEDLine
-
 
 void setup() {
   // put your setup code here, to run once:

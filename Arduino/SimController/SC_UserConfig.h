@@ -1,7 +1,3 @@
-// Version: 1.3.12    18.4.25
-
-
-
 //MODULE SELECTION - uncomment the modules you want to use.
    
   //#define LED               //drive LEDs
@@ -40,8 +36,25 @@
   #define PULLTIMEOUT 30         // set time to wait for a requested data update; default: 30ms
   //#define PRIORITIZE_OUTPUT    //uncomment this to put a stress on fast update of outputs (should be used for motors to allow smoother movements)
   //#define PRIORITIZE_INPUT     //uncomment this to put a stress on fast er poll of inputs (switches/Buttons) 
-  const char ID[]= "RightAuxController"; //Set the ID for this arduino program. Use any string. The program will use this ID to check in with the BMSAIT windows application
+  //const char ID[]= "RightAuxController"; //Set the ID for this arduino program. Use any string. The program will use this ID to check in with the BMSAIT windows application
+  
+  /* var format:
+  VarName, VarBytes, Module, Index of Value in module (255 if not needed)
+*/
+f16var vars[] = { 
+    {VARA, MODSERVO, 0, VARCHAR}, 
+    {VARB, MODSERVO, 1, VARSHORT}, 
+    {VARC, MODMM5451, 0, VARLONG},
+    {VARD, MODDED, 255, VARSTRING }
+};
+const char varCount = sizeof(vars)/sizeof(vars[0]);
 
+
+#ifdef DED_PFL
+    char DEDLines[5][25];
+#endif
+
+  
   
 //BOARD SELECTION
 
@@ -69,7 +82,7 @@
   // 8  Reference4 - i.e. start position (control position of data on 7-segment or LCD displays) 
   // 9. Reference5 - i.e. decimal point (will add a decimal point on 7-segment displays after the given position)
   // 10. Initial value as string (i.e. "00")
-  
+ /** 
   
   Datenfeld datenfeld[]=
     {
@@ -122,6 +135,6 @@
 	  ,{"DED2",   "0232", 's',  79,   0,  "",  ".2"}          //Variable 3 - DED Line 2
 	  ,{"DED3",   "0233", 's',  79,   0,  "",  ".3"}          //Variable 4 - DED Line 3
 	  ,{"DED4",   "0234", 's',  79,   0,  "",  ".4"}          //Variable 5 - DED Line 4
- 	  ,{"DED5",   "0235", 's',  79,   0,  "",  ".5"}          //Variable 6 - DED Line 5  */
+ 	  ,{"DED5",   "0235", 's',  79,   0,  "",  ".5"}          //Variable 6 - DED Line 5  
    }; 
-  const byte variableCount = sizeof(datenfeld)/sizeof(datenfeld[0]); 
+  const byte variableCount = sizeof(datenfeld)/sizeof(datenfeld[0]); */
