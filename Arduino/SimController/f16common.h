@@ -87,7 +87,7 @@ WRONG COMMAND; command sent from app not recognized
 #define CMDUPDATE 'U'
 #define CMDSTART '<'
 #define CMDEND '>'
-#define CMDESC 0x1B  // use ESC to escape value 62 ('>') in byte order
+#define CMDESC 0x1B  // use ESC (dec 27) to escape value 62 ('>') and itself in byte order
 
 /* module defines */
 #define VARCHAR     1  
