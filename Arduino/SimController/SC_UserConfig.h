@@ -43,13 +43,14 @@ int scNameSize = sizeof(scName)/sizeof(scName[0]);
   
   
   /* var format:
-  VarName, VarBytes, Module, Index of Value in module (255 if not needed)
+  VarName, VarBytes, Module, Index of Value in module (255 if not needed), value
 */
 f16var* vars[] = { 
-    new f16varC(VARA, MODSERVO, 0, VARCHAR, 0), 
-    new f16varI(VARB, MODSERVO, 1, VARINT, 0), 
-    new f16varL(VARC, MODMM5451, 0, VARLONG, 0),
-    new f16varS(VARD, MODDED, 255, VARSTRING, "Hello, World" )
+    new f16varC(POWERSTATES, MODNONE, 0, 5)
+  ,  new f16varI(FUELFWD, MODSERVO, 0, 1000)
+  ,  new f16varI(FUELAFT, MODSERVO, 1, 1001)
+  ,  new f16varL(CAUTIONPANELLIGHTS, MODMM5451, 0, 0)
+  ,  new f16varS(PFDLINE1, MODDED, 255, "Hello, World" )
 };
 const char varCount = sizeof(vars)/sizeof(vars[0]);
 
