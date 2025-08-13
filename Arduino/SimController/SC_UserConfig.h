@@ -45,11 +45,11 @@ int scNameSize = sizeof(scName)/sizeof(scName[0]);
   /* var format:
   VarName, VarBytes, Module, Index of Value in module (255 if not needed)
 */
-f16var vars[] = { 
-    {VARA, MODSERVO, 0, VARCHAR}, 
-    {VARB, MODSERVO, 1, VARSHORT}, 
-    {VARC, MODMM5451, 0, VARLONG},
-    {VARD, MODDED, 255, VARSTRING }
+f16var* vars[] = { 
+    new f16varC(VARA, MODSERVO, 0, VARCHAR, 0), 
+    new f16varI(VARB, MODSERVO, 1, VARINT, 0), 
+    new f16varL(VARC, MODMM5451, 0, VARLONG, 0),
+    new f16varS(VARD, MODDED, 255, VARSTRING, "Hello, World" )
 };
 const char varCount = sizeof(vars)/sizeof(vars[0]);
 
@@ -70,7 +70,14 @@ const char varCount = sizeof(vars)/sizeof(vars[0]);
   //#define DUE         //uncomment this if this sketch will be loaded on an DUE (connected via programming port)
   //#define DUE_NATIVE  //uncomment this if this sketch will be loaded on an DUE (connected via native port)
   //#define ESP         //uncomment this if this sketch will be loaded on an ESP32 or ESP8622
-  
+
+
+ #ifdef DUE_NATIVE
+    #define SERIALCOM SerialUSB   //enable communication over the native port of the DUE
+  #else
+    #define SERIALCOM Serial      //standard serial connection
+  #endif
+
 //DATA VARIABLES
   
   // This is the most important part of this sketch. You need to set the data that the Arduino will have to handle

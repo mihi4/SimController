@@ -123,12 +123,12 @@ void parseUpateCommand() {
             }
 
             SERIALCOM.print("byteCount: ");SERIALCOM.println(byteCount, DEC);
-            SERIALCOM.print("varData - number: ");
+            /*SERIALCOM.print("varData - number: ");
             SERIALCOM.print(vars[varIndex].number);SERIALCOM.print(" mod: ");
             SERIALCOM.print(vars[varIndex].module);SERIALCOM.print(" index: ");
             SERIALCOM.print(vars[varIndex].index);SERIALCOM.print(" type: ");
             SERIALCOM.println(vars[varIndex].type);
-            SERIALCOM.print(" value: ");SERIALCOM.print(dataValue, BIN);SERIALCOM.print(",");SERIALCOM.println(dataValue, DEC);
+            SERIALCOM.print(" value: ");SERIALCOM.print(dataValue, BIN);SERIALCOM.print(",");SERIALCOM.println(dataValue, DEC); */
         }
 
 		// Add part to read in bytes, creat the short/int/long and call update in specific module
