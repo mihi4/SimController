@@ -23,6 +23,7 @@
   #define DED_DRAW_PAUSE 200
   #define DEDINDEX 0  // index of first datenfeld used
   #define DIMPIN A1
+  #define DEDUPATEINTERVALL 330 
   
 unsigned long DED_last_comm = millis();
 unsigned long startRequest = 0;
