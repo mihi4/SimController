@@ -6,40 +6,42 @@
 
 // Example 6 - Receiving binary data
 
-const byte numBytes = 32;
+const byte numBytes = 50;
 byte receivedBytes[numBytes];
 byte numReceived = 0;
 
 boolean newData = false;
 
-unsigned short shortFromBytes(char bytes[2]) {
-     SERIALCOM.println("shortFromBytes");
+unsigned short shortFromBytes(unsigned char bytes[2]) {     
     return (bytes[0] << 8) | bytes[1];
 }
 
-unsigned long longFromBytes(char bytes[4]) {     
-    for (int i=0; i<4; i++) {
-        SERIALCOM.print(bytes[i], HEX);SERIALCOM.print(" ");
-    }
+unsigned long longFromBytes(unsigned char bytes[4]) {         
     SERIALCOM.println();
     unsigned long retVal = ((unsigned long) bytes[0] << 24)
                         | ((unsigned long) bytes[1] << 16)
                         | ((unsigned long) bytes[2] << 8)
                         | (unsigned long) bytes[3];    
-    SERIALCOM.print("retVal: ");SERIALCOM.println(retVal, DEC);
+    //SERIALCOM.print("retVal: ");SERIALCOM.println(retVal, DEC);
     return retVal;
 }
 
 
 void showNewData() {
     if (newData == true) {
-        SERIALCOM.print("This just in (HEX values)... ");
+        SERIALCOM.print("HEX values: ");
         for (byte n = 0; n < numReceived; n++) {
             SERIALCOM.print(receivedBytes[n], HEX);
             SERIALCOM.print(' ');
         }
         SERIALCOM.println();
-        newData = false;
+        SERIALCOM.print("DEC values: ");
+        for (byte n = 0; n < numReceived; n++) {
+            SERIALCOM.print(receivedBytes[n], DEC);
+            SERIALCOM.print(' ');
+        }
+        SERIALCOM.println();
+        //newData = false;
     }
 }
 
@@ -52,7 +54,7 @@ void sendConnectReply(){
 	SERIALCOM.print(".");	
 	SERIALCOM.print(varCount);
 	for (char i=0; i<varCount; i++) {
-		SERIALCOM.print((char)vars[i].number);	
+		SERIALCOM.print((char)vars[i]->number);	
 	}
 	SERIALCOM.println(CMDEND);
 	/*char buf[50] = { CMDSTART, 'H', 'I', '.' };
@@ -79,61 +81,95 @@ void sendReadBackString(String message) {
 }
 
 void sendCheckReply(){
-		
-	SERIALCOM.println("<OK>");	
+	SERIALCOM.print(CMDSTART);	
+	SERIALCOM.print("OK");	
+  SERIALCOM.println(CMDEND);	
 }
 
 void parseUpateCommand() {
-	char varNumber = receivedBytes[1];
+	
+  String msg = "";  // string for readback messages
+  
+  char varNumber = receivedBytes[1];
 	
 	char varIndex = -1;
+  
 	for (char i = 0; i<varCount; i++) {
-		if (vars[i].number == varNumber) varIndex = i;
+    // SERIALCOM.print("varNumber: ");SERIALCOM.println(vars[i]->number, DEC);
+		if (vars[i]->number == varNumber) varIndex = i;
 	}
 	if (varIndex > -1) {
-		SERIALCOM.println("Var found");
+		//SERIALCOM.println("Var found");
+    
 		char byteCount = receivedBytes[2];
-        
-        //FIXXXME 
-        byteCount = vars[varIndex].type;        
-        
-        if (byteCount == vars[varIndex].type) {  // type = number of bytes, except VARSTRING
-            
-            unsigned long dataValue = 0;
-            SERIALCOM.println(dataValue);
-            if (byteCount == VARCHAR) {
-                SERIALCOM.println("varchar");
-                dataValue = receivedBytes[3];
-            } else if (byteCount == VARSHORT) {
-                SERIALCOM.println("varshort");
-                char shortBytes[VARSHORT] = {0};
-                for (int i=0; i<VARSHORT; i++) {
-                    shortBytes[i] = receivedBytes[3+i];
-                }
-                dataValue = shortFromBytes(shortBytes);
-            } else if (byteCount == VARLONG) {
-                SERIALCOM.println("calling longfromBytes");
-                char bytes[VARINT] = {0};
-                for (int i=0; i<VARLONG; i++) {
-                    bytes[i] = receivedBytes[3+i];
-                }
-                dataValue = longFromBytes(bytes);
-            } else {
-                SERIALCOM.println("default");
-            }
+		char typeNum = vars[varIndex]->type;
+		char typeConverted=power(2,typeNum);
+    
+    SERIALCOM.print("byteCount: ");SERIALCOM.println(byteCount, DEC);
+    SERIALCOM.print("typeNum: ");SERIALCOM.println(typeNum, DEC);
+    SERIALCOM.print("typeConv: ");SERIALCOM.println(typeConverted, DEC);
 
-            SERIALCOM.print("byteCount: ");SERIALCOM.println(byteCount, DEC);
-            /*SERIALCOM.print("varData - number: ");
-            SERIALCOM.print(vars[varIndex].number);SERIALCOM.print(" mod: ");
-            SERIALCOM.print(vars[varIndex].module);SERIALCOM.print(" index: ");
-            SERIALCOM.print(vars[varIndex].index);SERIALCOM.print(" type: ");
-            SERIALCOM.println(vars[varIndex].type);
-            SERIALCOM.print(" value: ");SERIALCOM.print(dataValue, BIN);SERIALCOM.print(",");SERIALCOM.println(dataValue, DEC); */
+    if (typeNum == f16var::STRING) {
+      sendReadBackString("StringVariable incoming");
+      SERIALCOM.print("byteCount: ");SERIALCOM.println(byteCount, DEC);
+      String newValue = "";
+      for (int i=0; i<byteCount; i++) {
+        newValue.concat((char)receivedBytes[3+i]);
+      }
+      *vars[varIndex]->value.valString = newValue;  // String values have to be called on pointers
+      varsChanged = true;
+      return;
+    }
+
+
+    if (byteCount == typeConverted) {  // type = CHAR,INT,LONG,STRING = 0,1,2,3 from f16var enum Type
+
+      unsigned long dataValue = 0;
+      
+      if (byteCount == VARCHAR) {                
+          dataValue = receivedBytes[3];
+          vars[varIndex]->value.valC = (unsigned char)dataValue;
+          varsChanged = true;
+      } 
+      else if (byteCount == VARSHORT) {
+        //SERIALCOM.println("varshort");
+        unsigned char shortBytes[VARSHORT] = {0};
+          
+        for (int i=0; i<VARSHORT; i++) {
+              shortBytes[i] = receivedBytes[3+i];
         }
+        dataValue = shortFromBytes(shortBytes);
+        vars[varIndex]->value.valI = (unsigned int)dataValue;
+        
+        varsChanged = true;
+        
+      } 
+      else if (byteCount == VARLONG) {
+         
+        unsigned char bytes[VARLONG] = {0};
+       
+        for (int i=0; i<VARLONG; i++) {
+            bytes[i] = receivedBytes[3+i];       
+        }           
+        dataValue = longFromBytes(bytes);
+        vars[varIndex]->value.valL = dataValue;
+        
+        varsChanged = true;
+        
+      } else {
+          SERIALCOM.println("default");
+      }
 
-		// Add part to read in bytes, creat the short/int/long and call update in specific module
-		// Maybe store value in a special struct or class array of all values with appropriat module (and additional parameter)
-		
+        /*SERIALCOM.print("varData - number: ");
+        SERIALCOM.print(vars[varIndex].number);SERIALCOM.print(" mod: ");
+        SERIALCOM.print(vars[varIndex].module);SERIALCOM.print(" index: ");
+        SERIALCOM.print(vars[varIndex].index);SERIALCOM.print(" type: ");
+        SERIALCOM.println(vars[varIndex].type);
+        SERIALCOM.print(" value: ");SERIALCOM.print(dataValue, BIN);SERIALCOM.print(",");SERIALCOM.println(dataValue, DEC); */
+    }
+
+
+
 		
 	} else {
 		SERIALCOM.println(ER_WRONGVAR);  // send error message to pc
@@ -157,6 +193,12 @@ void resetController () {  // this function should reset the arduino
 
 void parseSerialCommand() {
 	if (newData == true) {
+    
+    SERIALCOM.print("received Bytes: ");SERIALCOM.println(numReceived, DEC);
+    for (int i=0;i<numReceived;i++) {
+      SERIALCOM.print(receivedBytes[i], HEX);SERIALCOM.print("-");
+    }
+    SERIALCOM.println();
 		switch (receivedBytes[0]) {
 			case 'C':
 				//SERIALCOM.println("Connect command!");
@@ -189,57 +231,72 @@ void parseSerialCommand() {
 
 void ReadSerial() {
 	static boolean recvInProgress = false;
-    static byte ndx = 0;
-    char startMarker = CMDSTART;
-    char endMarker = CMDEND;
-    byte rb;
-   
-    // FIXXXME still to do: implement escape char for '>' (value 62); maybe use ESC (27) for it?
+  static byte ndx = 0;
+  char startMarker = CMDSTART;
+  char endMarker = CMDEND;
+  byte rb;
 
-	boolean escapeFound = false;
-	byte escapeBytenum = -2;
-	
-    while (SERIALCOM.available() > 0 && newData == false) {
-        rb = SERIALCOM.read();
-		
-        if (recvInProgress) {
-            if (rb != endMarker) {
-				if (rb == CMDESC) {
-					SERIALCOM.println("escape found");
-					//escapeFound = true;             
-					if (escapeBytenum == (ndx-1)) {
-						SERIALCOM.println("2nd escape found");
-						receivedBytes[escapeBytenum] = rb;
-					} else {
-						escapeBytenum = ndx;
-						SERIALCOM.print("escapeBytenum: ");SERIALCOM.println(escapeBytenum);
-						ndx++;
-					}					
-				} else {
-					receivedBytes[ndx] = rb;
-					ndx++;
-				}
-                if (ndx >= numBytes) {
-                    ndx = numBytes - 1;
-                }
-            }
-            else {
-				if (escapeBytenum == (ndx-1)) {  // was previous byte escaping byte?					
-					receivedBytes[escapeBytenum] = rb;
-				} else {
-					receivedBytes[ndx] = '\0'; // terminate the string
-					recvInProgress = false;
-					numReceived = ndx;  // save the number for use when printing
-					ndx = 0;
-					newData = true;
-				}				
-				//escapeFound = false;
-				escapeBytenum = -2;
-            }
+	byte escapeBytenum = -2;  // escape "counter", shows the index, where escape character (dec 27, hex 0x1B) was found; -1 is bad, sind index 0-1 is -1 :-D
+  
+  
+
+  // debugging part for the algorithm
+  /*
+  char input[] = { '<', 'U', 10, 2, 100, 52, '>'};
+  const int size = sizeof(input)/sizeof(input[0]);
+  SERIALCOM.print("size: ");SERIALCOM.println(size, DEC);
+  for (int i=0; i<size; i++) {
+    rb = input[i]; */
+    
+  while (SERIALCOM.available() > 0 && newData == false) {
+    rb = SERIALCOM.read();
+    
+    
+    if (recvInProgress) {
+      if (rb != endMarker) {
+        if (rb == CMDESC) {
+          //SERIALCOM.print("escape found, ndx=");SERIALCOM.println(ndx, DEC);
+          //msg.concat("esc1.");
+           
+          if (escapeBytenum == (ndx-1)) {
+            //SERIALCOM.print("2nd escape found, escBytenum=");SERIALCOM.println(escapeBytenum, DEC);
+            //msg.concat("esc2.");
+            receivedBytes[escapeBytenum] = rb;
+            escapeBytenum = -2; // reset escape "counter"
+          } else {
+            escapeBytenum = ndx;
+            //SERIALCOM.print("escapeBytenum: ");SERIALCOM.println(escapeBytenum);
+            ndx++;
+          }					
+        } else {
+          receivedBytes[ndx] = rb;
+          ndx++;
         }
-        else if (rb == startMarker) {
-            recvInProgress = true;
+        if (ndx >= numBytes) {
+            ndx = numBytes - 1;
         }
+      }
+      else {
+        //SERIALCOM.println("endmarker found");
+        if (escapeBytenum == (ndx-1)) {  // was previous byte escaping byte?	
+          //SERIALCOM.println("prev byte was escape, setting prev index to rb");
+          receivedBytes[escapeBytenum] = rb;
+        } else {
+          //SERIALCOM.println("final delimiter found");
+          receivedBytes[ndx] = '\0'; // terminate the string
+          recvInProgress = false;
+          numReceived = ndx;  // save the number for use when printing
+          ndx = 0;
+          newData = true;
+        }				
+        escapeBytenum = -2;
+      }
+    } else if (rb == startMarker) {
+        recvInProgress = true;
+        numReceived = 0;
     }
+  }
+
+
 }	
 
