@@ -9,8 +9,9 @@
 const byte numBytes = 50;
 byte receivedBytes[numBytes];
 byte numReceived = 0;
-
 boolean newData = false;
+const byte msgLen = 50;
+char rbMsg[msgLen] = ""; // readBackMessage buffer
 
 unsigned short shortFromBytes(unsigned char bytes[2]) {     
     return (bytes[0] << 8) | bytes[1];
@@ -71,11 +72,11 @@ void sendConnectReply(){
 	SERIALCOM.println(buf);	*/
 }
 
-void sendReadBackString(String message) {
+void sendReadBackString(char message[msgLen]) {
     String msg = "";
     msg.concat(CMDSTART);
-	msg.concat("R");
-	msg.concat(message);
+    msg.concat("R");
+    msg.concat(message);
     msg.concat(CMDEND);
     SERIALCOM.println(msg);
 }
@@ -87,9 +88,7 @@ void sendCheckReply(){
 }
 
 void parseUpateCommand() {
-	
-  String msg = "";  // string for readback messages
-  
+	  
   char varNumber = receivedBytes[1];
 	
 	char varIndex = -1;
@@ -103,15 +102,14 @@ void parseUpateCommand() {
     
 		char byteCount = receivedBytes[2];
 		char typeNum = vars[varIndex]->type;
-		char typeConverted=power(2,typeNum);
+		char typeConverted=power(2,typeNum); // use enum 0,1,2,3 from f16var as exponent, so it corresponds with VARCHAR, VARSHORT and VARLONG
     
-    SERIALCOM.print("byteCount: ");SERIALCOM.println(byteCount, DEC);
-    SERIALCOM.print("typeNum: ");SERIALCOM.println(typeNum, DEC);
-    SERIALCOM.print("typeConv: ");SERIALCOM.println(typeConverted, DEC);
+    sprintf(rbMsg, "byteCount: %u, typeNum: %u, typeConverted: %u", byteCount, typeNum, typeConverted);
+    sendReadBackString(rbMsg);
 
     if (typeNum == f16var::STRING) {
-      sendReadBackString("StringVariable incoming");
-      SERIALCOM.print("byteCount: ");SERIALCOM.println(byteCount, DEC);
+      sprintf(rbMsg, "String incoming, byteCount is %u", byteCount);
+      sendReadBackString(rbMsg);      
       String newValue = "";
       for (int i=0; i<byteCount; i++) {
         newValue.concat((char)receivedBytes[3+i]);
@@ -121,9 +119,7 @@ void parseUpateCommand() {
       return;
     }
 
-
-    if (byteCount == typeConverted) {  // type = CHAR,INT,LONG,STRING = 0,1,2,3 from f16var enum Type
-
+    if (byteCount == typeConverted) {  // see if bytecount sent is what is expected from the var type
       unsigned long dataValue = 0;
       
       if (byteCount == VARCHAR) {                
@@ -157,21 +153,16 @@ void parseUpateCommand() {
         varsChanged = true;
         
       } else {
-          SERIALCOM.println("default");
+          
       }
-
-        /*SERIALCOM.print("varData - number: ");
-        SERIALCOM.print(vars[varIndex].number);SERIALCOM.print(" mod: ");
-        SERIALCOM.print(vars[varIndex].module);SERIALCOM.print(" index: ");
-        SERIALCOM.print(vars[varIndex].index);SERIALCOM.print(" type: ");
-        SERIALCOM.println(vars[varIndex].type);
-        SERIALCOM.print(" value: ");SERIALCOM.print(dataValue, BIN);SERIALCOM.print(",");SERIALCOM.println(dataValue, DEC); */
+    }	else {      
+      sprintf(rbMsg, "ParseERR, Var %u byteCnt %u",varNumber, byteCount);
+      sendReadBackString(rbMsg);
+      SERIALCOM.println(ER_BYTEMATCH);
     }
-
-
-
-		
 	} else {
+    sprintf(rbMsg, "ParseER, Var %u not configured",varNumber);
+    sendReadBackString(rbMsg);
 		SERIALCOM.println(ER_WRONGVAR);  // send error message to pc
 	}
 		
