@@ -46,7 +46,7 @@ public:
         : portName(portName), hSerial(INVALID_HANDLE_VALUE), running(false), onDataReceived(callback) {}
 
     // Initialisierung des seriellen Ports  
-    bool open(int baudRate = 9600) {
+    bool open(int baudRate = 115200) {
         hSerial = CreateFileA(portName.c_str(),
             GENERIC_READ | GENERIC_WRITE,
             0,
