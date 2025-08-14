@@ -78,10 +78,14 @@ WRONG VAR; data variable sent not found in local var list
 
 <E2>
 WRONG COMMAND; command sent from app not recognized
+
+<E3>
+Byte mismatch error, bytes sent does not match var datatype
 */
 
 #define ER_WRONGVAR "<E1>"
 #define ER_WRONGCMD "<E2>"
+#define ER_BYTEMATCH "<E3>"
 
 
 #define CMDUPDATE 'U'
