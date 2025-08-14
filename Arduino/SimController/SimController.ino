@@ -76,9 +76,10 @@ struct f16varS : public f16var {
     }  
 };
 
-
+//////////////////////////////
 // function definitions
-void parseSerialCommand();
+//////////////////////////////
+
 void outputVar(char varIndex, unsigned long value);
 
 unsigned int power(unsigned int base, unsigned int exp) {
@@ -98,6 +99,11 @@ boolean varsChanged = false;
 
 // only for debugging ReadSerial char input[] = { '<', 'U', 10, 2, 100, 52, '>'};
 
+
+//////////////////////////////
+//        includes
+//////////////////////////////
+
 #include "SC_UserConfig.h"
 #include "SCComms.h"
 
@@ -111,6 +117,9 @@ boolean varsChanged = false;
 	#include "SC_SSegMAX7219.h"
 #endif
 
+//////////////////////////////
+// function imlementations
+//////////////////////////////
 
 void outputVars() {
 	if (!varsChanged) return;
@@ -141,7 +150,9 @@ void outputVars() {
       
 }
 
-
+//////////////////////////////
+// setup and loop
+//////////////////////////////
 
 void setup() {
   // put your setup code here, to run once:
