@@ -50,13 +50,13 @@
     <ClInclude Include="lib\Controller.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lib\ceserial.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="lib\miUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Arduino\SimController\f16common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\SerialPortHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

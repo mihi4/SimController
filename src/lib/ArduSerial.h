@@ -17,7 +17,11 @@ class WindowsSerial
 public:
 	////////////////////////////////////////////////////////
 	// Default Constructor
+	
 	WindowsSerial(unsigned int _comPortNum);
+	WindowsSerial();
+
+	~WindowsSerial();
 
 	////////////////////////////////////////////////////////
 	// Initialization/Admin Stuff
@@ -61,9 +65,9 @@ private:
 };
 
 
-
-
 extern WindowsSerial Serial;
+
+/*extern WindowsSerial Serial;
 extern WindowsSerial Serial1;
 extern WindowsSerial Serial2;
 extern WindowsSerial Serial3;
@@ -93,4 +97,4 @@ extern WindowsSerial Serial26;
 extern WindowsSerial Serial27;
 extern WindowsSerial Serial28;
 extern WindowsSerial Serial29;
-extern WindowsSerial Serial30;
+extern WindowsSerial Serial30; */

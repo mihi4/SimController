@@ -63,13 +63,14 @@ void setupControllers() {  // cNum is the number of controllers in the eventual 
     std::vector<unsigned char> fields = { POWERSTATES, FUELTOTAL }; // , FUELAFT, FUELFWD, FUELTOTAL };
     // short varCount = fields.size();  // sizeof(fields) / sizeof(fields[0]);
     //std::cout << "varcount: " << varCount << "\n";
-    Controller c1("RightAUX", "\\\\.\\COM1", 115200, fields); 
+    Controller c1("RightAUX", "COM3", 115200, fields); 
     // std::cout << "controllername: " << c1.getName() << "\n";
     //c1.datafields = fields;
     for (int i = 0; i < fields.size(); i++) {
         c1.setDataField(i, fields[i]);
     }
     bool check = c1.connect();
+    if (check) { std::cout << "connected\n"; } else { std::cout << "NOT connected\n"; }
     allControllers.push_back(c1);
     
 }

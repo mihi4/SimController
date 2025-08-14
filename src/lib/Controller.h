@@ -1,16 +1,20 @@
 #pragma once
-#include "ceserial.h"
 #include <iostream>
 #include <vector>
 #include <bit>
+#include <string>
+#include <functional>
 #include "F16Data.h"
+
+
+class SerialPortHandler;
 
 class Controller
 {
 public:
-    Controller(std::string name, std::string comPort, long baudrate, std::vector<unsigned char> datafieldsIn);
-    Controller(std::string name, std::string comPort, long baudrate);
-    Controller();
+    Controller(std::string name, const std::string& comPort, long baudrate, std::vector<unsigned char> datafieldsIn);
+    Controller(std::string name, const std::string& comPort, long baudrate);
+    // Controller();
     ~Controller();
     std::string getName();
     
@@ -29,7 +33,13 @@ public:
 
 private:
 
-    ceSerial serialPort;
+    SerialPortHandler* serialPort;
+
+    // Memberfunktion für empfangene Daten  
+    void onSerialDataReceived(const std::string& data);
+
+    //WindowsSerial serPort;
+    //ceSerial serialPort;
     long baudrate;
     
     std::string controllerName;
