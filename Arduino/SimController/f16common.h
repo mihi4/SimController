@@ -64,7 +64,7 @@ common:
 
 #### Connect ####
 <C>
-returns <InameOfController;numberOfVars/bytes.[byte var1][byte var2]...[byte varLast]>
+returns <InameOfController;numberOfVars/bytes[byte var1][byte var2]...[byte varLast]>
 
 #### Check, if still Here ####
 <H>  "You Here?" ;)
