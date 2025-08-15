@@ -2,17 +2,18 @@
 #include "SerialPortHandler.h"
 
 
-Controller::Controller(std::string name, const std::string& comPort, long baudrate = 115200, std::vector<unsigned char> datafieldsIn = { 0 })
+Controller::Controller(std::string name, const std::string& portName, long baudrate = 115200, std::vector<unsigned char> datafieldsIn = { 0 })
     : baudrate(baudrate), controllerName(name), datafields(datafieldsIn), 
-    serialPort(new SerialPortHandler(comPort, [this](const std::string& data) { this->onSerialDataReceived(data); })) {    
+    serialPort(new SerialPortHandler(portName, [this](const std::string& data) { this->onSerialDataReceived(data); })) {
     
-    datafields = datafieldsIn; // new unsigned char[datafieldCount];
+    //datafields = datafieldsIn; // new unsigned char[datafieldCount];
     //int varCount = datafields.size();   
     std::cout << "my contructor, datafieldcount:--" << datafields.size() << "--\n";
 }
 
-Controller::Controller(std::string name, const std::string& comPort, long baudrate = 115200) 
-    : baudrate(baudrate), controllerName(name), serialPort(new SerialPortHandler(comPort, [this](const std::string& data) { this->onSerialDataReceived(data); })) {
+Controller::Controller(std::string name, const std::string& portName, long baudrate = 115200) 
+    : baudrate(baudrate), controllerName(name), 
+    serialPort(new SerialPortHandler(portName, [this](const std::string& data) { this->onSerialDataReceived(data); })) {
 
     datafields = {}; // new unsigned char[datafieldCount];    
     //int varCount = datafields.size();
@@ -26,7 +27,7 @@ Controller::Controller(std::string name, const std::string& comPort, long baudra
 Controller::~Controller() {
     //delete[] datafields;
     //delete  serial port
-    serialPort->close();
+    //serialPort->close();
     delete serialPort;
     
     
@@ -72,20 +73,29 @@ void Controller::onSerialDataReceived(const std::string& data) {
 }
 
 
-
 void Controller::sendDataUpdate(std::vector<char> updateString) {
     debugUpdateString(updateString);
     
 }
 
-bool Controller::connect()
+
+bool Controller::initialize() {
+    return serialPort->open(baudrate);
+}
+
+void Controller::connect()
 {
-    std::cout << "connecting to " << controllerName << std::endl;
-    if (serialPort->open(baudrate)) {
-        serialPort->write("<C>\n");
-        return true;
-    }
-    return false;
+    std::cout << "connecting to " << controllerName << std::endl;    
+    serialPort->write("<C>\n");
+    
+    connected = true;
+}
+void Controller::disconnect()
+{
+    //std::cout << "stopping serial port thread" << std::endl;
+    //serialPort->threadStop();
+    std::cout << "closing serial port" << std::endl;
+    serialPort->close();
 }
 
 void Controller::addByteToUpdateString(std::vector<char>* updateString, char byte) {

@@ -5,6 +5,7 @@
 #include <string>
 #include <functional>
 #include "F16Data.h"
+#include "SerialPortHandler.h"
 
 
 class SerialPortHandler;
@@ -12,8 +13,8 @@ class SerialPortHandler;
 class Controller
 {
 public:
-    Controller(std::string name, const std::string& comPort, long baudrate, std::vector<unsigned char> datafieldsIn);
-    Controller(std::string name, const std::string& comPort, long baudrate);
+    Controller(std::string name, const std::string& portName, long baudrate, std::vector<unsigned char> datafieldsIn);
+    Controller(std::string name, const std::string& portName, long baudrate);
     // Controller();
     ~Controller();
     std::string getName();
@@ -22,7 +23,8 @@ public:
     void addDataField(unsigned char value);
     std::vector<unsigned char> getDatafields();
 
-    bool connect();
+    void connect();
+    void disconnect();
 
     void sendDataUpdate(std::vector<char> updateString);
     void updateController(F16Data * data, F16Data * prevData); 
@@ -30,6 +32,7 @@ public:
     void setConnected(bool status);
     bool isConnected();
 
+    bool initialize();
 
 private:
 

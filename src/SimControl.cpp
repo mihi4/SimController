@@ -43,34 +43,25 @@ std::unique_ptr<DataReader> createDataReader(short selectedSim) {
     default:
         return nullptr;
         break;
-    }
-
-    /*if (selectedSim == BMS) {
-        return std::make_unique<BMSReader>();
-    }
-    else if (selectedSim == DCS) {
-        return std::make_unique<DCSReader>();
-    }
-    else if (selectedSim == MSFS) {
-        return std::make_unique<MSFSReader>();
-    }
-    else {
-        return nullptr;
-    }*/
+    }    
 }
 
 void setupControllers() {  // cNum is the number of controllers in the eventual config file
     std::vector<unsigned char> fields = { POWERSTATES, FUELTOTAL }; // , FUELAFT, FUELFWD, FUELTOTAL };
     // short varCount = fields.size();  // sizeof(fields) / sizeof(fields[0]);
     //std::cout << "varcount: " << varCount << "\n";
-    Controller c1("RightAUX", "COM3", 115200, fields); 
+    Controller c1("RightAUX", "COM4", 115200, fields); 
     // std::cout << "controllername: " << c1.getName() << "\n";
     //c1.datafields = fields;
     for (int i = 0; i < fields.size(); i++) {
         c1.setDataField(i, fields[i]);
     }
-    bool check = c1.connect();
-    if (check) { std::cout << "connected\n"; } else { std::cout << "NOT connected\n"; }
+    
+    if (c1.initialize()) {
+        c1.connect();
+    }
+    std::cout << "connected: " << c1.isConnected() << "\n";   
+    
     allControllers.push_back(c1);
     
 }
@@ -133,12 +124,12 @@ int main(int argc, char* argv[])
     
     //Controller * allControllers = new Controller[controllerNum];
        
-    std::cout << "### Setting up Controllers\n";
+    std::cout << "------ Setting up Controllers ------\n";
     setupControllers();
-    int size = allControllers.size();
-    std::cout << "main size after setup is " << size << std::endl;
+    int controllerSize = allControllers.size();
+    std::cout << "main size after setup is " << controllerSize << std::endl;
 
-    std::cout << "--- Controller creation done\n";
+    std::cout << "------ Controller setup done ------\n";
     //Controller c1("RightAUX", "COM1", 115200, { FUELAFT, FUELFWD, FUELTOTAL, HYDA, HYDB, EPUFUEL, CABINPRESS, CAUTIONPANELLIGHTS });
     //srand(time(NULL)); // Seed the time
     /****************************************
@@ -147,6 +138,8 @@ int main(int argc, char* argv[])
     
     *****************************************/    
     
+    simConnected = true;  // FIXXXME for sim really running
+
     while (true) {
         if (!simConnected) {
             std::cout << "connecting to sim...\r";
@@ -165,18 +158,23 @@ int main(int argc, char* argv[])
             prevData = data;
             //std::cout << "mapping" << util.map(data.fuelFWD, 0, 42000, 0, 65534) << "\r";
         } else {
-            simConnected = false; // try again next run
+            // simConnected = false; // try again next run
         }
 
         // check for quit keycommand LCTRL+LSHIFT+LALT+BACKSPACE
         if ((GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)) { break; }
-
-        Sleep(300);
+        
+        std::cout << ".";
+        Sleep(20);
         
     }
     
 
-    std::cout << "\n\nquitting!\n";    
+    std::cout << "\n\nquitting!\n";   
+    for (int i = 0; i < controllerSize; i++) {
+        allControllers[i].disconnect();
+    }
+    std::cout << "done!\n";
 
     return 0;
 }
