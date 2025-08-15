@@ -64,11 +64,11 @@ common:
 
 #### Connect ####
 <C>
-returns <HI.nameOfController.numberOfVars/bytes.[byte var1][byte var2]...[byte varLast]>
+returns <InameOfController;numberOfVars/bytes.[byte var1][byte var2]...[byte varLast]>
 
 #### Check, if still Here ####
-<H>
-returns <OK>
+<H>  "You Here?" ;)
+returns <Y>
 
 
 *********** ERROR CODES from Arduino **********
@@ -142,6 +142,9 @@ Byte mismatch error, bytes sent does not match var datatype
 #define PFDLINE3            20
 #define PFDLINE4            21
 #define PFDLINE5            22
+
+// REMEMBER TO LEAVE OUT 60 and 62 since those are the numbers for < and >
+
 
 #define VARA	65
 #define VARB	66

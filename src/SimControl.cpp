@@ -47,21 +47,8 @@ std::unique_ptr<DataReader> createDataReader(short selectedSim) {
 }
 
 void setupControllers() {  // cNum is the number of controllers in the eventual config file
-    std::vector<unsigned char> fields = { POWERSTATES, FUELTOTAL }; // , FUELAFT, FUELFWD, FUELTOTAL };
-    // short varCount = fields.size();  // sizeof(fields) / sizeof(fields[0]);
-    //std::cout << "varcount: " << varCount << "\n";
-    Controller c1("RightAUX", "COM4", 115200, fields); 
-    // std::cout << "controllername: " << c1.getName() << "\n";
-    //c1.datafields = fields;
-    for (int i = 0; i < fields.size(); i++) {
-        c1.setDataField(i, fields[i]);
-    }
-    
-    if (c1.initialize()) {
-        c1.connect();
-    }
-    std::cout << "connected: " << c1.isConnected() << "\n";   
-    
+    Controller c1("RightAUX", 4, 115200); 
+
     allControllers.push_back(c1);
     
 }
@@ -70,6 +57,13 @@ void updateControllers(F16Data * data, F16Data * prevData) {
     int size = allControllers.size();
     for (int i = 0; i < size; i++) {
         allControllers[i].updateController(data, prevData);
+    }
+
+}
+
+void readControllerComms() {    
+    for (int i = 0; i < allControllers.size(); i++) {
+        allControllers[i].readSerial();
     }
 
 }
@@ -129,7 +123,15 @@ int main(int argc, char* argv[])
     int controllerSize = allControllers.size();
     std::cout << "main size after setup is " << controllerSize << std::endl;
 
-    std::cout << "------ Controller setup done ------\n";
+    std::cout << "------ Controller setup done ------\n"; 
+    std::cout << "###### Initializing Controllers ######\n";
+    for (int i = 0; i < controllerSize; i++) {
+       allControllers[i].initialize();
+       allControllers[i].connect();
+    }
+    std::cout << "###### Initializing done ######\n";
+
+
     //Controller c1("RightAUX", "COM1", 115200, { FUELAFT, FUELFWD, FUELTOTAL, HYDA, HYDB, EPUFUEL, CABINPRESS, CAUTIONPANELLIGHTS });
     //srand(time(NULL)); // Seed the time
     /****************************************
@@ -149,8 +151,7 @@ int main(int argc, char* argv[])
             }
         }
                         
-        if (reader->connectToSim()) {
-            
+        if (reader->connectToSim()) {            
             reader->readF16Data(&data);         
             if (!prevData.isSameAs(data)) {  // only send data if anything has changed 
                 updateControllers(&data, &prevData);
@@ -161,11 +162,12 @@ int main(int argc, char* argv[])
             // simConnected = false; // try again next run
         }
 
+        readControllerComms();
+
         // check for quit keycommand LCTRL+LSHIFT+LALT+BACKSPACE
         if ((GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)) { break; }
         
-        std::cout << ".";
-        Sleep(20);
+        Sleep(10);
         
     }
     

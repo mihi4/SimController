@@ -9,11 +9,6 @@ WindowsSerial::WindowsSerial(unsigned int _comPortNum)
 	this->setPort(_comPortNum);
 }
 
-WindowsSerial::WindowsSerial()
-{
-	//this->setPort(_comPortNum);
-}
-
 WindowsSerial::~WindowsSerial()
 {
 	this->end();
@@ -357,9 +352,7 @@ bool WindowsSerial::connected()
 	return this->isConnected;
 }
 
-WindowsSerial Serial();
-
-/*WindowsSerial Serial(0);
+WindowsSerial Serial(0);
 WindowsSerial Serial1(1);
 WindowsSerial Serial2(2);
 WindowsSerial Serial3(3);
@@ -389,4 +382,4 @@ WindowsSerial Serial26(26);
 WindowsSerial Serial27(27);
 WindowsSerial Serial28(28);
 WindowsSerial Serial29(29);
-WindowsSerial Serial30(30);*/
+WindowsSerial Serial30(30);

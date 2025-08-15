@@ -1,19 +1,23 @@
 #include "Controller.h"
+#include "SerialPortHandler.h"
 
-/*Controller::Controller(std::string name, unsigned char portNum, long baudrate = 115200, std::vector<unsigned char> datafieldsIn = {0})
-    : baudrate(baudrate), controllerName(name), portNum(portNum), datafields(datafieldsIn) {
+
+Controller::Controller(std::string name, const std::string& portName, long baudrate = 115200, std::vector<unsigned char> datafieldsIn = { 0 })
+    : baudrate(baudrate), controllerName(name), datafields(datafieldsIn), 
+    serialPort(new SerialPortHandler(portName, [this](const std::string& data) { this->onSerialDataReceived(data); })) {
     
     //datafields = datafieldsIn; // new unsigned char[datafieldCount];
     //int varCount = datafields.size();   
-    std::cout << "my contructor, datafieldcount:--" << datafields.size() << "--\n";
-}*/
+    std::cout << "my contructor, portname " << serialPort->getPortname() << "datafieldcount:--" << datafields.size() << "--\n";
+}
 
-Controller::Controller(std::string name, unsigned char portNum, long baudrate = 115200)
-    : baudrate(baudrate), controllerName(name), portNum(portNum) {
-    
+Controller::Controller(std::string name, const std::string& portName, long baudrate = 115200) 
+    : baudrate(baudrate), controllerName(name), 
+    serialPort(new SerialPortHandler(portName, [this](const std::string& data) { this->onSerialDataReceived(data); })) {
+
     datafields = {}; // new unsigned char[datafieldCount];    
     //int varCount = datafields.size();
-    std::cout << "my contructor, datafieldcount:--" << datafields.size() << "--\n";
+    std::cout << "my contructor, portname " << serialPort->getPortname() << "datafieldcount:--" << datafields.size() << "--\n";
 }
 
 /*Controller::Controller() {
@@ -24,7 +28,7 @@ Controller::~Controller() {
     //delete[] datafields;
     //delete  serial port
     //serialPort->close();
-    //delete serialPort;
+    delete serialPort;
     
     
 }
@@ -64,144 +68,10 @@ std::vector<unsigned char> Controller::splitValue(int value, int size) {
 //      Serial communications
 ///////////////////////////////////////////////
 
-void Controller::readFromPort() {
-    static boolean recvInProgress = false;
-    static byte ndx = 0;
-    char startMarker = CMDSTART;
-    char endMarker = CMDEND;
-    byte rb;
-
-    byte escapeBytenum = -2;  // escape "counter", shows the index, where escape character (dec 27, hex 0x1B) was found; -1 is bad, sind index 0-1 is -1 :-D
-
-    while (Serial1.available() > 0 && newData == false) {
-        rb = Serial1.read();
-
-        if (recvInProgress) {
-            if (rb != endMarker) {
-                if (rb == CMDESC) {
-                    //Serial1.print("escape found, ndx=");Serial1.println(ndx, DEC);
-                    //msg.concat("esc1.");
-
-                    if (escapeBytenum == (ndx - 1)) {
-                        //Serial1.print("2nd escape found, escBytenum=");Serial1.println(escapeBytenum, DEC);
-                        //msg.concat("esc2.");
-                        receivedBytes[escapeBytenum] = rb;
-                        escapeBytenum = -2; // reset escape "counter"
-                    }
-                    else {
-                        escapeBytenum = ndx;
-                        //Serial1.print("escapeBytenum: ");Serial1.println(escapeBytenum);
-                        ndx++;
-                    }
-                }
-                else {
-                    receivedBytes[ndx] = rb;
-                    ndx++;
-                }
-                if (ndx >= numBytes) {
-                    ndx = numBytes - 1;
-                }
-            }
-            else {
-                //Serial1.println("endmarker found");
-                if (escapeBytenum == (ndx - 1)) {  // was previous byte escaping byte?	
-                  //Serial1.println("prev byte was escape, setting prev index to rb");
-                    receivedBytes[escapeBytenum] = rb;
-                }
-                else {
-                    //Serial1.println("final delimiter found");
-                    receivedBytes[ndx] = '\0'; // terminate the string
-                    recvInProgress = false;
-                    numReceived = ndx;  // save the number for use when printing
-                    ndx = 0;
-                    newData = true;
-                }
-                escapeBytenum = -2;
-            }
-        }
-        else if (rb == startMarker) {
-            recvInProgress = true;
-            numReceived = 0;
-        }
-    }
+void Controller::onSerialDataReceived(const std::string& data) {
+    std::cout << "Data received in Controller: " << data << std::endl;
 }
 
-bool Controller::parseControllerInfo() {
-    
-    byte count = 0;
-    byte startIndex = 1;
-    
-    while (true) {
-        count++;
-        if (receivedBytes[count] == ';') break;        
-        if (count == numBytes - 1) {
-            std::cout << "ERROR parsing Controller name, end of received bytes reached!";
-            return false;
-        }
-    }
-    std::string tempName(receivedBytes + startIndex, count-1);    
-
-    startIndex += count;
-    byte varNum = receivedBytes[startIndex];
-
-    startIndex += 1;
-    // now add the variable numbers to the datafields array;
-    for (int i = 0; i < varNum; i++) {
-        datafields.push_back(receivedBytes[startIndex + i]);
-    }
-
-    std::cout << controllerName << " on port COM" << std::dec << (int)portNum << " identifies as " << tempName << ", variabe count is " << std::dec << (int)varNum << std::endl;
-    std::cout << "Datafields: ";
-    for (int i = 0; i < datafields.size(); i++) {
-        std::cout << std::dec << (int)datafields.at(i) << " ";
-    }
-    std::cout << std::endl;
-}
-
-bool Controller::parseSerialInput() {
-    if (newData == true) {
-
-        /*Serial1.print("received Bytes: ");Serial1.println(numReceived, DEC);
-        for (int i=0;i<numReceived;i++) {
-          Serial1.print(receivedBytes[i], HEX);Serial1.print("-");
-        }
-        Serial1.println();*/
-        switch (receivedBytes[0]) {
-        case 'I':  // answer to connect command
-            std::cout << controllerName << ":connection string received!\n";
-            connected = true;
-            if (!parseControllerInfo()) {
-                return false;
-            }
-            break;
-        case 'Y':  // answer to heartbeat command
-            std::cout << controllerName << " is still here\n";
-            connected = true;            
-            break;        
-        default:        
-            std::cout << "ERROR parsing, no known command found\n";
-            return false;
-            break;
-        }
-        newData = false;
-        return true;
-    }
-
-
-    //if (receivedBytes[0] == 'C') Serial1.println("Connect command!");
-
-}
-
-void Controller::readSerial() {
-    readFromPort();
-    if (numReceived) {
-        if (!parseSerialInput()) {
-            std::cout << "ERROR parsing serial input";
-        }
-    }
-    numReceived = 0;
-
-}
 
 void Controller::sendDataUpdate(std::vector<char> updateString) {
     debugUpdateString(updateString);
@@ -210,17 +80,13 @@ void Controller::sendDataUpdate(std::vector<char> updateString) {
 
 
 bool Controller::initialize() {
-    Serial1.begin(115200, portNum);
-    return true;
+    return serialPort->open(baudrate);
 }
 
 void Controller::connect()
 {
-    std::cout << "connecting to " << controllerName << " on port COM" << std::dec << (int)portNum << std::endl;
-    if (Serial1.connected()) {
-        Serial1.println("<C>");
-    }
-    
+    std::cout << "connecting to " << controllerName << std::endl;    
+    serialPort->write("<C>\n");
     
     connected = true;
 }
@@ -229,7 +95,7 @@ void Controller::disconnect()
     //std::cout << "stopping serial port thread" << std::endl;
     //serialPort->threadStop();
     std::cout << "closing serial port" << std::endl;
-    Serial1.end();
+    serialPort->close();
 }
 
 void Controller::addByteToUpdateString(std::vector<char>* updateString, char byte) {

@@ -178,7 +178,7 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
 	ReadSerial();	
-  showNewData();
+  // showNewData();
 	parseSerialCommand();
   outputVars();	
    

@@ -5,15 +5,16 @@
 #include <string>
 #include <functional>
 #include "F16Data.h"
-//#include "SerialPortHandler.h"
-#include "ArduSerial.h"
+#include "SerialPortHandler.h"
 
+
+class SerialPortHandler;
 
 class Controller
 {
 public:
-    // Controller(std::string name, unsigned char portNum, long baudrate, std::vector<unsigned char> datafieldsIn);
-    Controller(std::string name, unsigned char portNum, long baudrate);
+    Controller(std::string name, const std::string& portName, long baudrate, std::vector<unsigned char> datafieldsIn);
+    Controller(std::string name, const std::string& portName, long baudrate);
     // Controller();
     ~Controller();
     std::string getName();
@@ -33,32 +34,20 @@ public:
 
     bool initialize();
 
-    void readSerial();
-
 private:
+
+    SerialPortHandler* serialPort;
+
+    // Memberfunktion für empfangene Daten  
+    void onSerialDataReceived(const std::string& data);
+
+    //WindowsSerial serPort;
     //ceSerial serialPort;
+    long baudrate;
     
     std::string controllerName;
     std::vector<unsigned char> datafields;
-
-    
-    // data for serial comms
-    long baudrate;
-    unsigned char portNum;
-
     bool connected = false;
-
-    bool parseControllerInfo();
-    void readFromPort();
-    bool parseSerialInput();
-
-    static const byte numBytes = 50;
-    char receivedBytes[numBytes] = { 0 };
-    byte numReceived = 0;
-    bool newData = false;
-    const byte msgLen = 50;
-
-
 
     std::vector<unsigned char> splitValue(int value, int size);
 

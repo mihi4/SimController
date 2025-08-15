@@ -50,9 +50,9 @@ void showNewData() {
 void sendConnectReply(){
 
 	SERIALCOM.print(CMDSTART);	
-	SERIALCOM.print("HI.");	
+	SERIALCOM.print("I");	
 	SERIALCOM.print(scName);	
-	SERIALCOM.print(".");	
+	SERIALCOM.print(";");	
 	SERIALCOM.print(varCount);
 	for (char i=0; i<varCount; i++) {
 		SERIALCOM.print((char)vars[i]->number);	
@@ -83,7 +83,7 @@ void sendReadBackString(char message[msgLen]) {
 
 void sendCheckReply(){
 	SERIALCOM.print(CMDSTART);	
-	SERIALCOM.print("OK");	
+	SERIALCOM.print("Y");	
   SERIALCOM.println(CMDEND);	
 }
 
@@ -185,11 +185,11 @@ void resetController () {  // this function should reset the arduino
 void parseSerialCommand() {
 	if (newData == true) {
     
-    SERIALCOM.print("received Bytes: ");SERIALCOM.println(numReceived, DEC);
+    /*SERIALCOM.print("received Bytes: ");SERIALCOM.println(numReceived, DEC);
     for (int i=0;i<numReceived;i++) {
       SERIALCOM.print(receivedBytes[i], HEX);SERIALCOM.print("-");
     }
-    SERIALCOM.println();
+    SERIALCOM.println();*/
 		switch (receivedBytes[0]) {
 			case 'C':
 				//SERIALCOM.println("Connect command!");

@@ -24,6 +24,9 @@
     <ClCompile Include="lib\BMSReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="lib\ArduSerial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\FlightData.h">
@@ -56,7 +59,7 @@
     <ClInclude Include="..\Arduino\SimController\f16common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lib\SerialPortHandler.h">
+    <ClInclude Include="lib\ArduSerial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

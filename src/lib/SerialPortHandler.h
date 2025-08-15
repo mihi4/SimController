@@ -1,4 +1,3 @@
-#pragma once
 #ifndef SERIALPORTHANDLER_H  
 #define SERIALPORTHANDLER_H  
 
@@ -110,8 +109,11 @@ public:
         }
     }
 
+    std::string getPortname() { return portName; }
+
     // ÷ffnen des seriellen Ports  
     bool open(int baudRate) {
+        std::cout << "calling CreateFile\n";
         hSerial = CreateFile(
             stringToWString(portName).c_str(), // Konvertiere std::string zu LPCWSTR  
             GENERIC_READ | GENERIC_WRITE,
@@ -130,7 +132,8 @@ public:
         // Konfiguration des seriellen Ports  
         DCB dcbSerialParams = { 0 };
         dcbSerialParams.DCBlength = sizeof(dcbSerialParams);
-
+        
+        std::cout << "calling getCommState\n";
         if (!GetCommState(hSerial, &dcbSerialParams)) {
             std::cerr << "Error: Unable to get serial port state" << std::endl;
             close();
@@ -142,6 +145,7 @@ public:
         dcbSerialParams.StopBits = ONESTOPBIT;
         dcbSerialParams.Parity = NOPARITY;
 
+        std::cout << "calling SetCommstate\n";
         if (!SetCommState(hSerial, &dcbSerialParams)) {
             std::cerr << "Error: Unable to set serial port state" << std::endl;
             close();
@@ -149,6 +153,7 @@ public:
         }
 
         // Ereignismaske setzen  
+        std::cout << "calling setComMask\n";
         if (!SetCommMask(hSerial, EV_RXCHAR)) {
             std::cerr << "Error: Unable to set comm mask" << std::endl;
             close();
@@ -162,36 +167,20 @@ public:
         timeouts.ReadTotalTimeoutMultiplier = 10;   // Multiplikator f¸r die Anzahl der zu lesenden Zeichen  
         timeouts.WriteTotalTimeoutConstant = 50;    // Gesamte Schreibzeit (in ms)  
         timeouts.WriteTotalTimeoutMultiplier = 10;  // Multiplikator f¸r die Anzahl der zu schreibenden Zeichen  
-
+        std::cout << "calling timeouts";
         if (!SetCommTimeouts(hSerial, &timeouts)) {
             std::cerr << "Error: Unable to set timeouts" << std::endl;
             close();
             return false;
         }
 
-
+        std::cout << "starting thread\n";
         // Lese-Thread starten  
         running = true; // Setze das Flag auf "true"  
         std::thread(&SerialPortHandler::readLoop, this).detach(); // Thread im Hintergrund starten  
         std::cout << "Read thread started successfully." << std::endl;
 
         return true;
-    }
-
-    void stopThread() {
-        if (running) {
-            running = false; // Setze das Flag auf "false", um den Lese-Thread zu stoppen  
-
-            if (hSerial != INVALID_HANDLE_VALUE) {
-                CancelIo(hSerial);
-            }
-
-            cv.notify_all(); // Benachrichtige den Lese-Thread, damit er die Schleife verl‰sst  
-        }
-
-        // Warte, bis der Lese-Thread vollst‰ndig beendet ist  
-        std::unique_lock<std::mutex> lock(mtx);
-        cv.wait(lock, [this]() { return !running; });
     }
 
     // Schlieﬂen des seriellen Ports  
@@ -205,11 +194,16 @@ public:
             }
 
             cv.notify_all(); // Benachrichtige den Lese-Thread, damit er die Schleife verl‰sst  
+
+              // Warte, bis der Lese-Thread vollst‰ndig beendet ist  
+            std::unique_lock<std::mutex> lock(mtx);
+            cv.wait(lock, [this]() { return !running; });
+
         }
 
         // Warte, bis der Lese-Thread vollst‰ndig beendet ist  
-        std::unique_lock<std::mutex> lock(mtx);
-        cv.wait(lock, [this]() { return !running; });
+/*        std::unique_lock<std::mutex> lock(mtx);
+        cv.wait(lock, [this]() { return !running; }); */
 
         if (hSerial != INVALID_HANDLE_VALUE) {
             CloseHandle(hSerial);
