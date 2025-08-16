@@ -127,22 +127,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="classes\BMSReader.cpp" />
+    <ClCompile Include="classes\Controller.cpp" />
+    <ClCompile Include="classes\ControllerHandler.cpp" />
     <ClCompile Include="lib\ArduSerial.cpp" />
-    <ClCompile Include="lib\BMSReader.cpp" />
-    <ClCompile Include="lib\Controller.cpp" />
     <ClCompile Include="SimControl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Arduino\SimController\f16common.h" />
+    <ClInclude Include="classes\BMSReader.h" />
+    <ClInclude Include="classes\Controller.h" />
+    <ClInclude Include="classes\ControllerHandler.h" />
+    <ClInclude Include="classes\DataReader.h" />
+    <ClInclude Include="classes\DCSReader.h" />
+    <ClInclude Include="classes\MSFSReader.h" />
     <ClInclude Include="lib\ArduSerial.h" />
-    <ClInclude Include="lib\Controller.h" />
-    <ClInclude Include="lib\DataReader.h" />
-    <ClInclude Include="lib\DCSReader.h" />
     <ClInclude Include="lib\F16Data.h" />
-    <ClInclude Include="lib\BMSReader.h" />
     <ClInclude Include="lib\FlightData.h" />
     <ClInclude Include="lib\miUtils.h" />
-    <ClInclude Include="lib\MSFSReader.h" />
     <ClInclude Include="SimControl.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

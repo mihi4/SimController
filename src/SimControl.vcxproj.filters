@@ -18,13 +18,16 @@
     <ClCompile Include="SimControl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lib\Controller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\BMSReader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="lib\ArduSerial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="classes\BMSReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="classes\Controller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="classes\ControllerHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,26 +35,11 @@
     <ClInclude Include="lib\FlightData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lib\DataReader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\DCSReader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="lib\F16Data.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\BMSReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SimControl.h">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\MSFSReader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\Controller.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="lib\miUtils.h">
       <Filter>Header Files</Filter>
@@ -60,6 +48,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="lib\ArduSerial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="classes\BMSReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="classes\Controller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="classes\DataReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="classes\DCSReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="classes\MSFSReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="classes\ControllerHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

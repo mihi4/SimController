@@ -1,6 +1,6 @@
 #pragma once
 #include "DataReader.h"
-#include "FlightData.h"
+#include "../lib/FlightData.h"
 #include <stdio.h>
 #include <Windows.h>
 

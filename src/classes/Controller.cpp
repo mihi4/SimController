@@ -8,8 +8,8 @@
     std::cout << "my contructor, datafieldcount:--" << datafields.size() << "--\n";
 }*/
 
-Controller::Controller(std::string name, unsigned char portNum, long baudrate = 115200)
-    : baudrate(baudrate), controllerName(name), portNum(portNum) {
+Controller::Controller(std::string name, WindowsSerial* serPort, long baudrate = 115200)
+    : baudrate(baudrate), controllerName(name) {
     
     datafields = {}; // new unsigned char[datafieldCount];    
     //int varCount = datafields.size();
@@ -177,7 +177,10 @@ bool Controller::parseSerialInput() {
         case 'Y':  // answer to heartbeat command
             std::cout << controllerName << " is still here\n";
             connected = true;            
-            break;        
+            break;  
+        case 'R':  // answer to heartbeat command
+            std::cout << controllerName << "rB: " << receivedBytes << std::endl;
+            break;
         default:        
             std::cout << "ERROR parsing, no known command found\n";
             return false;

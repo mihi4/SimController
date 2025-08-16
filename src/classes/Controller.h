@@ -4,16 +4,16 @@
 #include <bit>
 #include <string>
 #include <functional>
-#include "F16Data.h"
+#include "../lib/F16Data.h"
 //#include "SerialPortHandler.h"
-#include "ArduSerial.h"
+#include "../lib/ArduSerial.h"
 
 
 class Controller
 {
 public:
     // Controller(std::string name, unsigned char portNum, long baudrate, std::vector<unsigned char> datafieldsIn);
-    Controller(std::string name, unsigned char portNum, long baudrate);
+    Controller(std::string name, WindowsSerial* serPort, long baudrate);
     // Controller();
     ~Controller();
     std::string getName();
@@ -36,7 +36,6 @@ public:
     void readSerial();
 
 private:
-    //ceSerial serialPort;
     
     std::string controllerName;
     std::vector<unsigned char> datafields;

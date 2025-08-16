@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
-#include "F16Data.h"
-#include "miUtils.h"
+#include "../lib/F16Data.h"
+#include "../lib/miUtils.h"
 
 class DataReader
 {
