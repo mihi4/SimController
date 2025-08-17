@@ -46,30 +46,6 @@ std::unique_ptr<DataReader> createDataReader(short selectedSim) {
     }    
 }
 
-void setupControllers() {  // cNum is the number of controllers in the eventual config file
-    //Controller c1("RightAUX", 4, 115200);
-    //Controller c2("CenterCons", 3, 115200);
-
-    //allControllers.push_back(c1);
-    //allControllers.push_back(c2);
-    
-}
-
-void updateControllers(F16Data * data, F16Data * prevData) {
-    int size = allControllers.size();
-    for (int i = 0; i < size; i++) {
-        allControllers[i].updateController(data, prevData);
-    }
-
-}
-
-void readControllerComms() {    
-    for (int i = 0; i < allControllers.size(); i++) {
-        allControllers[i].readSerial();
-    }
-
-}
-
 
 int main(int argc, char* argv[])
 {   
@@ -126,9 +102,9 @@ int main(int argc, char* argv[])
 
     cHandler.setupControllers();
     cHandler.showControllers();
+    
 
-    return 0;
-
+  
     /* int controllerSize = allControllers.size();
     std::cout << "main size after setup is " << controllerSize << std::endl;
 
@@ -163,16 +139,15 @@ int main(int argc, char* argv[])
         if (reader->connectToSim()) {            
             reader->readF16Data(&data);         
             if (!prevData.isSameAs(data)) {  // only send data if anything has changed 
-                // updateControllers(&data, &prevData);
+                cHandler.updateControllers(&data, &prevData);
             }
             prevData = data;
             //std::cout << "mapping" << util.map(data.fuelFWD, 0, 42000, 0, 65534) << "\r";
         } else {
             // simConnected = false; // try again next run
         }
-
-        //readControllerComms();
-
+        
+        cHandler.readControllerComms();
         // check for quit keycommand LCTRL+LSHIFT+LALT+BACKSPACE
         if ((GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)) { break; }
         

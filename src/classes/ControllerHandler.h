@@ -6,7 +6,7 @@
 #include <functional>
 #include "../lib/F16Data.h"
 //#include "SerialPortHandler.h"
-#include "../lib/ArduSerial.h"
+//#include "../lib/ArduSerial.h"
 #include "Controller.h"
 
 class ControllerHandler {
@@ -18,7 +18,8 @@ public:
 
     void showControllers();
     void setupControllers();
-
+    void updateControllers(F16Data *data, F16Data *prevData);
+    void readControllerComms();
 
 private:
     std::vector<Controller> allControllers;

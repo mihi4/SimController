@@ -6,15 +6,16 @@
 #include <functional>
 #include "../lib/F16Data.h"
 //#include "SerialPortHandler.h"
-#include "../lib/ArduSerial.h"
+//#include "../lib/ArduSerial.h"
+#include "CommsHandler.h"
 
 
 class Controller
 {
 public:
-    // Controller(std::string name, unsigned char portNum, long baudrate, std::vector<unsigned char> datafieldsIn);
-    Controller(std::string name, WindowsSerial* serPort, long baudrate);
-    // Controller();
+    
+    Controller(std::string name, int comPortNum, long baudrate);
+    
     ~Controller();
     std::string getName();
     
@@ -25,23 +26,23 @@ public:
     void connect();
     void disconnect();
 
-    void sendDataUpdate(std::vector<char> updateString);
-    void updateController(F16Data * data, F16Data * prevData); 
-    
-    void setConnected(bool status);
-    bool isConnected();
-
-    bool initialize();
-
+    //void sendDataUpdate(std::vector<char> updateString);
+    void updateController(F16Data * data, F16Data * prevData);
     void readSerial();
 
 private:
+    // std::shared_ptr<WindowsSerial> serialPort;
     
     std::string controllerName;
+    int comPortNum;
+    long baudrate;
+
     std::vector<unsigned char> datafields;
 
+    CommsHandler serialHandler;
+
     
-    // data for serial comms
+    /* data for serial comms
     long baudrate;
     unsigned char portNum;
 
@@ -56,7 +57,7 @@ private:
     byte numReceived = 0;
     bool newData = false;
     const byte msgLen = 50;
-
+    */
 
 
     std::vector<unsigned char> splitValue(int value, int size);

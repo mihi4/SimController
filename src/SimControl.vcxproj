@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="classes\BMSReader.cpp" />
+    <ClCompile Include="classes\CommsHandler.cpp" />
     <ClCompile Include="classes\Controller.cpp" />
     <ClCompile Include="classes\ControllerHandler.cpp" />
     <ClCompile Include="lib\ArduSerial.cpp" />
@@ -136,6 +137,7 @@
   <ItemGroup>
     <ClInclude Include="..\Arduino\SimController\f16common.h" />
     <ClInclude Include="classes\BMSReader.h" />
+    <ClInclude Include="classes\CommsHandler.h" />
     <ClInclude Include="classes\Controller.h" />
     <ClInclude Include="classes\ControllerHandler.h" />
     <ClInclude Include="classes\DataReader.h" />

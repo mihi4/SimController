@@ -9,9 +9,13 @@ WindowsSerial::WindowsSerial(unsigned int _comPortNum)
 	this->setPort(_comPortNum);
 }
 
+WindowsSerial::WindowsSerial() {
+	this->isConnected = false;
+}
+
 WindowsSerial::~WindowsSerial()
 {
-	this->end();
+	if (this->isConnected) this->end();
 }
 
 
