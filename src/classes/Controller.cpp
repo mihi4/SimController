@@ -1,13 +1,5 @@
 #include "Controller.h"
 
-/*Controller::Controller(std::string name, unsigned char portNum, long baudrate = 115200, std::vector<unsigned char> datafieldsIn = {0})
-    : baudrate(baudrate), controllerName(name), portNum(portNum), datafields(datafieldsIn) {
-    
-    //datafields = datafieldsIn; // new unsigned char[datafieldCount];
-    //int varCount = datafields.size();   
-    std::cout << "my contructor, datafieldcount:--" << datafields.size() << "--\n";
-}*/
-
 Controller::Controller(std::string name, int comPortNum, long baudrate = 115200)
     : controllerName(name), baudrate(baudrate), comPortNum(comPortNum) {
     datafields = {}; // new unsigned char[datafieldCount];    
@@ -69,8 +61,7 @@ void Controller::disconnect()
 {
     //std::cout << "stopping serial port thread" << std::endl;
     //serialPort->threadStop();
-    
-    
+      
 }
 
 void Controller::addByteToUpdateString(std::vector<char>* updateString, char byte) {
@@ -90,7 +81,6 @@ void Controller::buildVarStringBegin(int varNum, unsigned char size, std::vector
 void Controller::buildVarStringEnd(std::vector<char>& updateString) {
     updateString.push_back(CMDEND);
     updateString.push_back('\0');
-
 }
 
 void Controller::buildVarString(int varNum, unsigned char value, std::vector<char>& updateString) {
@@ -110,9 +100,13 @@ void Controller::buildVarString(int varNum, unsigned short value, std::vector<ch
     }
 }
 void Controller::buildVarString(int varNum, unsigned int value, std::vector<char>& updateString) {
-    std::cout << "buildIsnt. valsize: " << sizeof(value) << " strSize: " << updateString.size() << std::endl;
+    //std::cout << "buildIsnt. valsize: " << sizeof(value) << " strSize: " << updateString.size() << std::endl;
     updateString.push_back(varNum);
-    updateString.push_back(sizeof(value));    
+    updateString.push_back(sizeof(value));
+    std::vector<unsigned char> splitValues = splitValue(value, sizeof(value));
+    for (int i = 0; i < splitValues.size(); i++) {
+        updateString.push_back(splitValues[i]);
+    }
 }
 
 void Controller::addVarDataToUpdateString(int varNum, std::vector<char> &updateString, F16Data* data, F16Data* prevData) {
@@ -133,6 +127,12 @@ void Controller::addVarDataToUpdateString(int varNum, std::vector<char> &updateS
             // std::cout << "fuelFWD, var = " << varNum << ", size: " << sizeof(data->fuelFWD) << ".\n";
             buildVarString(varNum, data->fuelFWD, updateString);
         }
+    case FUELAFT:
+        //std::cout << "fuel prev: " << prevData->fuelFWD << " fuel now " << data->fuelFWD;
+        if (data->fuelAFT != prevData->fuelAFT) {
+            // std::cout << "fuelFWD, var = " << varNum << ", size: " << sizeof(data->fuelFWD) << ".\n";
+            buildVarString(varNum, data->fuelAFT, updateString);
+        }
         //prevData->fuelFWD = data->fuelFWD;
     case FUELTOTAL:
         //std::cout << "fuel prev: " << prevData->fuelFWD << " fuel now " << data->fuelFWD;
@@ -141,6 +141,36 @@ void Controller::addVarDataToUpdateString(int varNum, std::vector<char> &updateS
             buildVarString(varNum, data->fuelTotal, updateString);
         }
         //prevData->fuelTotal = data->fuelTotal;
+    case HYDA:
+        //std::cout << "fuel prev: " << prevData->fuelFWD << " fuel now " << data->fuelFWD;
+        if (data->hydA != prevData->hydA) {
+            // std::cout << "fuelFWD, var = " << varNum << ", size: " << sizeof(data->fuelFWD) << ".\n";
+            buildVarString(varNum, data->hydA, updateString);
+        }
+    case HYDB:
+        //std::cout << "fuel prev: " << prevData->fuelFWD << " fuel now " << data->fuelFWD;
+        if (data->hydB != prevData->hydB) {
+            // std::cout << "fuelFWD, var = " << varNum << ", size: " << sizeof(data->fuelFWD) << ".\n";
+            buildVarString(varNum, data->hydB, updateString);
+        }
+    case EPUFUEL:
+        //std::cout << "fuel prev: " << prevData->fuelFWD << " fuel now " << data->fuelFWD;
+        if (data->epuFuel != prevData->epuFuel) {
+            // std::cout << "fuelFWD, var = " << varNum << ", size: " << sizeof(data->fuelFWD) << ".\n";
+            buildVarString(varNum, data->epuFuel, updateString);
+        }
+    case CABINPRESS:
+        //std::cout << "fuel prev: " << prevData->fuelFWD << " fuel now " << data->fuelFWD;
+        if (data->cabinPress != prevData->cabinPress) {
+            // std::cout << "fuelFWD, var = " << varNum << ", size: " << sizeof(data->fuelFWD) << ".\n";
+            buildVarString(varNum, data->cabinPress, updateString);
+        }
+    case CAUTIONPANELLIGHTS:
+        //std::cout << "fuel prev: " << prevData->fuelFWD << " fuel now " << data->fuelFWD;
+        if (data->cautionPanelLights != prevData->cautionPanelLights) {
+            // std::cout << "fuelFWD, var = " << varNum << ", size: " << sizeof(data->fuelFWD) << ".\n";
+            buildVarString(varNum, data->cautionPanelLights, updateString);
+        }
     default:
         break;
     }     

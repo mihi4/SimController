@@ -125,8 +125,6 @@ int main(int argc, char* argv[])
     
     *****************************************/    
     
-    simConnected = true;  // FIXXXME for sim really running
-
     while (true) {
         if (!simConnected) {
             std::cout << "connecting to sim...\r";
@@ -144,7 +142,7 @@ int main(int argc, char* argv[])
             prevData = data;
             //std::cout << "mapping" << util.map(data.fuelFWD, 0, 42000, 0, 65534) << "\r";
         } else {
-            // simConnected = false; // try again next run
+            simConnected = false; // try again next run
         }
         
         cHandler.readControllerComms();
