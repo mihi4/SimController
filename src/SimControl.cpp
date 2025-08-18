@@ -85,7 +85,7 @@ int main(int argc, char* argv[])
 
     F16Data data;
     F16Data prevData;
-    miUtility util;
+    // miUtility util;
     
     bool simConnected = false;    
 
