@@ -1,5 +1,5 @@
 #pragma once
-#pragma warning(disable:26495)  // mhirczy, added to suppress warnings
+#pragma warning(disable:26495) 
 
 // General note about data type sizes and alignment in use
 // - char is 1 byte
