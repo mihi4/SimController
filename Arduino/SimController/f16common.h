@@ -5,51 +5,7 @@
     common functions/data used in Arduino and PC code
 *********************************************************/
 
-// bits for airplane power data and sim status
-#define BUSBAT					0x01    // true if at least the battery bus is powered
-#define BUSEMER					0x02     // true if at least the emergency bus is powered
-#define BUSESSENTIAL	 		0x04    // true if at least the essential bus is powered
-#define BUSNONESSENTIAL			0x08    // true if at least the non-essential bus is powered
-#define MAINGENON               0x10
-#define STBYGENON               0x20
-#define PLANEFLYING	            0x40   // true, if player is attached to plane, FLYING in enum FlyStates
 
-// CAUTION PANEL lights bit order
-// different order because of soldering on hardware
-// set those to "original" values - topleft to bottomright - if necessary
-
-#define CPSEAT      0x01
-#define CPNWS       0x02 
-#define CPANTISKID  0x04
-#define CPHOOK      0x08
-#define CPAVIONICS  0x10
-#define CPEQUIPHOT  0x20
-#define CPRADARALT  0x40
-#define CPIFF       0x80
-#define CPENGINE    0x100
-#define CPSEC       0x200
-#define CPFUELOIL   0x400
-#define CPINLET     0x800
-#define CPFLCS      0x1000
-#define CPELECSYS   0x2000
-#define CPPROBEHEAT 0x4000
-#define CPCADC      0x8000
-#define CPAFTFUEL   0x10000
-#define CPFWDFUEL   0x20000
-#define CPATF       0x40000
-#define CPSTORESCFG 0x80000
-#define CPLINE1     0x100000
-#define CPBUC       0x200000
-#define CPEEC       0x400000
-#define CPOVERHEAT  0x800000
-#define CPLINE2     0x1000000
-#define CPLINE3     0x2000000
-#define CPLINE4     0x4000000
-#define CPNUCLEAR   0x8000000
-#define CPLINE5     0x10000000
-#define CPLINE6     0x20000000
-#define CPCABIN     0x40000000
-#define CPOXYLOW    0x80000000
 
 /* Command Structure between PC - Arduino
 
@@ -111,8 +67,33 @@ Byte mismatch error, bytes sent does not match var datatype
 
 // variable numbers to use to configure data to get from F16Data.h 
 // let's see if 255 values are enough ;-) (light- and statusbits are stored in 1- or 2-byte vars
+#define SIMSTATES           1
+#define PLANEFLYING	    0x01   // true, if player is attached to plane, FLYING in enum FlyStates
 
-#define POWERSTATES         1
+
+#define POWERSTATES         2
+// bits for airplane power data and sim status
+#define BUSBAT			0x01    // true if at least the battery bus is powered
+#define BUSEMER			0x02     // true if at least the emergency bus is powered
+#define BUSESSENTIAL	0x04    // true if at least the essential bus is powered
+#define BUSNONESSENTIAL	0x08    // true if at least the non-essential bus is powered
+#define MAINGENON       0x10
+#define STBYGENON       0x20
+
+#define RELAYSTATES         3
+// bits for relays
+#define WEIGHTONWHEELS  0x01   // true, if WOW
+#define AUTOPILOT       0x02    
+#define LANDINGLIGHTS   0x04
+#define JFSTARTER       0x08
+#define FLTCTLBIT       0x10
+#define SPEEDBRAKEOUT   0x20
+
+
+//#define MAXPOWER
+
+
+
 
 ////////////////////////////// RIGHT AUX //////////////////////////////////
 
@@ -134,6 +115,42 @@ Byte mismatch error, bytes sent does not match var datatype
 
 // ---- CABIN PRESSURE ALT ----
 #define CABINPRESS          16
+// CAUTION PANEL lights bit order
+// different order because of soldering on hardware
+// set those to "original" values - topleft to bottomright - if necessary
+#define CPSEAT      0x01
+#define CPNWS       0x02 
+#define CPANTISKID  0x04
+#define CPHOOK      0x08
+#define CPAVIONICS  0x10
+#define CPEQUIPHOT  0x20
+#define CPRADARALT  0x40
+#define CPIFF       0x80
+#define CPENGINE    0x100
+#define CPSEC       0x200
+#define CPFUELOIL   0x400
+#define CPINLET     0x800
+#define CPFLCS      0x1000
+#define CPELECSYS   0x2000
+#define CPPROBEHEAT 0x4000
+#define CPCADC      0x8000
+#define CPAFTFUEL   0x10000
+#define CPFWDFUEL   0x20000
+#define CPATF       0x40000
+#define CPSTORESCFG 0x80000
+#define CPLINE1     0x100000
+#define CPBUC       0x200000
+#define CPEEC       0x400000
+#define CPOVERHEAT  0x800000
+#define CPLINE2     0x1000000
+#define CPLINE3     0x2000000
+#define CPLINE4     0x4000000
+#define CPNUCLEAR   0x8000000
+#define CPLINE5     0x10000000
+#define CPLINE6     0x20000000
+#define CPCABIN     0x40000000
+#define CPOXYLOW    0x80000000
+
 
 // **********************
 // PFD and Caution Panel
@@ -183,7 +200,20 @@ Byte mismatch error, bytes sent does not match var datatype
 #define VVIVAL              44
 #define AOAVAL              45
 
-#define INSTBITS            46
+// HSI - not sure, if I will ever use those :-D
+#define HSICOURSEDEVIATION     46 // HSI_VAL_CRS_DEVIATION
+#define HSIDESIREDCOURSE       47 // HSI_VAL_DESIRED_CRS
+#define HSIDISTANCETOBEACON    48 // HSI_VAL_DISTANCE_TO_BEACON
+#define HSIBEARINGTOBEACON     49 // HSI_VAL_BEARING_TO_BEACON
+#define HSICURRENTHEADING      50 // HSI_VAL_CURRENT_HEADING
+#define HSIDESIREDHEADING      51 // HSI_VAL_DESIRED_HEADING
+#define HSIDEVIATIONLIMIT      52 // HSI_VAL_DEV_LIMIT
+#define HSIHALFDEVIATIONLIMIT  53 // HSI_VAL_HALF_DEV_LIMIT
+#define HSILOCALIZERCOURSE     54 // HSI_VAL_LOCALIZER_CRS
+#define HSIAIRBASEX            55 // HSI_VAL_AIRBASE_X
+#define HSIAIRBASEY            56 // HSI_VAL_AIRBASE_Y
+
+#define INSTBITS                57
 // bits in INSTBITS
 #define PNEU            0x01
 #define VVIFLAG         0x02
@@ -193,27 +223,77 @@ Byte mismatch error, bytes sent does not match var datatype
 #define ADIAUX          0x20    // ADI AUX Flag
 #define ADIGS           0x40    // ADI GS FLAG
 #define ADILOC          0x80    // ADI LOC FLAG
-#define BEACON          0x100
-#define HSIOFF          0x200
-#define HSITO           0x400
-#define HSIFROM         0x800
-#define HSIILSWARN      0x1000
-#define HSICRSWARN      0x2000
-#define HSIINIT         0x4000
-
-
-
-
+#define HSIOFF          0x100
+#define HSITO           0x200
+#define HSIFROM         0x400
+#define HSIILSWARN      0x800
+#define HSICRSWARN      0x1000
+#define HSIINIT         0x2000
+//#define               0x4000
+//#define               0x8000
 
 // **********************
 // Left Instrument Panel
 // **********************
 
-#define CCLIGHTS            FIXXXME
+// Nothing here to output, data for 12V relays (magnetic switches) is in separate var, all lights for MM5451 are in 
 
-#define MASTERCAUTION   0x01
-#define TFFAIL          0x02
+// **********************
+// All InstPanel lights 
+// **********************
+
+#define INSTLIGHTS          58
+
+// Left Eyebrows
+#define EBMASTERC       0x01
+#define EBTFFAIL        0x02
+// TWP
+#define HANDOFF         0x04
+#define LAUNCH          0x08
+#define PRIMODE         0x10
+#define UUNKNOWN        0x20
+#define SYSTEST         0x40
+#define TGTSEP          0x80
+// MISC
+#define ECMON           0x100
+#define MODEACTIVE      0x200
+#define MODESTBY        0x400
+// HUD indexer
+#define IDXAOAUP        0x800
+#define IDXAOACENTER    0x1000
+#define IDXAOADOWN      0x2000
+#define IDXRDY          0x4000
+#define IDXARNWS        0x8000
+#define IDXDISC         0x10000
+// right eyebrows
+#define EBENGFIRE       0x20000
+#define EBENGINE        0x40000
+#define EBHYDOILPRESS   0x80000
+#define EBFLCS          0x100000
+#define EBDBUON         0x200000
+#define EBTOLDGCFG      0x400000
+#define EBCANOPY        0x800000
+#define EBOXYLOW        0x1000000  // not sure, if this is in all block50/52s
+// CC
+#define MARKERBEACON      0x2000000
+
 
 // REMEMBER TO LEAVE OUT 60 and 62 since those are the numbers for < and >
 
+////////////////////////////// LEFT AUX //////////////////////////////////
 
+#define LAUXLIGHTS          65
+// lightbits
+#define GEARLIGHT   0x01
+#define WNOSE       0x02
+#define WLEFT       0x04
+#define WRIGHT      0x08
+#define TWASEARCH   0x10
+#define TWAACT      0x20
+#define TWALOWALT   0x40
+#define TWASYSPWT   0x08
+
+#define SPEEDBRAKEON    66 // FIXXXME, may
+
+
+#define SIMVERSION          255  // at least available for BMS, let's see for DCS and MSFS
