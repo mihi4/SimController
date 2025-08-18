@@ -19,9 +19,7 @@ public:
 			pfdLine2 == d.pfdLine2 &&
 			pfdLine3 == d.pfdLine3 &&
 			pfdLine4 == d.pfdLine4 &&
-			pfdLine5 == d.pfdLine5 &&
-			hudLights == d.hudLights
-
+			pfdLine5 == d.pfdLine5 
 			;
 	}
 
@@ -59,18 +57,39 @@ public:
 	std::string pfdLine4 = "                    ";
 	std::string pfdLine5 = "                    ";
 
-	// **********************
-	// INSTRUMENT PANEL data
-	// **********************
 
-	unsigned char hudLights = 0; // AOA and NWS indexers
+	/// DON'T FORGET TO ADD NEW datafields at the top for the comparator
 
 	
 	// **********************
-	// CENTER CONSOLE data
+	// Instrument Panel data
 	// **********************
+/*
+#define OILPRESS            25
+#define NOZZLEPOS           26
+#define RPM                 27
+#define FTIT                28
 
-	
+// **********************
+// Right Instrument Panel 
+// **********************
+
+#define FUELFLOW            29
+
+	std::string dedLine1 = "                    ";
+	std::string dedLine2 = "                    ";
+	std::string dedLine3 = "                    ";
+	std::string dedLine4 = "                    ";
+	std::string dedLine5 = "                    ";
+
+// **********************
+// Main Instrument Panel 
+// **********************
+
+
+
+*/
+
 	// **********************
 	// LAUX data
 	// **********************

@@ -114,8 +114,10 @@ Byte mismatch error, bytes sent does not match var datatype
 
 #define POWERSTATES         1
 
+////////////////////////////// RIGHT AUX //////////////////////////////////
+
 // **********************
-// RAUX data
+// Engine data
 // **********************
 
 // ---- FQTI ----
@@ -133,6 +135,10 @@ Byte mismatch error, bytes sent does not match var datatype
 // ---- CABIN PRESSURE ALT ----
 #define CABINPRESS          16
 
+// **********************
+// PFD and Caution Panel
+// **********************
+
 // ---- CAUTION PANEL ----
 #define CAUTIONPANELLIGHTS  17
 
@@ -143,12 +149,71 @@ Byte mismatch error, bytes sent does not match var datatype
 #define PFDLINE4            21
 #define PFDLINE5            22
 
+////////////////////////////// CENTER CONSOLE //////////////////////////////////
+
+// **********************
+// EngineCluster data
+// **********************
+
+#define OILPRESS            25
+#define NOZZLEPOS           26
+#define RPM                 27
+#define FTIT                28
+
+// **********************
+// Right Instrument Panel 
+// **********************
+
+#define FUELFLOW            29
+
+#define DEDLINE1            30
+#define DEDLINE2            31
+#define DEDLINE3            32
+#define DEDLINE4            33
+#define DEDLINE5            34
+
+// **********************
+// Main Instrument Panel 
+// **********************
+
+#define ASI                 40
+#define MACH                41   
+#define ALT                 42
+#define ALTCAL              43
+#define VVIVAL              44
+#define AOAVAL              45
+
+#define INSTBITS            46
+// bits in INSTBITS
+#define PNEU            0x01
+#define VVIFLAG         0x02
+#define AOAFLAG         0x04
+#define BUPADIFLAG      0x08
+#define ADIOFF          0x10    // ADI OFF Flag
+#define ADIAUX          0x20    // ADI AUX Flag
+#define ADIGS           0x40    // ADI GS FLAG
+#define ADILOC          0x80    // ADI LOC FLAG
+#define BEACON          0x100
+#define HSIOFF          0x200
+#define HSITO           0x400
+#define HSIFROM         0x800
+#define HSIILSWARN      0x1000
+#define HSICRSWARN      0x2000
+#define HSIINIT         0x4000
+
+
+
+
+
+// **********************
+// Left Instrument Panel
+// **********************
+
+#define CCLIGHTS            FIXXXME
+
+#define MASTERCAUTION   0x01
+#define TFFAIL          0x02
+
 // REMEMBER TO LEAVE OUT 60 and 62 since those are the numbers for < and >
-
-
-#define VARA	65
-#define VARB	66
-#define VARC	67
-#define VARD	68
 
 

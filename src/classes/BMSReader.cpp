@@ -75,6 +75,7 @@ void BMSReader::checkCPBit(F16Data* data, FlightData* flightdata, FlightData::Li
 }
 
 
+
 void BMSReader::setCautionLightbits(F16Data* data, FlightData* flightdata) {
 
     // check if MAL/IND LIGHT button is pressed and light up everything
