@@ -34,7 +34,7 @@ void CommsHandler::sendDataUpdate(std::vector<char> updateString)
 {
     std::string output(updateString.begin(), updateString.end());
 
-    std::cout << "this string goes to the serial port " << std::dec << (int)portNum << " **" << output << " **\n";
+    //std::cout << "this string goes to the serial port " << std::dec << (int)portNum << " **" << output << " **\n";
     if (serialPort && serialPort.connected()) serialPort.println(output);
 }
 
