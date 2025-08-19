@@ -5,8 +5,6 @@
     common functions/data used in Arduino and PC code
 *********************************************************/
 
-
-
 /* Command Structure between PC - Arduino
 
 common:
@@ -69,7 +67,7 @@ Byte mismatch error, bytes sent does not match var datatype
 // let's see if 255 values are enough ;-) (light- and statusbits are stored in 1- or 2-byte vars
 #define SIMSTATES           1
 #define PLANEFLYING	    0x01   // true, if player is attached to plane, FLYING in enum FlyStates
-
+#define TESTLIGHTS      0x02   // true, if all lights are on (MAL&IND button pressed. Let's see, if we can create this
 
 #define POWERSTATES         2
 // bits for airplane power data and sim status
@@ -91,9 +89,6 @@ Byte mismatch error, bytes sent does not match var datatype
 
 
 //#define MAXPOWER
-
-
-
 
 ////////////////////////////// RIGHT AUX //////////////////////////////////
 
@@ -243,7 +238,7 @@ Byte mismatch error, bytes sent does not match var datatype
 // **********************
 
 #define INSTLIGHTS          58
-
+// 26 lightbits, one mm5451
 // Left Eyebrows
 #define EBMASTERC       0x01
 #define EBTFFAIL        0x02
@@ -275,15 +270,15 @@ Byte mismatch error, bytes sent does not match var datatype
 #define EBCANOPY        0x800000
 #define EBOXYLOW        0x1000000  // not sure, if this is in all block50/52s
 // CC
-#define MARKERBEACON      0x2000000
+#define MARKERBEACON    0x2000000
 
 
 // REMEMBER TO LEAVE OUT 60 and 62 since those are the numbers for < and >
 
-////////////////////////////// LEFT AUX //////////////////////////////////
+////////////////////////////// LEFT CONSOLE //////////////////////////////////
 
-#define LAUXLIGHTS          65
-// lightbits
+#define LEFTLIGHTS          65
+// 28 lightbits, one MM5451
 #define GEARLIGHT   0x01
 #define WNOSE       0x02
 #define WLEFT       0x04
@@ -292,8 +287,71 @@ Byte mismatch error, bytes sent does not match var datatype
 #define TWAACT      0x20
 #define TWALOWALT   0x40
 #define TWASYSPWT   0x08
+#define JFSRUN      0x10
+#define EPURUN      0x20
+#define EPUHYD      0x40
+#define EPUAIR      0x80
+#define ELPMG       0x100
+#define ELMAINGEN   0x200
+#define ELSTDBYGEN  0x400
+#define ELEPUGEN    0x800
+#define ELEPUPMG    0x1000
+#define ELBATTFAIL  0x2000
+#define ELTOFLCS    0x4000
+#define ELFLCSRLY   0x8000
+#define AVTRRUN     0x10000
+#define AVTRCTVS    0x20000
+#define FLTCTLRUN   0x40000
+#define FLTCTLFAIL  0x80000
+#define TESTA       0x100000   
+#define TESTB       0x200000
+#define TESTC       0x400000
+#define TESTD       0x800000
 
-#define SPEEDBRAKEON    66 // FIXXXME, may
+// UHF data
+#define UHFCHAN         70
+#define UHFFREQ         71
+
+// ECM data
+#define ECMLIGHTS       72
+#define ECM1S       0x01    
+#define ECM1A       0x02    
+#define ECM1F       0x04    
+#define ECM1T       0x08    
+#define ECM2S       0x10    
+#define ECM2A       0x20    
+#define ECM2F       0x40    
+#define ECM2T       0x80    
+#define ECM3S       0x100    
+#define ECM3A       0x200    
+#define ECM3F       0x400    
+#define ECM3T       0x800    
+#define ECM4S       0x1000    
+#define ECM4A       0x2000    
+#define ECM4F       0x4000    
+#define ECM4T       0x8000    
+#define ECM5S       0x10000    
+#define ECM5A       0x20000    
+#define ECM5F       0x40000    
+#define ECM5T       0x80000    
+#define ECMEMPTYS   0x100000
+#define ECMEMPTYA   0x200000    
+#define ECMEMPTYF   0x400000    
+#define ECMEMPTYT   0x800000
+#define ECMFRMS     0x1000000    
+#define ECMFRMA     0x2000000   
+#define ECMFRMF     0x4000000    
+#define ECMFRMT     0x8000000    
+#define ECMSPLS     0x10000000    
+#define ECMSPLA     0x20000000    
+#define ECMSPLF     0x40000000    
+#define ECMSPLT     0x80000000    
+
+#define IFFDISP         73  // 4byte string to display channel/digit data
+#define AUXDISP         74
+
+#define TRIMROLL        80
+#define TRIMPITCH       81
 
 
 #define SIMVERSION          255  // at least available for BMS, let's see for DCS and MSFS
