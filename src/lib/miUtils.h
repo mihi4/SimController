@@ -7,18 +7,29 @@ public:
     }
 
     std::string getBinaryRep(int n) {
-
         std::string ans = "";
-
         // Check for each bit.
         for (int i = 31; i >= 0; i--) {
-
             // If i'th bit is set 
             if (n & (1 << i)) ans += '1';
             else ans += '0';
         }
-
         return ans;
+    }
+
+    void outputHexString(std::string miString) {
+        for (int i = 0; i < miString.size(); i++) {
+            std::cout << std::hex << (int)miString.at(i) << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    void outputHexString(char miString[]) {
+        const int size = sizeof(miString);
+        for (int i = 0; i < size; i++) {
+            std::cout << std::hex << (int)miString[i] << " ";
+        }
+        std::cout << std::endl;
     }
 };
 
