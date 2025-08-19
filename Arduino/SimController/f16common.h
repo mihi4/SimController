@@ -66,8 +66,8 @@ Byte mismatch error, bytes sent does not match var datatype
 // variable numbers to use to configure data to get from F16Data.h 
 // let's see if 255 values are enough ;-) (light- and statusbits are stored in 1- or 2-byte vars
 #define SIMSTATES           1
-#define PLANEFLYING	    0x01   // true, if player is attached to plane, FLYING in enum FlyStates
-#define TESTLIGHTS      0x02   // true, if all lights are on (MAL&IND button pressed. Let's see, if we can create this
+#define SIMPLANEFLYING	    0x01   // true, if player is attached to plane, FLYING in enum FlyStates
+#define SIMTESTLIGHTS      0x02   // true, if all lights are on (MAL&IND button pressed. Let's see, if we can create this
 
 #define POWERSTATES         2
 // bits for airplane power data and sim status
@@ -80,12 +80,12 @@ Byte mismatch error, bytes sent does not match var datatype
 
 #define RELAYSTATES         3
 // bits for relays
-#define WEIGHTONWHEELS  0x01   // true, if WOW
-#define AUTOPILOT       0x02    
-#define LANDINGLIGHTS   0x04
-#define JFSTARTER       0x08
-#define FLTCTLBIT       0x10
-#define SPEEDBRAKEOUT   0x20
+#define RLYWEIGHTONWHEELS  0x01   // true, if WOW
+#define RLYAUTOPILOT       0x02    
+#define RLYPARKINGBRAKE    0x04
+#define RLYJFSTARTER       0x08
+#define RLYFLTCTLBIT       0x10
+#define RLYSPEEDBRAKE      0x20
 
 
 //#define MAXPOWER
@@ -110,6 +110,14 @@ Byte mismatch error, bytes sent does not match var datatype
 
 // ---- CABIN PRESSURE ALT ----
 #define CABINPRESS          16
+
+
+// **********************
+// PFD and Caution Panel
+// **********************
+
+// ---- CAUTION PANEL ----
+#define CAUTIONPANELLIGHTS  17
 // CAUTION PANEL lights bit order
 // different order because of soldering on hardware
 // set those to "original" values - topleft to bottomright - if necessary
@@ -147,13 +155,6 @@ Byte mismatch error, bytes sent does not match var datatype
 #define CPOXYLOW    0x80000000
 
 
-// **********************
-// PFD and Caution Panel
-// **********************
-
-// ---- CAUTION PANEL ----
-#define CAUTIONPANELLIGHTS  17
-
 // ---- PFD ----
 #define PFDLINE1            18
 #define PFDLINE2            19
@@ -188,9 +189,10 @@ Byte mismatch error, bytes sent does not match var datatype
 // Main Instrument Panel 
 // **********************
 
-#define ASI                 40
-#define MACH                41   
-#define ALT                 42
+#define ASI                 39
+#define MACH                40
+#define ALTPOINTER          41   
+#define ALTITUDE            42
 #define ALTCAL              43
 #define VVIVAL              44
 #define AOAVAL              45
@@ -208,22 +210,22 @@ Byte mismatch error, bytes sent does not match var datatype
 #define HSIAIRBASEX            55 // HSI_VAL_AIRBASE_X
 #define HSIAIRBASEY            56 // HSI_VAL_AIRBASE_Y
 
-#define INSTBITS                57
+#define INSTRUMENTBITS         57
 // bits in INSTBITS
-#define PNEU            0x01
-#define VVIFLAG         0x02
-#define AOAFLAG         0x04
-#define BUPADIFLAG      0x08
-#define ADIOFF          0x10    // ADI OFF Flag
-#define ADIAUX          0x20    // ADI AUX Flag
-#define ADIGS           0x40    // ADI GS FLAG
-#define ADILOC          0x80    // ADI LOC FLAG
-#define HSIOFF          0x100
-#define HSITO           0x200
-#define HSIFROM         0x400
-#define HSIILSWARN      0x800
-#define HSICRSWARN      0x1000
-#define HSIINIT         0x2000
+#define INSTPNEU            0x01
+#define INSTVVIFLAG         0x02
+#define INSTAOAFLAG         0x04
+#define INSTBUPADIOFFFLAG   0x08
+#define INSTADIOFF          0x10    // ADI OFF Flag
+#define INSTADIAUX          0x20    // ADI AUX Flag
+#define INSTADIGS           0x40    // ADI GS FLAG
+#define INSTADILOC          0x80    // ADI LOC FLAG
+#define INSTHSIOFF          0x100
+#define INSTHSITO           0x200
+#define INSTHSIFROM         0x400
+#define INSTHSIILSWARN      0x800
+#define INSTHSICRSWARN      0x1000
+#define INSTHSIINIT         0x2000
 //#define               0x4000
 //#define               0x8000
 
@@ -237,18 +239,18 @@ Byte mismatch error, bytes sent does not match var datatype
 // All InstPanel lights 
 // **********************
 
-#define INSTLIGHTS          58
+#define INSTPANELLIGHTS          58
 // 26 lightbits, one mm5451
 // Left Eyebrows
 #define EBMASTERC       0x01
 #define EBTFFAIL        0x02
 // TWP
-#define HANDOFF         0x04
-#define LAUNCH          0x08
-#define PRIMODE         0x10
-#define UUNKNOWN        0x20
-#define SYSTEST         0x40
-#define TGTSEP          0x80
+#define TWPHANDOFF         0x04
+#define TWPLAUNCH          0x08
+#define TWPPRIMODE         0x10
+#define TWPUUNKNOWN        0x20
+#define TWPSYSTEST         0x40
+#define TWPTGTSEP          0x80
 // MISC
 #define ECMON           0x100
 #define MODEACTIVE      0x200
@@ -277,7 +279,7 @@ Byte mismatch error, bytes sent does not match var datatype
 
 ////////////////////////////// LEFT CONSOLE //////////////////////////////////
 
-#define LEFTLIGHTS          65
+#define LEFTCONSLIGHTS          65
 // 28 lightbits, one MM5451
 #define GEARLIGHT   0x01
 #define WNOSE       0x02
@@ -353,5 +355,17 @@ Byte mismatch error, bytes sent does not match var datatype
 #define TRIMROLL        80
 #define TRIMPITCH       81
 
+// CMDS data
+#define CMDSBITS        85
+// bits
+#define CMDSGO      0x01
+#define CMDSNOGO    0x02
+#define CMDSRDY     0x04
+#define CMDSDEGR    0x08
+
+#define CMDS01STR          86  // 01 String
+#define CMDS02STR          87  // 02 String
+#define CMDSCHAFFSTR       88  // ChaffString
+#define CMDSFLARESTR       89  // Flarestring
 
 #define SIMVERSION          255  // at least available for BMS, let's see for DCS and MSFS
