@@ -177,59 +177,57 @@ void BMSReader::clearDatabit(unsigned char &var, unsigned int bit) {
     var &= bit;
 }
 
-std::string BMSReader::trimPFL(std::string pfl, bool firsthalf)
-{
-    if (pfl.empty()) return "";
+std::string BMSReader::trimDED_PFD(std::string line, char inv[]) {    
+    const char charNum = 25;
+    if (line.empty()) return "";
 
-    char PFLcompiled[12] = "";
+    char lineCompiled[charNum] = "";
     //code by Uri_ba (https://pit.uriba.org/uriba/ded-adventures-part-3/)
-
-    byte offset = 0;
-    if (!firsthalf)
+    
+    for (char ctr = 0; ctr < charNum; ctr++)
     {
-        offset = 12;
+        if (inv[ctr] == 2) {  // is char at position inverted?
+            if (isalpha(line[ctr]))
+            { lineCompiled[ctr] = (char)(line[ctr] + 36); }
+            else if (isdigit(line[ctr]))
+            { lineCompiled[ctr] = (char)(line[ctr] + 43); }
+            else if (line[ctr] == 1)
+            { lineCompiled[ctr] = (char)36; }
+            else if (line[ctr] == 2)
+            { lineCompiled[ctr] = (char)37; }
+            else if (line[ctr] == 3)
+            { lineCompiled[ctr] = (char)223; }
+            else if (line[ctr] == 32)
+            { lineCompiled[ctr] = (char)33; }
+            else
+            { lineCompiled[ctr] = line[ctr]; }
+        }
+        else {
+            if (line[ctr] == 1)           //cursor
+            { lineCompiled[ctr] = (char)36; }
+            else if (line[ctr] == 2)      //stars (inverted)
+            { lineCompiled[ctr] = (char)37; }
+            else if (line[ctr] == 3)      //??
+            { lineCompiled[ctr] = '_'; }
+            else if (line[ctr] == '~')    //Pfeil nach unten
+            { lineCompiled[ctr] = (char)29; }
+            else if (line[ctr] == 94)     // °
+            { lineCompiled[ctr] = (char)63; }
+            else if (line[ctr] == 125)    // }
+            { lineCompiled[ctr] = (char)30; }
+            else if (line[ctr] == 123)    // {
+            { lineCompiled[ctr] = (char)31; }
+            else
+            {
+                lineCompiled[ctr] = line[ctr];
+            }
+        }
     }
 
-    for (byte ctr = 0; ctr < 12; ctr++)
-    {
-        if (pfl[ctr + offset] == 1)           //cursor
-        {
-            PFLcompiled[ctr] = (char)36;
-        }
-        else if (pfl[ctr + offset] == 2)      //stars (inverted)
-        {
-            PFLcompiled[ctr] = (char)37;
-        }
-        else if (pfl[ctr + offset] == 3)      //??
-        {
-            PFLcompiled[ctr] = '_';
-        }
-        else if (pfl[ctr + offset] == '~')    //Pfeil nach unten
-        {
-            PFLcompiled[ctr] = (char)29;
-        }
-        else if (pfl[ctr + offset] == 94)     // °
-        {
-            PFLcompiled[ctr] = (char)63;
-        }
-        else if (pfl[ctr + offset] == 125)    // }
-        {
-            PFLcompiled[ctr] = (char)30;
-        }
-        else if (pfl[ctr + offset] == 123)    // {
-        {
-            PFLcompiled[ctr] = (char)31;
-        }
-        else
-        {
-            PFLcompiled[ctr] = pfl[ctr + offset];
-        }
-    }
-
-    std::string ergebnis(PFLcompiled);
+    std::string ergebnis(lineCompiled);    
     return ergebnis;
-}
 
+}
 
 void BMSReader::readF16Data(F16Data* data) {
     // std::cout << "Reading from BMS!\n";    
@@ -256,6 +254,8 @@ void BMSReader::readF16Data(F16Data* data) {
     if (flightData2->IsSetPower(flightData2->BusPowerEssential)) setDatabit(data->powerStates, BUSESSENTIAL); else clearDatabit(data->powerStates, BUSESSENTIAL);
     if (flightData2->IsSetPower(flightData2->BusPowerNonEssential)) setDatabit(data->powerStates, BUSNONESSENTIAL); else clearDatabit(data->powerStates, BUSNONESSENTIAL);
 
+    // setPowerbits(data, flightData2);
+
     /////////////////////////////////////////////////////////////////
     //      Relay bits  
     /////////////////////////////////////////////////////////////////
@@ -266,8 +266,7 @@ void BMSReader::readF16Data(F16Data* data) {
     if (flightData->IsSet3(flightData->FlcsBitRun)) setDatabit(data->relayStates, RLYFLTCTLBIT); else clearDatabit(data->relayStates, RLYFLTCTLBIT);
     if (flightData->IsSet3(flightData->SpeedBrake)) setDatabit(data->relayStates, RLYSPEEDBRAKE); else clearDatabit(data->relayStates, RLYSPEEDBRAKE);
     
-
-    // setPowerbits(data, flightData2);
+    
     /////////////////////////////////////////////////////////////////
     //   Right AUX
     ///////////////////////////////////////////////////////////////// 
@@ -282,9 +281,21 @@ void BMSReader::readF16Data(F16Data* data) {
     data->cabinPress = (unsigned short)flightData2->cabinAlt;
     // CautionPanel
     setCautionLightbits(data, flightData);
-
-
+    // PFD and DED
+    data->pfdLine1 = trimDED_PFD(flightData->PFLLines[0], flightData->PFLInvert[0]);
+    data->pfdLine2 = trimDED_PFD(flightData->PFLLines[1], flightData->PFLInvert[1]);
+    data->pfdLine3 = trimDED_PFD(flightData->PFLLines[2], flightData->PFLInvert[2]);
+    data->pfdLine4 = trimDED_PFD(flightData->PFLLines[3], flightData->PFLInvert[3]);
+    data->pfdLine5 = trimDED_PFD(flightData->PFLLines[4], flightData->PFLInvert[4]);
+        
+    data->dedLine1 = trimDED_PFD(flightData->DEDLines[0], flightData->Invert[0]);
+    data->dedLine2 = trimDED_PFD(flightData->DEDLines[1], flightData->Invert[1]);
+    data->dedLine3 = trimDED_PFD(flightData->DEDLines[2], flightData->Invert[2]);
+    data->dedLine4 = trimDED_PFD(flightData->DEDLines[3], flightData->Invert[3]); 
+    data->dedLine5 = trimDED_PFD(flightData->DEDLines[4], flightData->Invert[4]);
     
-    
 
+    /////////////////////////////////////////////////////////////////
+    //   Instrument Panel
+    ///////////////////////////////////////////////////////////////// 
 }

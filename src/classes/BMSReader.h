@@ -17,6 +17,8 @@ private:
     FlightData* flightData;
     FlightData2* flightData2;
 
+    //F16DataHelper helper;
+
     HANDLE gSharedMemHandle = NULL;
     void* gSharedMemPtr = NULL;
     HANDLE gSharedMemHandle2 = NULL;
@@ -41,6 +43,6 @@ private:
     void checkCPBit(F16Data* data, FlightData* flightdata, FlightData::LightBits2 bmsBit, int scBit);
     void checkCPBit(F16Data* data, FlightData* flightdata, FlightData::LightBits3 bmsBit, int scBit);
     
-    std::string trimPFL(std::string pfl, bool firsthalf);
+    std::string trimDED_PFD(std::string line, char inv[]);
     
 };
