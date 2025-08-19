@@ -130,7 +130,8 @@ int main(int argc, char* argv[])
             std::cout << "connecting to sim...\r";
             if (reader->connectToSim()) {
                 simConnected = true;
-                std::cout << "\nConnected to " << argv[1] << "\n";
+                reader->readF16Data(&data);
+                std::cout << "\nConnected to " << argv[1] << data.simVersion << "\n";
             }
         }
                         
