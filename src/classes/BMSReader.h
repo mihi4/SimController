@@ -24,7 +24,13 @@ private:
 
     miUtility util;
 
-    
+    void setSimVersion(F16Data* data, FlightData2* flightData2);
+
+    void setDatabit(unsigned int &var, unsigned int bit);
+    void setDatabit(unsigned char &var, unsigned int bit);
+    void clearDatabit(unsigned int &var, unsigned int bit);
+    void clearDatabit(unsigned char &var, unsigned int bit);
+
     void checkPowerbit(F16Data* data, FlightData2* flightData2, FlightData2::PowerBits bmsBit, int scBit);
     void setPowerbits(F16Data* data, FlightData2* flightData2);
     void setCautionLightbits(F16Data* data, FlightData* flightdata);
@@ -35,6 +41,6 @@ private:
     void checkCPBit(F16Data* data, FlightData* flightdata, FlightData::LightBits2 bmsBit, int scBit);
     void checkCPBit(F16Data* data, FlightData* flightdata, FlightData::LightBits3 bmsBit, int scBit);
     
-
+    std::string trimPFL(std::string pfl, bool firsthalf);
     
 };
