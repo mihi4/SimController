@@ -99,11 +99,11 @@ public:
 	unsigned int cautionPanelLights = 0; // full 32 bits, bits start with CP
     
 	// ---- PFD ----
-	std::string pfdLine1 = "                    ";
-	std::string pfdLine2 = "                    ";
-	std::string pfdLine3 = "                    ";
-	std::string pfdLine4 = "                    ";
-	std::string pfdLine5 = "                    ";
+	std::string pfdLine1 = "                         ";
+	std::string pfdLine2 = "                         ";
+	std::string pfdLine3 = "                         ";
+	std::string pfdLine4 = "                         ";
+	std::string pfdLine5 = "                         ";
 
 	/// DON'T FORGET TO ADD NEW datafields at the top for the comparator
 
@@ -118,11 +118,11 @@ public:
 
 	unsigned int fuelFlow = 0; // 0 - 99999; let's see later, if we need a string instead
 	
-	std::string dedLine1 = "                    ";
-	std::string dedLine2 = "                    ";
-	std::string dedLine3 = "                    ";
-	std::string dedLine4 = "                    ";
-	std::string dedLine5 = "                    ";
+	std::string dedLine1 = "                         ";
+	std::string dedLine2 = "                         ";
+	std::string dedLine3 = "                         ";
+	std::string dedLine4 = "                         ";
+	std::string dedLine5 = "                         ";
 
 	// **********************
 	// Main Instrument Panel 
