@@ -1,4 +1,6 @@
 #pragma once
+#pragma warning(disable:4715) 
+
 #include "../lib/ArduSerial.h"
 #include "../lib/F16Data.h"
 #include <memory>

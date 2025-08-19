@@ -3,11 +3,11 @@
 Controller::Controller(std::string name, int comPortNum, long baudrate = 115200)
     : controllerName(name), baudrate(baudrate), comPortNum(comPortNum) {
     datafields = {}; // new unsigned char[datafieldCount];    
-    std::cout << "Controller constructor, " << controllerName << std::endl;
+    //std::cout << "Controller constructor, " << controllerName << std::endl;
 }
 
 Controller::~Controller() {
-    std::cout << "Controller " << controllerName << " deconstructor, deleting serial port\n";   
+    //std::cout << "Controller " << controllerName << " deconstructor, deleting serial port\n";   
     //delete serialPort;
 }
 

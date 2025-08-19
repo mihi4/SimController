@@ -1,11 +1,11 @@
 #include "CommsHandler.h"
 
 CommsHandler::CommsHandler() {
-    std::cout << "CommsHandler constructor\n";
+    // std::cout << "CommsHandler constructor\n";
 }
 CommsHandler::~CommsHandler()
 {
-    std::cout << "CommsHandler " << controllerName << " deconstructor\n";
+   // std::cout << "CommsHandler " << controllerName << " deconstructor\n";
     if (serialPort) serialPort.end();
     //delete serialPort;
 }

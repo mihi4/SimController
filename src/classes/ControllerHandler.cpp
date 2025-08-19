@@ -36,7 +36,7 @@ void ControllerHandler::createControllerVector()
         allControllers.emplace_back(Controller(cNames[i],cPortNums[i], 115200));
     }
 
-    contNumber = allControllers.size();
+    contNumber = (int) allControllers.size();
     
 }
 
