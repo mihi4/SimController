@@ -1,5 +1,10 @@
 #pragma once
 
+// defines for the gauge conversion vector
+#define GAUGERPM    0
+#define GAUGEFTIT   1
+#define GAUGEASI    2
+
 struct
 {
     unsigned short absolutwert_u;
@@ -8,6 +13,8 @@ struct
     unsigned short ticks_o;
     unsigned short ticks_delta;
 } GaugeConversion;
+
+
 
 class miUtility {
 public:
@@ -40,5 +47,9 @@ public:
         }
         std::cout << std::endl;
     }
+
+    // conversions for nonlinear gauges: FTIT, ASI, RPM
+
+
 };
 
