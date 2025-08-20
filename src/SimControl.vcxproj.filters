@@ -74,8 +74,5 @@
     <ClInclude Include="classes\CommsHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="classes\F16DataHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
