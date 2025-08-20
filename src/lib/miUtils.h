@@ -1,5 +1,14 @@
 #pragma once
 
+struct
+{
+    unsigned short absolutwert_u;
+    unsigned short absolutwert_o;
+    unsigned short ticks_u;
+    unsigned short ticks_o;
+    unsigned short ticks_delta;
+} GaugeConversion;
+
 class miUtility {
 public:
     long map(long x, long in_min, long in_max, long out_min, long out_max) {
