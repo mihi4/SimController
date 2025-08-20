@@ -60,6 +60,8 @@ Byte mismatch error, bytes sent does not match var datatype
 #define MOD7219      30
 #define MODDED       79
 
+#define FLOATMULT    100
+
 // INSTRUMENT PANEL light bit order
 
 
