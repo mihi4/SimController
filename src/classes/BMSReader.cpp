@@ -298,4 +298,17 @@ void BMSReader::readF16Data(F16Data* data) {
     /////////////////////////////////////////////////////////////////
     //   Instrument Panel
     ///////////////////////////////////////////////////////////////// 
-}
+    
+    //  Instrument Cluster
+    data->oilPressure = (unsigned short) (flightData->oilPressure * FLOATMULT);  // bms val is 0-100, too coarse for smooth movement
+    data->nozzlePos = (unsigned short) (flightData->nozzlePos * FLOATMULT); // bms val is 0-100, too coarse for smooth movement
+    data->rpm = flightData->rpm; // FIXXXME, use trim function
+    data->ftit = flightData->ftit; // FIXXXME, use trim function
+
+    data->fuelFlow = (int) flightData->fuelFlow;
+
+    
+
+
+}   
+
