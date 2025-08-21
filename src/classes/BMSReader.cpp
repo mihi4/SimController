@@ -49,21 +49,7 @@ void BMSReader::setSimVersion(F16Data* data, FlightData2* flightData2) {
     data->simVersion.append(buf);
 }
 
-bool BMSReader::getBlinkStatus(FlightData2* flightdata2, FlightData2::BlinkBits blinkBit) {
-    auto currentTime = std::chrono::steady_clock::now();
-    unsigned short intervall = 0;
 
-    if (!flightdata2->IsSetBlink(blinkBit)) return true; // blinkbit in mem not set, so it should light normally
-
-    double dIndex = std::log((int)blinkBit) / std::log(2);
-    char vectorIndex = (char)dIndex;
-    auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastToggleTimes[vectorIndex]).count();
-    if (elapsedTime >= intervals[vectorIndex]) {
-        status[vectorIndex] = !status[vectorIndex];
-        lastToggleTimes[vectorIndex] = currentTime; // Aktualisiere den letzten Toggle-Zeitpunkt 
-    }
-    return status[vectorIndex];
-}
 
 
 
@@ -252,6 +238,22 @@ std::string BMSReader::trimDED_PFD(std::string line, char inv[]) {
 
 }
 
+bool BMSReader::getBlinkStatus(FlightData2* flightdata2, FlightData2::BlinkBits blinkBit) {
+    auto currentTime = std::chrono::steady_clock::now();
+    unsigned short intervall = 0;
+
+    if (!flightdata2->IsSetBlink(blinkBit)) return true; // blinkbit in mem not set, so it should light normally
+
+    double dIndex = std::log((int)blinkBit) / std::log(2);
+    char vectorIndex = (char)dIndex;
+    auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastToggleTimes[vectorIndex]).count();
+    if (elapsedTime >= intervals[vectorIndex]) {
+        status[vectorIndex] = !status[vectorIndex];
+        lastToggleTimes[vectorIndex] = currentTime; // Aktualisiere den letzten Toggle-Zeitpunkt 
+    }
+    return status[vectorIndex];
+}
+
 void BMSReader::readF16Data(F16Data* data) {
     // std::cout << "Reading from BMS!\n";    
 
@@ -300,11 +302,11 @@ void BMSReader::readF16Data(F16Data* data) {
     // HYD PRESS
     data->hydA = (unsigned short)flightData2->hydPressureA;
     data->hydB = (unsigned short)flightData2->hydPressureB;   
-    data->epuFuel = (unsigned short) util.map((long)flightData->epuFuel*100, 0, 10000, 0, 65535);
+    data->epuFuel = (unsigned short)(flightData->epuFuel * FLOATMULT); // util.map((long)flightData->epuFuel*FLOATMULT, 0, 10000, 0, 65535);
     data->cabinPress = (unsigned short)flightData2->cabinAlt;
     // CautionPanel
     setCautionLightbits(data, flightData);
-    // separat code for blinking CP lights PROBEHEAT and Elec_Fault
+    // separat code for blinking CP lights PROBEHEAT and Elec_Fault   
     if (flightData->IsSet2(flightData->PROBEHEAT) && getBlinkStatus(flightData2, flightData2->PROBEHEAT)) setCPBit(data, CPPROBEHEAT); else clearCPBit(data, CPPROBEHEAT);
     if (flightData->IsSet3(flightData->Elec_Fault) && getBlinkStatus(flightData2, flightData2->Elec_Fault)) setCPBit(data, CPELECSYS); else clearCPBit(data, CPELECSYS);
     
@@ -329,21 +331,25 @@ void BMSReader::readF16Data(F16Data* data) {
     //  Engine Cluster
     data->oilPressure = (unsigned short) (flightData->oilPressure * FLOATMULT);  // bms val is 0-100, too coarse for smooth movement
     data->nozzlePos = (unsigned short) (flightData->nozzlePos * FLOATMULT); // bms val is 0-100, too coarse for smooth movement
-    data->rpm = (unsigned short) flightData->rpm * FLOATMULT; // FIXXXME, use trim function
-    data->ftit = (unsigned short) flightData->ftit * FLOATMULT; // FIXXXME, use trim function
+    data->rpm = (unsigned short) (flightData->rpm * FLOATMULT); // FIXXXME, use trim function
+    data->ftit = (unsigned short) (flightData->ftit * FLOATMULT); // FIXXXME, use trim function
 
-    data->fuelFlow = (unsigned int) flightData->fuelFlow;
+    data->fuelFlow = (unsigned int) (flightData->fuelFlow / 100); // only the first 3 digits change in fuelflow
 
     // main instruments
 
-    data->kias = (unsigned int)flightData->kias * FLOATMULT; //FIXXXME, use trim function
-    data->mach = (unsigned short)flightData->mach * FLOATMULT; 
-    data->altitude = (int)flightData2->AAUZ;
+    data->kias = (unsigned int)(flightData->kias * FLOATMULT); //FIXXXME, use trim function
+    data->mach = (unsigned short)(flightData->mach * FLOATMULT);     
+
+    data->altitude = (int)(flightData2->AAUZ*-1);
     data->altPointer = (data->altitude) % 1000;
     data->altCalibration = std::to_string(flightData2->AltCalReading);
-    data->altThousands = std::to_string((int)(data->altitude / 1000));
+    data->altThousands = std::to_string((int)(data->altitude / 100));
     
-    // instrument lighbits FIXXXME finish later
+    // instrument bits FIXXXME
+
+
+    // instrument panel lighbits FIXXXME finish later
     // left eyebrows
     if (flightData->IsSet(flightData->MasterCaution)) setDatabit(data->instPanelLights, EBMASTERC); else clearDatabit(data->instPanelLights, EBMASTERC);
     if (flightData->IsSet(flightData->TF)) setDatabit(data->instPanelLights, EBTFFAIL); else clearDatabit(data->instPanelLights, EBTFFAIL);
