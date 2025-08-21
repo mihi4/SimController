@@ -62,8 +62,9 @@ Byte mismatch error, bytes sent does not match var datatype
 
 #define FLOATMULT    100
 
-// INSTRUMENT PANEL light bit order
-
+#define BLINKBITNUM  13
+#define BLINKSLOW    800  // intervalls in milliseconds for blinking warning lights
+#define BLINKFAST    400
 
 // variable numbers to use to configure data to get from F16Data.h 
 // let's see if 255 values are enough ;-) (light- and statusbits are stored in 1- or 2-byte vars
@@ -251,7 +252,7 @@ Byte mismatch error, bytes sent does not match var datatype
 #define TWPHANDOFF         0x04
 #define TWPLAUNCH          0x08
 #define TWPPRIMODE         0x10
-#define TWPUUNKNOWN        0x20
+#define TWPUNKNOWN        0x20
 #define TWPSYSTEST         0x40
 #define TWPTGTSEP          0x80
 // MISC
@@ -259,9 +260,9 @@ Byte mismatch error, bytes sent does not match var datatype
 #define MODEACTIVE      0x200
 #define MODESTBY        0x400
 // HUD indexer
-#define IDXAOAUP        0x800
-#define IDXAOACENTER    0x1000
-#define IDXAOADOWN      0x2000
+#define IDXAOAABOVE     0x800
+#define IDXAOAON        0x1000
+#define IDXAOABELOW     0x2000
 #define IDXRDY          0x4000
 #define IDXARNWS        0x8000
 #define IDXDISC         0x10000
