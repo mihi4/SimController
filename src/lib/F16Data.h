@@ -131,7 +131,7 @@ public:
 	unsigned short kias = 0; // 0-65535, scale not linear!
 	unsigned short mach = 0; // see kias
 	unsigned short altPointer = 0; // pointer value, 0 - 1000, one revolution of the pointer
-	unsigned int altitude = 0;
+	int altitude = 0;
 	std::string altCalibration = "    "; // e.g. 2992, 1015
 	std::string altThousands = "   ";
 	short vvi = 0; // original zDot is float value, ft/sec -6000 to 6000
@@ -150,7 +150,7 @@ public:
 	int hsiAirbaseX = 0;
 	int hsiAirbaseY = 0;
 
-	unsigned short instrumentBits = 0;  // bist start with INST
+	unsigned short instrumentBits = 0;  // bits start with INST
 
 	unsigned int instPanelLights = 0;  // lightbits of InstPanel (MISC, TWP, Indexers, Eyebrows)
 
