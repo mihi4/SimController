@@ -172,13 +172,19 @@ void BMSReader::setPowerbits(F16Data* data, FlightData2* flightData2) {
 void BMSReader::setDatabit(unsigned int &var,  unsigned int bit) {    
     var |= bit;    
 }
-void BMSReader::setDatabit(unsigned char &var, unsigned int bit) {
-    var |= bit;    
-}
-void BMSReader::clearDatabit(unsigned int&var, unsigned int bit) {
+void BMSReader::clearDatabit(unsigned int& var, unsigned int bit) {
     var &= ~bit;
 }
-void BMSReader::clearDatabit(unsigned char &var, unsigned int bit) {
+void BMSReader::setDatabit(unsigned short& var, unsigned short bit) {
+    var |= bit;
+}
+void BMSReader::clearDatabit(unsigned short& var, unsigned short bit) {
+    var &= ~bit;
+}
+void BMSReader::setDatabit(unsigned char &var, unsigned char bit) {
+    var |= bit;    
+}
+void BMSReader::clearDatabit(unsigned char &var, unsigned char bit) {
     var &= ~bit;
 }
 

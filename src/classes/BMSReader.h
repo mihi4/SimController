@@ -37,10 +37,12 @@ private:
     bool getBlinkStatus(FlightData2* flightdata2, FlightData2::BlinkBits blinkBit);
 
 
-    void setDatabit(unsigned int& var, unsigned int bit);
-    void setDatabit(unsigned char &var, unsigned int bit);
+    void setDatabit(unsigned int &var, unsigned int bit);
     void clearDatabit(unsigned int &var, unsigned int bit);
-    void clearDatabit(unsigned char &var, unsigned int bit); 
+    void setDatabit(unsigned char &var, unsigned char bit);    
+    void clearDatabit(unsigned char &var, unsigned char bit); 
+    void setDatabit(unsigned short &var, unsigned short bit);
+    void clearDatabit(unsigned short &var, unsigned short bit);
 
     void checkPowerbit(F16Data* data, FlightData2* flightData2, FlightData2::PowerBits bmsBit, int scBit);
     void setPowerbits(F16Data* data, FlightData2* flightData2);
