@@ -132,7 +132,8 @@ public:
 	unsigned short mach = 0; // see kias
 	unsigned short altPointer = 0; // pointer value, 0 - 1000, one revolution of the pointer
 	unsigned int altitude = 0;
-	unsigned short altCalibration = 0; // e.g. 2992, 1015
+	std::string altCalibration = "    "; // e.g. 2992, 1015
+	std::string altThousands = "   ";
 	short vvi = 0; // original zDot is float value, ft/sec -6000 to 6000
 	short aoa = 0;	// original alpha is float value degrees, multiply with 100(?)
 

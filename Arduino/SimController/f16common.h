@@ -191,8 +191,9 @@ Byte mismatch error, bytes sent does not match var datatype
 // Main Instrument Panel 
 // **********************
 
-#define ASI                 39
-#define MACH                40
+#define ASI                 38
+#define MACH                39
+#define ALTTHOUSANDS        40
 #define ALTPOINTER          41   
 #define ALTITUDE            42
 #define ALTCAL              43
