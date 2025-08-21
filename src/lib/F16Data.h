@@ -64,8 +64,8 @@ public:
 			cmds01Str == d.cmds01Str &&
 			cmds02Str == d.cmds02Str &&
 			cmdsChaffStr == d.cmdsChaffStr &&
-			cmdsFlareStr == d.cmdsFlareStr
-
+			cmdsFlareStr == d.cmdsFlareStr &&
+			simVersion == d.simVersion
 			;
 	}
 
@@ -177,7 +177,7 @@ public:
 	std::string cmds02Str = "    ";
 	std::string cmdsChaffStr = "    ";
 	std::string cmdsFlareStr = "    ";
-
+	
 	std::string simVersion = "";
 };
 
