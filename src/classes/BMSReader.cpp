@@ -169,17 +169,17 @@ void BMSReader::setPowerbits(F16Data* data, FlightData2* flightData2) {
    
 }
 
-void BMSReader::setDatabit(unsigned int &var,  unsigned int bit) {
-    var |= bit;
+void BMSReader::setDatabit(unsigned int &var,  unsigned int bit) {    
+    var |= bit;    
 }
 void BMSReader::setDatabit(unsigned char &var, unsigned int bit) {
-    var |= bit;
+    var |= bit;    
 }
 void BMSReader::clearDatabit(unsigned int&var, unsigned int bit) {
-    var &= bit;
+    var &= ~bit;
 }
 void BMSReader::clearDatabit(unsigned char &var, unsigned int bit) {
-    var &= bit;
+    var &= ~bit;
 }
 
 void setECMBits(F16Data* data, FlightData2* flightdata2) {
@@ -347,18 +347,25 @@ void BMSReader::readF16Data(F16Data* data) {
     data->altThousands = std::to_string((int)(data->altitude / 100));
     
     // instrument bits FIXXXME
-
-
+    
+    
     // instrument panel lighbits FIXXXME finish later
-    // left eyebrows
-    if (flightData->IsSet(flightData->MasterCaution)) setDatabit(data->instPanelLights, EBMASTERC); else clearDatabit(data->instPanelLights, EBMASTERC);
+    // left eyebrows  
+    if (flightData->IsSet(flightData->MasterCaution)) {
+        std::cout << "MasterCaution ON\n";
+        setDatabit(data->instPanelLights, 0x02);
+    }    
+    else {
+        std::cout << "MasterCaution OFF\n";
+        clearDatabit(data->instPanelLights, 0x02);
+    }
+
     if (flightData->IsSet(flightData->TF)) setDatabit(data->instPanelLights, EBTFFAIL); else clearDatabit(data->instPanelLights, EBTFFAIL);
     // TWP
     if (flightData->IsSet2(flightData->HandOff)) setDatabit(data->instPanelLights, TWPHANDOFF); else clearDatabit(data->instPanelLights, TWPHANDOFF);
     if (flightData->IsSet2(flightData->Launch) && getBlinkStatus(flightData2, flightData2->Launch)) setDatabit(data->instPanelLights, TWPLAUNCH); else clearDatabit(data->instPanelLights, TWPLAUNCH);
     if (flightData->IsSet2(flightData->PriMode) && getBlinkStatus(flightData2, flightData2->PriMode)) setDatabit(data->instPanelLights, TWPPRIMODE); else clearDatabit(data->instPanelLights, TWPPRIMODE);
-    if (flightData->IsSet2(flightData->Unk) && getBlinkStatus(flightData2, flightData2->Unk)) setDatabit(data->instPanelLights, TWPUNKNOWN); else clearDatabit(data->instPanelLights, TWPUNKNOWN);
-    if (flightData->IsSet2(flightData->Unk) && getBlinkStatus(flightData2, flightData2->Unk)) setDatabit(data->instPanelLights, TWPUNKNOWN); else clearDatabit(data->instPanelLights, TWPUNKNOWN);
+    if (flightData->IsSet2(flightData->Unk) && getBlinkStatus(flightData2, flightData2->Unk)) setDatabit(data->instPanelLights, TWPUNKNOWN); else clearDatabit(data->instPanelLights, TWPUNKNOWN);    
     if (flightData->IsSet3(flightData->SysTest)) setDatabit(data->instPanelLights, TWPSYSTEST); else clearDatabit(data->instPanelLights, TWPSYSTEST);
     if (flightData->IsSet2(flightData->TgtSep)) setDatabit(data->instPanelLights, TWPTGTSEP); else clearDatabit(data->instPanelLights, TWPTGTSEP);
     // ECM light

@@ -14,7 +14,7 @@ public:
     bool connectToSim();
     BMSReader(); // default constructor
     ~BMSReader(); // default constructor
-
+    
 private:
     FlightData* flightData;
     FlightData2* flightData2;
@@ -31,16 +31,16 @@ private:
     void setSimVersion(F16Data* data, FlightData2* flightData2);
 
     // blinking logic data
-    int intervals[BLINKBITNUM] = {BLINKSLOW, BLINKFAST, BLINKSLOW, BLINKSLOW, BLINKSLOW, BLINKSLOW, BLINKSLOW, BLINKSLOW, BLINKSLOW, BLINKSLOW, BLINKSLOW, BLINKFAST, BLINKSLOW, };
+    int intervals[BLINKBITNUM] = {BLINKSLOW, BLINKFAST, BLINKSLOW, BLINKFAST, BLINKFAST, BLINKFAST, BLINKSLOW, BLINKSLOW, BLINKSLOW, BLINKSLOW, BLINKSLOW, BLINKFAST, BLINKSLOW, };
     bool status[BLINKBITNUM];
     std::chrono::steady_clock::time_point lastToggleTimes[BLINKBITNUM]; // Letzte Toggle-Zeitpunkte  
     bool getBlinkStatus(FlightData2* flightdata2, FlightData2::BlinkBits blinkBit);
 
 
-    void setDatabit(unsigned int &var, unsigned int bit);
+    void setDatabit(unsigned int& var, unsigned int bit);
     void setDatabit(unsigned char &var, unsigned int bit);
     void clearDatabit(unsigned int &var, unsigned int bit);
-    void clearDatabit(unsigned char &var, unsigned int bit);
+    void clearDatabit(unsigned char &var, unsigned int bit); 
 
     void checkPowerbit(F16Data* data, FlightData2* flightData2, FlightData2::PowerBits bmsBit, int scBit);
     void setPowerbits(F16Data* data, FlightData2* flightData2);
