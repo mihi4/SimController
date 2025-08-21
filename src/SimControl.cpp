@@ -44,7 +44,6 @@ std::unique_ptr<DataReader> createDataReader(short selectedSim) {
     }    
 }
 
-
 int main(int argc, char* argv[])
 {   
     std::cout << "*************************************************************\n";
@@ -53,7 +52,6 @@ int main(int argc, char* argv[])
     std::cout << "*                                                           *\n";
     std::cout << "*************************************************************\n";
 
-    Sleep(200);
     /*********************************************
        check if commandline parameter fit 
        if not, print message and quit
@@ -83,40 +81,17 @@ int main(int argc, char* argv[])
 
     F16Data data;
     F16Data prevData;
-    // miUtility util;
+    miUtility util;
     
     bool simConnected = false;    
-
-    /* 
-    for first iteration create Arduinos in code, later read from config file
-    */    
-    char controllerNum = 1;
     
-    //Controller * allControllers = new Controller[controllerNum];
+    std::cout << "------ Setting up Controllers ------\n";    
     
-    std::cout << "------ Setting up Controllers ------\n";
-    // setupControllers();
-    ControllerHandler cHandler("dummyFilename");
+    ControllerHandler cHandler("dummyFilename");  // later read config from file, maybe
 
     cHandler.setupControllers();
     cHandler.showControllers();
     
-
-  
-    /* int controllerSize = allControllers.size();
-    std::cout << "main size after setup is " << controllerSize << std::endl;
-
-    std::cout << "------ Controller setup done ------\n"; 
-    std::cout << "###### Initializing Controllers ######\n";
-    for (int i = 0; i < controllerSize; i++) {
-       allControllers[i].initialize();
-       allControllers[i].connect();
-    }
-    std::cout << "###### Initializing done ######\n";
-    */
-
-    //Controller c1("RightAUX", "COM1", 115200, { FUELAFT, FUELFWD, FUELTOTAL, HYDA, HYDB, EPUFUEL, CABINPRESS, CAUTIONPANELLIGHTS });
-    //srand(time(NULL)); // Seed the time
     /****************************************
      
                     main loop
@@ -143,13 +118,21 @@ int main(int argc, char* argv[])
         } else {
             simConnected = false; // try again next run
         }
-        
+        data.instPanelLights = 0;
+        std::cout << "instLight vor set: " << util.getBinaryRep(data.instPanelLights) << "\n";
+        data.instPanelLights |= EBMASTERC;
+        Sleep(500);
+        std::cout << "instLight vor clear: " << util.getBinaryRep(data.instPanelLights) << "\n";
+        data.instPanelLights &= ~EBMASTERC;
+        std::cout << "instLight nach clear: " << util.getBinaryRep(data.instPanelLights) << "\n";
+        std::cout << "---------\n";
+
         cHandler.readControllerComms();
         
         // check for quit keycommand LCTRL+LSHIFT+LALT+BACKSPACE
         if ((GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)) { break; }
         
-        Sleep(10);
+        Sleep(400);
         
     }
     
