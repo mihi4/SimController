@@ -2,8 +2,6 @@
 //
 #include "SimControl.h"
 
-std::vector<Controller> allControllers;
-
 bool checkParameter(int argNum) {
     if (argNum == 2) return false;
     return true;

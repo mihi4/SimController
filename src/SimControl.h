@@ -13,8 +13,8 @@
 #include "classes/ControllerHandler.h"
 
 #define BMS 1
-#define DCS 2 // reader not implemented ye
-#define MSFS 3 // reader not implemented ye
+#define DCS 2 // reader not implemented yet
+#define MSFS 3 // reader not implemented yet
 
 bool checkParameter(int argNum);
 char parseSimParameter(char* argv[]);
