@@ -65,6 +65,11 @@ public:
 			cmds02Str == d.cmds02Str &&
 			cmdsChaffStr == d.cmdsChaffStr &&
 			cmdsFlareStr == d.cmdsFlareStr &&
+			adiPitch == d.adiPitch &&
+			adiRoll == d.adiRoll &&
+			adiIlsHorPos == d.adiIlsHorPos &&
+			adiIlsVerPos == d.adiIlsVerPos &&
+			adiSideslip == d.adiSideslip &&
 			simVersion == d.simVersion
 			;
 	}
@@ -178,6 +183,13 @@ public:
 	std::string cmdsChaffStr = "    ";
 	std::string cmdsFlareStr = "    ";
 	
+	int adiPitch = 0;
+	int adiRoll = 0;
+	int adiIlsHorPos = 0;
+	int adiIlsVerPos = 0;
+	int adiSideslip = 0;
+
+
 	std::string simVersion = "";
 };
 

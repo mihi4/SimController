@@ -249,12 +249,12 @@ Byte mismatch error, bytes sent does not match var datatype
 #define EBMASTERC       0x01
 #define EBTFFAIL        0x02
 // TWP
-#define TWPHANDOFF         0x04
-#define TWPLAUNCH          0x08
-#define TWPPRIMODE         0x10
-#define TWPUNKNOWN        0x20
-#define TWPSYSTEST         0x40
-#define TWPTGTSEP          0x80
+#define TWPHANDOFF      0x04
+#define TWPLAUNCH       0x08
+#define TWPPRIMODE      0x10
+#define TWPUNKNOWN      0x20
+#define TWPSYSTEST      0x40
+#define TWPTGTSEP       0x80
 // MISC
 #define ECMON           0x100
 #define MODEACTIVE      0x200
@@ -371,5 +371,13 @@ Byte mismatch error, bytes sent does not match var datatype
 #define CMDS02STR          87  // 02 String
 #define CMDSCHAFFSTR       88  // ChaffString
 #define CMDSFLARESTR       89  // Flarestring
+
+// ADI data
+#define ADIPITCH          90
+#define ADIROLL           91
+#define ADIILSHORPOS      92
+#define ADIILSVERPOS      93
+#define ADISIDESLIP       94
+
 
 #define SIMVERSION          255  // at least available for BMS, let's see for DCS and MSFS
