@@ -63,8 +63,8 @@ Byte mismatch error, bytes sent does not match var datatype
 #define FLOATMULT    100
 
 #define BLINKBITNUM  13
-#define BLINKSLOW    700  // intervalls in milliseconds for blinking warning lights
-#define BLINKFAST    300
+#define BLINKSLOW    600  // intervalls in milliseconds for blinking warning lights
+#define BLINKFAST    250
 
 // variable numbers to use to configure data to get from F16Data.h 
 // let's see if 255 values are enough ;-) (light- and statusbits are stored in 1- or 2-byte vars
