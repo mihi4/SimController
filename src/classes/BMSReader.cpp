@@ -49,6 +49,24 @@ void BMSReader::setSimVersion(F16Data* data, FlightData2* flightData2) {
     data->simVersion.append(buf);
 }
 
+bool BMSReader::getBlinkStatus(FlightData2* flightdata2, FlightData2::BlinkBits blinkBit) {
+    auto currentTime = std::chrono::steady_clock::now();
+    unsigned short intervall = 0;
+
+    if (!flightdata2->IsSetBlink(blinkBit)) return true; // blinkbit in mem not set, so it should light normally
+
+    double dIndex = std::log((int)blinkBit) / std::log(2);
+    char vectorIndex = (char)dIndex;
+    auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastToggleTimes[vectorIndex]).count();
+    if (elapsedTime >= intervals[vectorIndex]) {
+        status[vectorIndex] = !status[vectorIndex];
+        lastToggleTimes[vectorIndex] = currentTime; // Aktualisiere den letzten Toggle-Zeitpunkt 
+    }
+    return status[vectorIndex];
+}
+
+
+
 void BMSReader::setCPBit(F16Data* data, unsigned long bit) {
     data->cautionPanelLights |= bit;
 }
@@ -129,14 +147,15 @@ void BMSReader::setCautionLightbits(F16Data* data, FlightData* flightdata) {
     checkCPBit(data, flightData, flightdata->AftFuelLow, CPAFTFUEL);
     checkCPBit(data, flightData, flightdata->SEC, CPSEC);
     checkCPBit(data, flightData, flightdata->OXY_LOW, CPOXYLOW);
-    checkCPBit(data, flightData, flightdata->PROBEHEAT, CPPROBEHEAT);
+    // checkCPBit(data, flightData, flightdata->PROBEHEAT, CPPROBEHEAT);
+    
     checkCPBit(data, flightData, flightdata->SEAT_ARM, CPSEAT);
     checkCPBit(data, flightData, flightdata->BUC, CPBUC);
     checkCPBit(data, flightData, flightdata->FUEL_OIL_HOT, CPFUELOIL);
     checkCPBit(data, flightData, flightdata->ANTI_SKID, CPANTISKID);
     
     // lightbits3
-    checkCPBit(data, flightData, flightdata->Elec_Fault, CPELECSYS);
+    // checkCPBit(data, flightData, flightdata->Elec_Fault, CPELECSYS);
     //checkCPBit(data, flightData, flightdata->Lef_Fault, 
     checkCPBit(data, flightData, flightdata->cadc, CPCADC);
     checkCPBit(data, flightData, flightdata->ATF_Not_Engaged, CPATF);
@@ -175,6 +194,10 @@ void BMSReader::clearDatabit(unsigned int&var, unsigned int bit) {
 }
 void BMSReader::clearDatabit(unsigned char &var, unsigned int bit) {
     var &= bit;
+}
+
+void setECMBits(F16Data* data, FlightData2* flightdata2) {
+    // FIXXXME
 }
 
 std::string BMSReader::trimDED_PFD(std::string line, char inv[]) {    
@@ -235,7 +258,7 @@ void BMSReader::readF16Data(F16Data* data) {
     flightData = (FlightData*)gSharedMemPtr;
     flightData2 = (FlightData2*)gSharedMemPtr2;
     
-    setSimVersion(data, flightData2);
+    setSimVersion(data, flightData2);    
 
     /////////////////////////////////////////////////////////////////
     //      SIM Bits
@@ -281,6 +304,10 @@ void BMSReader::readF16Data(F16Data* data) {
     data->cabinPress = (unsigned short)flightData2->cabinAlt;
     // CautionPanel
     setCautionLightbits(data, flightData);
+    // separat code for blinking CP lights PROBEHEAT and Elec_Fault
+    if (flightData->IsSet2(flightData->PROBEHEAT) && getBlinkStatus(flightData2, flightData2->PROBEHEAT)) setCPBit(data, CPPROBEHEAT); else clearCPBit(data, CPPROBEHEAT);
+    if (flightData->IsSet3(flightData->Elec_Fault) && getBlinkStatus(flightData2, flightData2->Elec_Fault)) setCPBit(data, CPELECSYS); else clearCPBit(data, CPELECSYS);
+    
     // PFD and DED
     data->pfdLine1 = trimDED_PFD(flightData->PFLLines[0], flightData->PFLInvert[0]);
     data->pfdLine2 = trimDED_PFD(flightData->PFLLines[1], flightData->PFLInvert[1]);
@@ -299,16 +326,96 @@ void BMSReader::readF16Data(F16Data* data) {
     //   Instrument Panel
     ///////////////////////////////////////////////////////////////// 
     
-    //  Instrument Cluster
+    //  Engine Cluster
     data->oilPressure = (unsigned short) (flightData->oilPressure * FLOATMULT);  // bms val is 0-100, too coarse for smooth movement
     data->nozzlePos = (unsigned short) (flightData->nozzlePos * FLOATMULT); // bms val is 0-100, too coarse for smooth movement
-    data->rpm = flightData->rpm; // FIXXXME, use trim function
-    data->ftit = flightData->ftit; // FIXXXME, use trim function
+    data->rpm = (unsigned short) flightData->rpm * FLOATMULT; // FIXXXME, use trim function
+    data->ftit = (unsigned short) flightData->ftit * FLOATMULT; // FIXXXME, use trim function
 
-    data->fuelFlow = (int) flightData->fuelFlow;
+    data->fuelFlow = (unsigned int) flightData->fuelFlow;
 
+    // main instruments
+
+    data->kias = (unsigned int)flightData->kias * FLOATMULT; //FIXXXME, use trim function
+    data->mach = (unsigned short)flightData->mach * FLOATMULT; 
+    data->altitude = (int)flightData2->AAUZ;
+    data->altPointer = (data->altitude) % 1000;
+    data->altCalibration = std::to_string(flightData2->AltCalReading);
+    data->altThousands = std::to_string((int)(data->altitude / 1000));
     
+    // instrument lighbits FIXXXME finish later
+    // left eyebrows
+    if (flightData->IsSet(flightData->MasterCaution)) setDatabit(data->instPanelLights, EBMASTERC); else clearDatabit(data->instPanelLights, EBMASTERC);
+    if (flightData->IsSet(flightData->TF)) setDatabit(data->instPanelLights, EBTFFAIL); else clearDatabit(data->instPanelLights, EBTFFAIL);
+    // TWP
+    if (flightData->IsSet2(flightData->HandOff)) setDatabit(data->instPanelLights, TWPHANDOFF); else clearDatabit(data->instPanelLights, TWPHANDOFF);
+    if (flightData->IsSet2(flightData->Launch) && getBlinkStatus(flightData2, flightData2->Launch)) setDatabit(data->instPanelLights, TWPLAUNCH); else clearDatabit(data->instPanelLights, TWPLAUNCH);
+    if (flightData->IsSet2(flightData->PriMode) && getBlinkStatus(flightData2, flightData2->PriMode)) setDatabit(data->instPanelLights, TWPPRIMODE); else clearDatabit(data->instPanelLights, TWPPRIMODE);
+    if (flightData->IsSet2(flightData->Unk) && getBlinkStatus(flightData2, flightData2->Unk)) setDatabit(data->instPanelLights, TWPUNKNOWN); else clearDatabit(data->instPanelLights, TWPUNKNOWN);
+    if (flightData->IsSet2(flightData->Unk) && getBlinkStatus(flightData2, flightData2->Unk)) setDatabit(data->instPanelLights, TWPUNKNOWN); else clearDatabit(data->instPanelLights, TWPUNKNOWN);
+    if (flightData->IsSet3(flightData->SysTest)) setDatabit(data->instPanelLights, TWPSYSTEST); else clearDatabit(data->instPanelLights, TWPSYSTEST);
+    if (flightData->IsSet2(flightData->TgtSep)) setDatabit(data->instPanelLights, TWPTGTSEP); else clearDatabit(data->instPanelLights, TWPTGTSEP);
+    // ECM light
+    if (flightData->IsSet2(flightData->EcmPwr) && getBlinkStatus(flightData2, flightData2->ECM_Oper)) setDatabit(data->instPanelLights, ECMON); else clearDatabit(data->instPanelLights, ECMON);
+    // MISC Panel TFR light
+    if (flightData->IsSet2(flightData->TFR_ENGAGED )) setDatabit(data->instPanelLights, MODEACTIVE); else clearDatabit(data->instPanelLights, MODEACTIVE);
+    if (flightData->IsSet(flightData->TFR_STBY)) setDatabit(data->instPanelLights, MODESTBY); else clearDatabit(data->instPanelLights, MODESTBY);
+    // HUD indexers
+    if (flightData->IsSet(flightData->AOAAbove)) setDatabit(data->instPanelLights, IDXAOAABOVE); else clearDatabit(data->instPanelLights, IDXAOAABOVE);
+    if (flightData->IsSet(flightData->AOAOn)) setDatabit(data->instPanelLights, IDXAOAON); else clearDatabit(data->instPanelLights, IDXAOAON);
+    if (flightData->IsSet(flightData->AOABelow)) setDatabit(data->instPanelLights, IDXAOABELOW); else clearDatabit(data->instPanelLights, IDXAOABELOW);
+    if (flightData->IsSet(flightData->RefuelRDY)) setDatabit(data->instPanelLights, IDXRDY); else clearDatabit(data->instPanelLights, IDXRDY);
+    if (flightData->IsSet(flightData->RefuelAR)) setDatabit(data->instPanelLights, IDXARNWS); else clearDatabit(data->instPanelLights, IDXARNWS);
+    if (flightData->IsSet(flightData->RefuelDSC)) setDatabit(data->instPanelLights, IDXDISC); else clearDatabit(data->instPanelLights, IDXDISC);
+    // right eyebrows
+    if (flightData->IsSet(flightData->ENG_FIRE)) setDatabit(data->instPanelLights, EBENGFIRE); else clearDatabit(data->instPanelLights, EBENGFIRE);
+    if (flightData->IsSet2(flightData->ENGINE)) setDatabit(data->instPanelLights, EBENGINE); else clearDatabit(data->instPanelLights, EBENGINE);
+    if (flightData->IsSet(flightData->HYD)) setDatabit(data->instPanelLights, EBHYDOILPRESS); else clearDatabit(data->instPanelLights, EBHYDOILPRESS);
+    if (flightData->IsSet(flightData->FLCS)) setDatabit(data->instPanelLights, EBFLCS); else clearDatabit(data->instPanelLights, EBFLCS);
+    if (flightData->IsSet3(flightData->DbuWarn)) setDatabit(data->instPanelLights, EBDBUON); else clearDatabit(data->instPanelLights, EBDBUON);
+    if (flightData->IsSet(flightData->T_L_CFG)) setDatabit(data->instPanelLights, EBTOLDGCFG); else clearDatabit(data->instPanelLights, EBTOLDGCFG);
+    // CANOPY??!?!
+    if (flightData->IsSet(flightData->OXY_BROW)) setDatabit(data->instPanelLights, EBOXYLOW); else clearDatabit(data->instPanelLights, EBOXYLOW);
+    // marker beacon
+    if (flightData->IsSetHsi(flightData->OuterMarker)) { 
+        if (getBlinkStatus(flightData2, flightData2->OuterMarker)) setDatabit(data->instPanelLights, MARKERBEACON); else clearDatabit(data->instPanelLights, MARKERBEACON);
+    }
+    if (flightData2->IsSetBlink(flightData2->MiddleMarker)) {
+        if (getBlinkStatus(flightData2, flightData2->MiddleMarker)) setDatabit(data->instPanelLights, MARKERBEACON); else clearDatabit(data->instPanelLights, MARKERBEACON);
+    }
+    
+    /////////////////////////////////////////////////////////////////
+    //   Left Console
+    ///////////////////////////////////////////////////////////////// 
+   
+    // CMDS
+    data->cmdsChaffStr = std::to_string( (int) flightData->ChaffCount);
+    data->cmdsFlareStr = std::to_string((int)flightData->FlareCount);
+
+    if (flightData->IsSet2(flightData->Go))  setDatabit(data->cmdsBits, CMDSGO); else clearDatabit(data->cmdsBits, CMDSGO);
+    if (flightData->IsSet2(flightData->NoGo))  setDatabit(data->cmdsBits, CMDSNOGO); else clearDatabit(data->cmdsBits, CMDSNOGO);
+    if (flightData->IsSet2(flightData->Degr))  setDatabit(data->cmdsBits, CMDSDEGR); else clearDatabit(data->cmdsBits, CMDSDEGR);
+    if (flightData->IsSet2(flightData->Rdy))  setDatabit(data->cmdsBits, CMDSRDY); else clearDatabit(data->cmdsBits, CMDSRDY);
+
+    // UHF
+    data->uhfChannel = flightData2->uhf_panel_preset;
+    data->uhfFrequency = std::to_string(flightData2->uhf_panel_frequency);
+
+    // IFF/AUXCOMM
+
+    data->iffDisplay = flightData2->iffBackupMode1Digit1 + flightData2->iffBackupMode1Digit2 + flightData2->iffBackupMode3ADigit1 + flightData2->iffBackupMode3ADigit2;
+    data->auxDisplay = std::to_string(flightData->AUXTChan);
+
+    // MANTRIM
+
+    data->trimPitch = flightData->TrimPitch * FLOATMULT;
+    data->trimRoll = flightData->TrimRoll * FLOATMULT;
+
+    // ECM Bits
 
 
+    // Left Console Lightbits
+
+    if (flightData->IsSet2(flightData->GEARHANDLE)) setDatabit(data->instPanelLights, GEARLIGHT); else clearDatabit(data->instPanelLights, GEARLIGHT);
 }   
 
