@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
             simConnected = false; // try again next run
         }        
         
-        std::cout << "instLight: " << util.getBinaryRep(data.instPanelLights) << "\n";
+        std::cout << "altPointer: " << data.altPointer << " slip: " << data.adiSideslip << " pitch: " << data.adiPitch << " roll: " << data.adiRoll << " ilsHor: " << data.adiIlsHorPos << " ilsVer: " << data.adiIlsVerPos << "\n";
     
         cHandler.readControllerComms();
         
