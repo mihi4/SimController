@@ -117,16 +117,10 @@ int main(int argc, char* argv[])
             //std::cout << "mapping" << util.map(data.fuelFWD, 0, 42000, 0, 65534) << "\r";
         } else {
             simConnected = false; // try again next run
-        }
-        data.instPanelLights = 0;
-        std::cout << "instLight vor set: " << util.getBinaryRep(data.instPanelLights) << "\n";
-        data.instPanelLights |= EBMASTERC;
-        Sleep(500);
-        std::cout << "instLight vor clear: " << util.getBinaryRep(data.instPanelLights) << "\n";
-        data.instPanelLights &= ~EBMASTERC;
-        std::cout << "instLight nach clear: " << util.getBinaryRep(data.instPanelLights) << "\n";
-        std::cout << "---------\n";
-
+        }        
+        
+        std::cout << "instLight: " << util.getBinaryRep(data.instPanelLights) << "\n";
+    
         cHandler.readControllerComms();
         
         // check for quit keycommand LCTRL+LSHIFT+LALT+BACKSPACE

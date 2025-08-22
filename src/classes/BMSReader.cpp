@@ -357,15 +357,7 @@ void BMSReader::readF16Data(F16Data* data) {
     
     // instrument panel lighbits FIXXXME finish later
     // left eyebrows  
-    if (flightData->IsSet(flightData->MasterCaution)) {
-        std::cout << "MasterCaution ON\n";
-        setDatabit(data->instPanelLights, 0x02);
-    }    
-    else {
-        std::cout << "MasterCaution OFF\n";
-        clearDatabit(data->instPanelLights, 0x02);
-    }
-
+    if (flightData->IsSet(flightData->MasterCaution)) setDatabit(data->instPanelLights, EBMASTERC); else clearDatabit(data->instPanelLights, EBMASTERC);
     if (flightData->IsSet(flightData->TF)) setDatabit(data->instPanelLights, EBTFFAIL); else clearDatabit(data->instPanelLights, EBTFFAIL);
     // TWP
     if (flightData->IsSet2(flightData->HandOff)) setDatabit(data->instPanelLights, TWPHANDOFF); else clearDatabit(data->instPanelLights, TWPHANDOFF);
@@ -435,6 +427,6 @@ void BMSReader::readF16Data(F16Data* data) {
 
     // Left Console Lightbits
 
-    if (flightData->IsSet2(flightData->GEARHANDLE)) setDatabit(data->instPanelLights, GEARLIGHT); else clearDatabit(data->instPanelLights, GEARLIGHT);
+    
 }   
 
