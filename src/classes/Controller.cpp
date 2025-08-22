@@ -109,6 +109,16 @@ void Controller::buildVarString(int varNum, unsigned int value, std::vector<char
     }
 }
 
+void Controller::buildVarString(int varNum, int value, std::vector<char>& updateString) {
+    //std::cout << "buildIsnt. valsize: " << sizeof(value) << " strSize: " << updateString.size() << std::endl;
+    updateString.push_back(varNum);
+    updateString.push_back(sizeof(value));
+    std::vector<unsigned char> splitValues = splitValue(value, sizeof(value));
+    for (int i = 0; i < splitValues.size(); i++) {
+        updateString.push_back(splitValues[i]);
+    }
+}
+
 void Controller::addVarDataToUpdateString(int varNum, std::vector<char> &updateString, F16Data* data, F16Data* prevData) {
     
     //std::cout << "comparing var " << varNum << ". ";
@@ -171,6 +181,7 @@ void Controller::addVarDataToUpdateString(int varNum, std::vector<char> &updateS
             // std::cout << "fuelFWD, var = " << varNum << ", size: " << sizeof(data->fuelFWD) << ".\n";
             buildVarString(varNum, data->cautionPanelLights, updateString);
         }
+    
     default:
         break;
     }     
@@ -183,7 +194,7 @@ void Controller::updateController(F16Data* data, F16Data* prevData) {
         std::vector<char> updateString;
 
         // this and lower part removed to create separate update commands for each variable. 
-        // better to do it all in one update command?  FIXXXME
+        // better to do it all in one update command?  
 
         //updateString.push_back(CMDSTART);
         //updateString.push_back(CMDUPDATE);
