@@ -46,8 +46,6 @@ private:
 
     void checkPowerbit(F16Data* data, FlightData2* flightData2, FlightData2::PowerBits bmsBit, int scBit);
     void setPowerbits(F16Data* data, FlightData2* flightData2);
-    
-    void setECMBits(F16Data* data, FlightData2* flightdata2);
 
     void setCPBit(F16Data* data, unsigned long bit);
     void clearCPBit(F16Data* data, unsigned long bit);
