@@ -350,7 +350,7 @@ void BMSReader::readF16Data(F16Data* data) {
     if (flightData->IsSetHsi(flightData->CourseWarning)) setDatabit(data->instrumentBits, INSTHSICRSWARN); else clearDatabit(data->instrumentBits, INSTHSICRSWARN);
     if (flightData->IsSetHsi(flightData->Init)) setDatabit(data->instrumentBits, INSTHSIINIT); else clearDatabit(data->instrumentBits, INSTHSIINIT);
 
-    // instrument panel lighbits FIXXXME finish later
+    // instrument panel lighbits
     // left eyebrows  
     if (flightData->IsSet(flightData->MasterCaution)) setDatabit(data->instPanelLights, EBMASTERC); else clearDatabit(data->instPanelLights, EBMASTERC);
     if (flightData->IsSet(flightData->TF)) setDatabit(data->instPanelLights, EBTFFAIL); else clearDatabit(data->instPanelLights, EBTFFAIL);
