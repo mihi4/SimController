@@ -50,7 +50,24 @@ void BMSReader::setSimVersion(F16Data* data, FlightData2* flightData2) {
 }
 
 
-
+void BMSReader::setDatabit(unsigned int &var,  unsigned int bit) {    
+    var |= bit;    
+}
+void BMSReader::clearDatabit(unsigned int& var, unsigned int bit) {
+    var &= ~bit;
+}
+void BMSReader::setDatabit(unsigned short& var, unsigned short bit) {
+    var |= bit;
+}
+void BMSReader::clearDatabit(unsigned short& var, unsigned short bit) {
+    var &= ~bit;
+}
+void BMSReader::setDatabit(unsigned char &var, unsigned char bit) {
+    var |= bit;    
+}
+void BMSReader::clearDatabit(unsigned char &var, unsigned char bit) {
+    var &= ~bit;
+}
 
 
 void BMSReader::setCPBit(F16Data* data, unsigned long bit) {
@@ -148,44 +165,6 @@ void BMSReader::setCautionLightbits(F16Data* data, FlightData* flightdata) {
     checkCPBit(data, flightData, flightdata->Inlet_Icing, CPINLET);
        
     return;
-}
-
-void BMSReader::checkPowerbit(F16Data* data, FlightData2* flightData2, FlightData2::PowerBits bmsBit, int scBit) {
-    if (flightData2->IsSetPower(bmsBit)) {
-        data->powerStates |= scBit;
-    }
-    else {
-        data->powerStates &= ~scBit;
-    }
-}
-void BMSReader::setPowerbits(F16Data* data, FlightData2* flightData2) {
-    
-    checkPowerbit(data, flightData2, flightData2->MainGenerator, MAINGENON);
-    checkPowerbit(data, flightData2, flightData2->StandbyGenerator, STBYGENON);
-    checkPowerbit(data, flightData2, flightData2->BusPowerBattery, BUSBAT);
-    checkPowerbit(data, flightData2, flightData2->BusPowerEmergency, BUSEMER);
-    checkPowerbit(data, flightData2, flightData2->BusPowerEssential, BUSESSENTIAL);
-    checkPowerbit(data, flightData2, flightData2->BusPowerNonEssential, BUSNONESSENTIAL);
-   
-}
-
-void BMSReader::setDatabit(unsigned int &var,  unsigned int bit) {    
-    var |= bit;    
-}
-void BMSReader::clearDatabit(unsigned int& var, unsigned int bit) {
-    var &= ~bit;
-}
-void BMSReader::setDatabit(unsigned short& var, unsigned short bit) {
-    var |= bit;
-}
-void BMSReader::clearDatabit(unsigned short& var, unsigned short bit) {
-    var &= ~bit;
-}
-void BMSReader::setDatabit(unsigned char &var, unsigned char bit) {
-    var |= bit;    
-}
-void BMSReader::clearDatabit(unsigned char &var, unsigned char bit) {
-    var &= ~bit;
 }
 
 void setECMBits(F16Data* data, FlightData2* flightdata2) {
@@ -352,8 +331,21 @@ void BMSReader::readF16Data(F16Data* data) {
     data->altCalibration = std::to_string(flightData2->AltCalReading);
     data->altThousands = std::to_string((int)(data->altitude / 100));
     
-    // instrument bits FIXXXME
-    
+    // instrument bits
+    if( flightData2->IsSetAlt(flightData2->PneuFlag) ) setDatabit(data->instrumentBits, INSTPNEU); else clearDatabit(data->instrumentBits, INSTPNEU);
+    if ( flightData->isSetHsi(flightData->VVI) ) setDatabit(data->instrumentBits, INSTVVIFLAG); else clearDatabit(data->instrumentBits, INSTVVIFLAG);
+    if ( flightData->isSetHsi(flightData->AOA) ) setDatabit(data->instrumentBits, INSTAOAFLAG); else clearDatabit(data->instrumentBits, INSTAOAFLAG);
+    if ( flightData->isSetHsi(flightData->BUP_ADI_OFF) ) setDatabit(data->instrumentBits, INSTBUPADIOFFFLAG); else clearDatabit(data->instrumentBits, INSTBUPADIOFFFLAG);
+    if ( flightData->isSetHsi(flightData->ADI_OFF) ) setDatabit(data->instrumentBits, INSTADIOFF); else clearDatabit(data->instrumentBits, INSTADIOFF);
+    if ( flightData->isSetHsi(flightData->ADI_AUX) ) setDatabit(data->instrumentBits, INSTADIAUX); else clearDatabit(data->instrumentBits, INSTADIAUX);
+    if ( flightData->isSetHsi(flightData->ADI_GS) ) setDatabit(data->instrumentBits, INSTADIGS); else clearDatabit(data->instrumentBits, INSTADIGS);
+    if ( flightData->isSetHsi(flightData->ADI_LOC) ) setDatabit(data->instrumentBits, INSTADILOC); else clearDatabit(data->instrumentBits, INSTADILOC);
+    if ( flightData->isSetHsi(flightData->HSI_OFF) ) setDatabit(data->instrumentBits, INSTHSIOFF); else clearDatabit(data->instrumentBits, INSTHSIOFF);
+    if ( flightData->isSetHsi(flightData->ToTrue) ) setDatabit(data->instrumentBits, INSTHSITO); else clearDatabit(data->instrumentBits, INSTHSITO);
+    if ( flightData->isSetHsi(flightData->FromTrue) ) setDatabit(data->instrumentBits, INSTHSIFROM); else clearDatabit(data->instrumentBits, INSTHSIFROM);
+    if ( flightData->isSetHsi(flightData->IlsWarning) ) setDatabit(data->instrumentBits, INSTHSIILSWARN); else clearDatabit(data->instrumentBits, INSTHSIILSWARN);
+    if ( flightData->isSetHsi(flightData->CourseWarning) ) setDatabit(data->instrumentBits, INSTHSICRSWARN); else clearDatabit(data->instrumentBits, INSTHSICRSWARN);
+    if ( flightData->isSetHsi(flightData->Init) ) setDatabit(data->instrumentBits, INSTHSIINIT); else clearDatabit(data->instrumentBits, INSTHSIINIT);
     
     // instrument panel lighbits FIXXXME finish later
     // left eyebrows  
