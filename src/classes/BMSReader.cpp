@@ -327,6 +327,13 @@ void BMSReader::readF16Data(F16Data* data) {
     data->altCalibration = std::to_string(flightData2->AltCalReading);
     data->altThousands = std::to_string((int)(data->altitude / 100));
 
+    // FIXXXME adi values have to adapt
+    data->adiPitch = flightData->pitch * 1000;
+    data->adiRoll = flightData->roll * 1000;
+    data->adiIlsHorPos = flightData->AdiIlsHorPos * FLOATMULT;
+    data->adiIlsVerPos = flightData->AdiIlsVerPos * FLOATMULT;
+    data->adiSideslip = flightData2->sideSlipdeg * FLOATMULT;
+
     // instrument bits
     if (flightData2->IsSetAlt(flightData2->PneuFlag)) setDatabit(data->instrumentBits, INSTPNEU); else clearDatabit(data->instrumentBits, INSTPNEU);
     if (flightData->IsSetHsi(flightData->VVI)) setDatabit(data->instrumentBits, INSTVVIFLAG); else clearDatabit(data->instrumentBits, INSTVVIFLAG);

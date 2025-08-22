@@ -1,4 +1,6 @@
 #pragma once
+
+#define _USE_MATH_DEFINES
 #include "DataReader.h"
 #include "../lib/FlightData.h"
 #include <stdio.h>
