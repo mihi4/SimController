@@ -11,7 +11,7 @@ common:
 '<'<byte command>[command parameter]'>'
 
 #### Data Update ####
-<U<byte varnum><byte vartype><databyte><databyte>...<databyte>>
+<U<byte varnum><byte vartype><databyte>[<databyte>...<databyte>]>
 
 #### Reset and setup arduino again ####
 <R>
@@ -71,8 +71,8 @@ Byte mismatch error, bytes sent does not match var datatype
 // variable numbers to use to configure data to get from F16Data.h 
 // let's see if 255 values are enough ;-) (light- and statusbits are stored in 1- or 2-byte vars
 #define SIMSTATES           1
-#define SIMPLANEFLYING	    0x01   // true, if player is attached to plane, FLYING in enum FlyStates
-#define SIMTESTLIGHTS      0x02   // true, if all lights are on (MAL&IND button pressed. Let's see, if we can create this
+#define SIMPLANEFLYING  0x01   // true, if player is attached to plane, FLYING in enum FlyStates
+#define SIMTESTLIGHTS   0x02   // true, if all lights are on (MAL&IND button pressed. Let's see, if we can create this
 
 #define POWERSTATES         2
 // bits for airplane power data and sim status
