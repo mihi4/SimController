@@ -1,48 +1,3 @@
-//MODULE SELECTION - uncomment the modules you want to use.
-   
-  //#define LED               //drive LEDs
-  //#define LEDMatrix         //drive LED Matrix using a MAX7219 controller
-  //#define LCD               //drive LCD display
-  #define LED_MM5451
-  //#define SSegMAX7219       //drive 7-Segment displays via MAX7219 controller
-  //#define SSegTM1637        //drive 7-Segment displays via TM1367 controller
-  //#define SLx2016           //drive 4-digit 5x7 dotmatrix modules
-  //#define ServoMotor        //drive servo motors directly connected to the arduino
-  //#define ServoPWM          //drive multiple servo motors via pwm shield
-  //#define StepperBYJ        //drive stepper motor 28BYJ-48
-  //#define StepperX27        //drive stepper motor X27.168
-  //#define StepperVID        //drive multiple stepper motors X25.168 with a VID66-06 controller
-  //#define CompassX27        //drive a compass with a Xxx.xxx -class stepper motor
-  //#define AirCore           //drive multiple Air Core motors (via CS4192 controller chip)
-  //#define MotorPoti         //motor-driven poti control
-  //#define OLED              //display data on an OLED display
-  //#define SpeedBrake        //Enable display of the SpeedBrake indicator on an 128x64 OLED display (DEDunino)
-  //#define FuelFlowIndicator //Enable display of the FuelFlow indicator on an 128x64 OLED display (DEDunino)
-  //#define OLED_Compass      //Enable display of the wet compass on an 128x32 OLED display 
-  //#define DED_PFL           //Enable display of DED or PFL on an 254x64 OLED display (DEDunino)
-  //#define Switches          //use the arduino to read switch positions and send keyboard commands
-  //#define MagSwitch         //enable magnetic held switches														   
-  //#define ButtonMatrix      //use the arduino to read switch positions and send keyboard commands
-  //#define RotEncoder        //use the arduino to read rotary encoders and send keyboard commands
-  //#define AnalogAxis        //use the arduino to read analog resistors and sync this with a gamecontroller axis
-  //#define Lighting          //software controlled backlighting
-  //#define NewDevice         //placeholder. Use this line to activate your own code to drive other, specific hardware
-  //#define BUPRadio          //activate special procedures to drive the Backup Radio Panel
-  //#define CMDS              //activate special procedures to drive the CMDS Panel
-
-//BASIC SETTINGS
-  #define BAUDRATE 115200 // 57600 //    115200       // serial connection speed
-  
-static const char scName[] = "RightAux";
-int scNameSize = sizeof(scName)/sizeof(scName[0]);  
-  
-  
-#ifdef DED_PFL
-    char DEDLines[5][25];
-#endif
-
-  
-  
 //BOARD SELECTION
 
   //#define UNO         //uncomment this if this sketch will be loaded on an UNO
@@ -61,8 +16,45 @@ int scNameSize = sizeof(scName)/sizeof(scName[0]);
     #define SERIALCOM Serial      //standard serial connection
   #endif
 
-//DATA VARIABLES
+  //MODULE SELECTION - uncomment the modules you want to use.
+   
+  //#define LED               //drive LEDs
+  //#define LEDMatrix         //drive LED Matrix using a MAX7219 controller
+  //#define LCD               //drive LCD display
+  #define LED_MM5451
+  #define SSegMAX7219       //drive 7-Segment displays via MAX7219 controller
+  //#define SSegTM1637        //drive 7-Segment displays via TM1367 controller
+  //#define SLx2016           //drive 4-digit 5x7 dotmatrix modules
+  #define ServoMotor        //drive servo motors directly connected to the arduino
+  //#define ServoPWM          //drive multiple servo motors via pwm shield
+  //#define StepperBYJ        //drive stepper motor 28BYJ-48
+  //#define StepperX27        //drive stepper motor X27.168
+  //#define StepperVID        //drive multiple stepper motors X25.168 with a VID66-06 controller
+  //#define CompassX27        //drive a compass with a Xxx.xxx -class stepper motor
+  //#define AirCore           //drive multiple Air Core motors (via CS4192 controller chip)
+  //#define MotorPoti         //motor-driven poti control
+  //#define OLED              //display data on an OLED display
+  //#define SpeedBrake        //Enable display of the SpeedBrake indicator on an 128x64 OLED display (DEDunino)
+  //#define FuelFlowIndicator //Enable display of the FuelFlow indicator on an 128x64 OLED display (DEDunino)
+  //#define OLED_Compass      //Enable display of the wet compass on an 128x32 OLED display 
+  #define DED_PFL           //Enable display of DED or PFL on an 254x64 OLED display (DEDunino)
+  //#define Switches          //use the arduino to read switch positions and send keyboard commands
+  //#define MagSwitch         //enable magnetic held switches														   
+  //#define ButtonMatrix      //use the arduino to read switch positions and send keyboard commands
+  //#define RotEncoder        //use the arduino to read rotary encoders and send keyboard commands
+  //#define AnalogAxis        //use the arduino to read analog resistors and sync this with a gamecontroller axis
+  //#define Lighting          //software controlled backlighting
+  //#define NewDevice         //placeholder. Use this line to activate your own code to drive other, specific hardware
+  //#define BUPRadio          //activate special procedures to drive the Backup Radio Panel
+  //#define CMDS              //activate special procedures to drive the CMDS Panel
+
+//BASIC SETTINGS
+#define BAUDRATE 115200 // 57600 //    115200       // serial connection speed
   
+static const char scName[] = "RightAux";
+int scNameSize = sizeof(scName)/sizeof(scName[0]);  
+  
+//DATA VARIABLES
 /* var format:
   VarNumber, VarBytes, Module, index of modules (if more are available), Index of Value in module (depending on module), value
   value index can be used for single bits in a led module or 255 to use the full value, for example, 
@@ -73,7 +65,11 @@ f16var* vars[] = {
   ,  new f16varI(FUELFWD, MODSERVO, 0, 0, 1000)
   ,  new f16varI(FUELAFT, MODSERVO, 1, 0, 1001)
   ,  new f16varL(LEFTCONSLIGHTS, MODMM5451, 0, 255, 0)
-  ,  new f16varS(PFDLINE1, MODDED, 255, 0, "Hello, World" )
+  ,  new f16varS(PFDLINE1, MODDED, 255, 0, "                         " )
+  ,  new f16varS(PFDLINE2, MODDED, 255, 0, "                         " )
+  ,  new f16varS(PFDLINE3, MODDED, 255, 0, "                         " )
+  ,  new f16varS(PFDLINE4, MODDED, 255, 0, "                         " )
+  ,  new f16varS(PFDLINE5, MODDED, 255, 0, "                         " )
 };
 const char varCount = sizeof(vars)/sizeof(vars[0]);
 

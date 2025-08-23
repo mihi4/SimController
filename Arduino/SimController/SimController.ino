@@ -1,4 +1,3 @@
- 
 #include <Arduino.h>
 #include "f16common.h"
 
@@ -122,6 +121,9 @@ boolean debugmode = true;
 #ifdef SSegMAX7219
 	#include "SC_SSegMAX7219.h"
 #endif
+ #ifdef ServoMotor
+  #include "SC_Servo.h"    
+ #endif
 
 //////////////////////////////
 // function imlementations
@@ -163,6 +165,16 @@ void outputVars() {
       #ifdef LED_MM5451
         case MODMM5451:
           UpdateLED_MM5451(i);
+          break;
+      #endif
+      #ifdef ServoMotor
+        case MODSERVO:
+          UpdateServo(i);
+          break;
+      #endif
+      #ifdef SSegMAX7219
+        case MODMAX7219:
+          UpdateMAX7219(i);
           break;
       #endif
 
