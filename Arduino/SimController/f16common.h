@@ -11,7 +11,7 @@ common:
 '<'<byte command>[command parameter]'>'
 
 #### Data Update ####
-<U<byte varnum><byte varlength><databyte><databyte>...<databyte>>
+<U<byte varnum><byte vartype><databyte><databyte>...<databyte>>
 
 #### Reset and setup arduino again ####
 <R>
@@ -47,7 +47,7 @@ Byte mismatch error, bytes sent does not match var datatype
 #define CMDEND '>'
 #define CMDESC 0x1B  // use ESC (dec 27) to escape value 62 ('>') and itself in byte order
 
-/* module defines */
+/* vartype defines */
 #define VARCHAR     1  
 #define VARSHORT    2
 #define VARINT      2
