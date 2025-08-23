@@ -2,11 +2,20 @@
 #include <Arduino.h>
 #include "f16common.h"
 
-
+/*
+Variable model
+==============
+number: number of variable as configured in f16common.h
+module: number of the hardware modul to use, also configured in f16common.h
+modIndex: if more modules of same hardware are used, they will be configured in an array, this configures the index position in it
+valIndex: can be used as single bit value to change in a LED module... let's see, how we're going to use it :-)
+Type: one of CHAR, INT, LONG, STRING
+*/
 struct f16var {  
     unsigned char number;
     unsigned char module;
-    unsigned char index;
+    unsigned char modIndex;
+    unsigned char valIndex;
     //unsigned char type;
 
 	enum Type {	
@@ -28,7 +37,7 @@ struct f16var {
     } value;
 	
     // Konstruktor  
-    f16var(unsigned char number, unsigned char module, unsigned char index, Type type) : number(number), module(module), index(index), type(type) {  }
+    f16var(unsigned char number, unsigned char module, unsigned char modIndex, unsigned char valIndex, Type type) : number(number), module(module), modIndex(modIndex), valIndex(valIndex), type(type) {  }
       
     // Virtuelle Methode zur Ausgabe  
     //virtual void printValue() = 0; // Reine virtuelle Methode  
@@ -38,16 +47,14 @@ struct f16varC : public f16var {
 //  unsigned char value;
   
   //f16varC(unsigned char number, unsigned char module, unsigned char index, unsigned char type, unsigned char value) : f16var(number, module, index, type), value(value) {}
-  f16varC(unsigned char number, unsigned char module, unsigned char index, unsigned char value) : f16var(number, module, index, CHAR) {
+  f16varC(unsigned char number, unsigned char module, unsigned char modIndex, unsigned char valIndex, unsigned char value) : f16var(number, module, modIndex, valIndex, CHAR) {
 	  this->value.valC = value;
 	}
 };
 
 struct f16varI : public f16var {  // using I as in integer for Short, since both are 2 bytes on arduino
-  //unsigned int value;
   
-  //f16varI(unsigned char number, unsigned char module, unsigned char index, unsigned char type, unsigned int value) : f16var(number, module, index, type), value(value) {}
-  f16varI(unsigned char number, unsigned char module, unsigned char index, unsigned int value) : f16var(number, module, index, INT)  {
+  f16varI(unsigned char number, unsigned char module, unsigned char modIndex, unsigned char valIndex, unsigned char value) : f16var(number, module, modIndex, valIndex, INT)  {
 	  
 	  this->value.valI = value;
 	  
@@ -55,18 +62,15 @@ struct f16varI : public f16var {  // using I as in integer for Short, since both
 };
 
 struct f16varL : public f16var {
-  //unsigned long value;
   
-  //f16varL(unsigned char number, unsigned char module, unsigned char index, unsigned char type, unsigned long value) : f16var(number, module, index, type), value(value) {}
-  f16varL(unsigned char number, unsigned char module, unsigned char index, unsigned long value) : f16var(number, module, index, LONG) {
+  f16varL(unsigned char number, unsigned char module, unsigned char modIndex, unsigned char valIndex, unsigned char value) : f16var(number, module, modIndex, valIndex, LONG) {
 	  this->value.valL = value;	  
   }
 };
 
 struct f16varS : public f16var {
-  //String value;
-  // f16varS(unsigned char number, unsigned char module, unsigned char index, unsigned char type, String value) : f16var(number, module, index, type), value(value) {}
-  f16varS(unsigned char number, unsigned char module, unsigned char index, String value) : f16var(number, module, index, STRING) {
+  
+  f16varS(unsigned char number, unsigned char module, unsigned char modIndex, unsigned char valIndex, unsigned char value) : f16var(number, module, modIndex, valIndex, STRING) {
 	  this->value.valString = new String(value);
   }
   
@@ -81,6 +85,7 @@ struct f16varS : public f16var {
 //////////////////////////////
 
 void outputVar(char varIndex, unsigned long value);
+bool checkBit(unsigned long var, unsigned long bit);
 
 unsigned int power(unsigned int base, unsigned int exp) {
 	int retVal = 1;
@@ -96,6 +101,7 @@ unsigned int power(unsigned int base, unsigned int exp) {
 
 unsigned long lastDEDUpdate = 0;
 boolean varsChanged = false;
+boolean debugmode = true;
 
 // only for debugging ReadSerial char input[] = { '<', 'U', 10, 2, 100, 52, '>'};
 
@@ -107,7 +113,7 @@ boolean varsChanged = false;
 #include "SC_UserConfig.h"
 #include "SCComms.h"
 
-#ifdef DED_PFS
+#ifdef DED_PFL
 	#include "SC_DED_PFL.h"
 #endif
 #ifdef LED_MM5451
@@ -120,17 +126,24 @@ boolean varsChanged = false;
 //////////////////////////////
 // function imlementations
 //////////////////////////////
+bool checkBit(unsigned long var, unsigned long bit) {
+  if (var & bit) return true;
+  return false;
+}
+
 
 void outputVars() {
-	if (!varsChanged) return;
+	
 	#ifdef DED_PFL  
   if (millis() > lastDEDUpdate + DEDUPATEINTERVALL) {
     UpdateDED();  
     lastDEDUpdate = millis();
   }  
   #endif
+
+
 	for (int i=0;i<varCount;i++) {
-    SERIALCOM.print("var ");SERIALCOM.print(i, DEC);SERIALCOM.print(" type ");SERIALCOM.print(vars[i]->type, DEC);SERIALCOM.print(" value: ");
+    /*SERIALCOM.print("var ");SERIALCOM.print(i, DEC);SERIALCOM.print(" type ");SERIALCOM.print(vars[i]->type, DEC);SERIALCOM.print(" value: ");
     switch (vars[i]->type) {  
       case f16var::INT:  
           SERIALCOM.println(vars[i]->value.valI);  
@@ -144,7 +157,18 @@ void outputVars() {
 			case f16var::LONG:  
           SERIALCOM.println(vars[i]->value.valL);  
           break;  
-    }  
+    } */
+   
+    switch (vars[i]->module) {
+      #ifdef LED_MM5451
+        case MODMM5451:
+          UpdateLED_MM5451(i);
+          break;
+      #endif
+
+
+    }
+
   }
   varsChanged = false;
       
@@ -172,7 +196,7 @@ void setup() {
   ReadSerial();
   showNewData();
   parseSerialCommand();
-  outputVars();*/
+  outputVars(); */
 }
 
 void loop() {
@@ -180,6 +204,6 @@ void loop() {
 	ReadSerial();	
   // showNewData();
 	parseSerialCommand();
-  outputVars();	
-   
+  if (varsChanged) outputVars();	
+  delay(5);
 }

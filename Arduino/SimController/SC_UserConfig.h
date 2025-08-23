@@ -3,7 +3,7 @@
   //#define LED               //drive LEDs
   //#define LEDMatrix         //drive LED Matrix using a MAX7219 controller
   //#define LCD               //drive LCD display
-  //#define LED_MM5451
+  #define LED_MM5451
   //#define SSegMAX7219       //drive 7-Segment displays via MAX7219 controller
   //#define SSegTM1637        //drive 7-Segment displays via TM1367 controller
   //#define SLx2016           //drive 4-digit 5x7 dotmatrix modules
@@ -32,29 +32,11 @@
 
 //BASIC SETTINGS
   #define BAUDRATE 115200 // 57600 //    115200       // serial connection speed
-  // #define POLLTIME 100           // set time between PULL data requests
-  // #define PULLTIMEOUT 30         // set time to wait for a requested data update; default: 30ms
-  // #define PRIORITIZE_OUTPUT    //uncomment this to put a stress on fast update of outputs (should be used for motors to allow smoother movements)
-  // #define PRIORITIZE_INPUT     //uncomment this to put a stress on fast er poll of inputs (switches/Buttons) 
-  // const char ID[]= "RightAuxController"; //Set the ID for this arduino program. Use any string. The program will use this ID to check in with the BMSAIT windows application
   
 static const char scName[] = "RightAux";
 int scNameSize = sizeof(scName)/sizeof(scName[0]);  
   
   
-  /* var format:
-  VarName, VarBytes, Module, Index of Value in module (255 if not needed), value
-*/
-f16var* vars[] = { 
-    new f16varC(POWERSTATES, MODNONE, 0, 5)
-  ,  new f16varI(FUELFWD, MODSERVO, 0, 1000)
-  ,  new f16varI(FUELAFT, MODSERVO, 1, 1001)
-  ,  new f16varL(CAUTIONPANELLIGHTS, MODMM5451, 0, 0)
-  ,  new f16varS(PFDLINE1, MODDED, 255, "Hello, World" )
-};
-const char varCount = sizeof(vars)/sizeof(vars[0]);
-
-
 #ifdef DED_PFL
     char DEDLines[5][25];
 #endif
@@ -81,6 +63,23 @@ const char varCount = sizeof(vars)/sizeof(vars[0]);
 
 //DATA VARIABLES
   
+/* var format:
+  VarNumber, VarBytes, Module, index of modules (if more are available), Index of Value in module (depending on module), value
+  value index can be used for single bits in a led module or 255 to use the full value, for example, 
+*/
+f16var* vars[] = { 
+    new f16varC(SIMSTATES, MODNONE, 0, 0, 0)
+  ,  new f16varC(POWERSTATES, MODNONE, 0, 0, 0)   // First 2 should always be configured in every module
+  ,  new f16varI(FUELFWD, MODSERVO, 0, 0, 1000)
+  ,  new f16varI(FUELAFT, MODSERVO, 1, 0, 1001)
+  ,  new f16varL(LEFTCONSLIGHTS, MODMM5451, 0, 255, 0)
+  ,  new f16varS(PFDLINE1, MODDED, 255, 0, "Hello, World" )
+};
+const char varCount = sizeof(vars)/sizeof(vars[0]);
+
+
+
+
   // This is the most important part of this sketch. You need to set the data that the Arduino will have to handle
   // Make sure that you chose the definition of variableCount matches the number of entries in this table
   // Fill data as follows: 
