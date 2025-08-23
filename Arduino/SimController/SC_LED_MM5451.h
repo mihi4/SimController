@@ -115,25 +115,28 @@ void UpdateLED_MM5451(byte p)
   
   unsigned long longVal = 0;
   switch (vars[p]->type) {  
-      case f16var::INT:  
-          longVal = vars[p]->value.valI;  
-          break;  
-      case f16var::CHAR:  
-          longVal = vars[p]->value.valC;  
-          break;  
-      case f16var::STRING:  
-          longVal = atol((*vars[p]->value.valString).c_str());  
-          break;  
-			case f16var::LONG:  
-          longVal = vars[p]->value.valL;  
-          break;  
-    }  
+    case f16var::INT:  
+        longVal = vars[p]->value.valI;  
+        break;  
+    case f16var::CHAR:  
+        longVal = vars[p]->value.valC;  
+        break;  
+    case f16var::STRING:  
+        longVal = atol((*vars[p]->value.valString).c_str());  
+        break;  
+    case f16var::LONG:  
+        longVal = vars[p]->value.valL;  
+        break;  
+  }  
 
   if (vars[p]->valIndex == 255) { // use full varvalue to set output bits
     for (int i=0; i<32; i++) {  // maximum is 4byte long (32bit) as value to send
       if ( (longVal >> (i)) && 1) LED_On(vars[p]->modIndex, i); else LED_Off(vars[p]->modIndex, i);
     }
+  } else {
+    if (longVal) LED_On(vars[p]->modIndex, vars[p]->valIndex); else LED_Off(vars[p]->modIndex, vars[p]->valIndex); 
   }
+  
   if (debugmode) debugDatabits(vars[p]->modIndex);
   mm5451[(vars[p]->modIndex)].outputDataBits();  // let MM5451 chip send out all LED data bits 
 }

@@ -21,7 +21,7 @@
   #define PRE_BOOT_PAUSE 500
   #define POST_BOOT_PAUSE 1500
   #define DED_DRAW_PAUSE 200
-  #define DEDINDEX 0  // index of first datenfeld used
+  #define DEDINDEX 5  // index of first var to store the ded/pfd data
   #define DIMPIN A1
   #define DEDUPATEINTERVALL 330 
   
@@ -33,111 +33,22 @@ byte lastBrightnessValue = 0;
 
 void ClearDED();
 void RealDED();
-/*
-//send a request to the BMSAIT app to send DED/PFL data
-void ReadDED()
-{
-  byte i1='\0';
-  byte i2='\0';
-  byte treffer=0;
-  if (SERIALCOM.available()) ReadResponse(); //clear input buffer
-
-  if (datenfeld[2].ID[0]=='0') { SendMessage("DED",6);} //data variable is set to 023x -> ask for DED data
-  if (datenfeld[2].ID[0]=='1') {SendMessage("PFL",6);} //data variable is set to 110x -> ask for PFL data
-
-  long t=millis();
-  treffer=0;
-
-  //try to load all five lines of DED/PFL in one attempt
-  while ((treffer<5) && (t+1000>millis()))
-  {
-    if (SERIALCOM.available()<2)
-      {delay(1);}
-    else
-    {
-      i1= SERIALCOM.read();
-
-      //a standard data message got detected. Read and compute this
-      if (i1==MESSAGEBEGIN)
-      {
-        state=1;
-        ReadResponse();
-      }
-
-      if (i1=='e')
-      {
-        if (debugmode) {SendMessage("noData",1);}
-        break; //BMSAIT reports that no PFL/DED data is available
-      }
-
-      if (i1=='c') //BMSAIT reports that PFL/DED is blank
-      {
-        if (debugmode) {SendMessage("Blank",1);}
-        ClearDED();
-        break;
-      }
-
-      if (i1=='d')
-      {
-         //BMSAIT sends PFL/DED data
-        i2= SERIALCOM.read();
-        if ((i2>47)&&(i2<58)) //read PFL/DED line
-        {
-          unsigned long w=millis();
-          while ((SERIALCOM.available()<24)&&(w+PULLTIMEOUT>millis()))
-            {delay(1);}
-          if (SERIALCOM.available()>=24)
-          {
-            SERIALCOM.readBytes(DEDLines[i2-48+2],24);
-            DEDLines[i2-48+2][24]='\0';
-            treffer++;
-          }
-          else
-          {
-            if (debugmode)
-            {
-              SERIALCOM.print(VAR_BEGIN);
-              SERIALCOM.print('t');
-              SERIALCOM.print("Timeout ");
-              SERIALCOM.print(i2);
-              SERIALCOM.println(VAR_ENDE);
-            }
-          }
-        }
-        else
-        {
-          //error - expected DED/PFL line information not recieved
-          if (debugmode)
-          {
-            SERIALCOM.print(VAR_BEGIN);
-            SERIALCOM.print('t');
-            SERIALCOM.print("Error at ");
-            SERIALCOM.print(i1);
-            SERIALCOM.print(',');
-            SERIALCOM.print(i2);
-            SERIALCOM.println(VAR_ENDE);
-          }
-        }
-      }
-    }
-  }
-  if (treffer==5) lastInput=millis();
-} */
 
 ///draw empty display
 void ClearDED()
 {
 //SendMessage("ClearDED start",1);
 //debugTime('a');
-  char emptyLine[]="                        ";
-  for (byte linie=DEDINDEX;linie<DEDINDEX+5;linie++)
+  //char emptyLine[]="                        ";
+  //String emptyLine="                        ";
+  for (byte linie=DEDINDEX;linie<DEDINDEX+5;linie++)  
   {
-    memmove(DEDLines[linie],emptyLine,sizeof(emptyLine));
+    String search = (vars[DEDINDEX]->value.valString)->substring(0,vars[DEDINDEX]->value.valString->length()-1);
+    vars[DEDINDEX]->value.valString->replace(search, "                        ");// memmove(DEDLines[linie],emptyLine,sizeof(emptyLine));
   }
 //SendMessage("ClearDED end",1);
 //debugTime('a');
 }
-
 
 ///draw DED data from SharedMem
 void RealDED()
@@ -149,9 +60,11 @@ void RealDED()
       do {
     #endif
 
-      for (byte line = 0; line < 5; line++)
+      for (byte line = DEDINDEX; line < DEDINDEX+5; line++)
       {
-        displayDED.drawStr(DED_H_CONST, line * DED_CHAR_H + DED_V_CONST, DEDLines[line+DEDINDEX]);
+        char tempDedLine[25];
+        (vars[line+DEDINDEX]->value.valString)->toCharArray(tempDedLine, 25);
+        displayDED.drawStr(DED_H_CONST, line * DED_CHAR_H + DED_V_CONST, tempDedLine);
       }
     #if defined(DUE) || defined(DUE_NATIVE) //|| defined(MEGA)
       displayDED.sendBuffer(); //strong arduinos: command for full buffered mode
@@ -201,7 +114,6 @@ void setDEDBrightness()
     displayDED.sendF("C7h", brightnessValue);
  }
 }
-
 
 //setup the OLED
 void SetupDED()

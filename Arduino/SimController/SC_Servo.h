@@ -26,10 +26,10 @@ unsigned long lu;   //last update
 
 Servodata servodata[] =
 {// pIN  p_ug  p_og  a_ug  a_og  last  lu
-	{40,   3,   157,   1,   65535,    0,   0}, 	// HYDPRESS A
-	{41,   12,   168,   1,   65535,    0,   0}, 	// HYDPRESS B
-	{37,   10,   160,   65535,   1,    0,   0},  	// FUEL QTY Fwd
-	{36,   10,   180,   65535,   1,    0,   0}  	// FUEL QTY Aft*/
+	{40,   3,   157,   0,   4000,    0,   0}, 	// HYDPRESS A
+	{41,   12,   168,   0,   4000,    0,   0}, 	// HYDPRESS B
+	{37,   10,   160,   4200,   0,    0,   0},  	// FUEL QTY Fwd
+	{36,   10,   180,   4200,   0,    0,   0}  	// FUEL QTY Aft
 };
 const int SERVOZAHL = sizeof(servodata)/sizeof(servodata[0]);
 Servo servo[SERVOZAHL];
@@ -78,47 +78,49 @@ void Servo_Zeroize(bool mode)
 }
 
 
-void UpdateServo(byte id)
+void UpdateServo(byte p)
 {
-	/* char buf[6];
-
-	 if (id == 2) {
-		if (debugmode){SendMessage("updatingServo",1);}
-		if (debugmode){SendMessage(datenfeld[id].ID,1);}
-		if (debugmode){SendMessage(datenfeld[id].wert,1);}
-		ltoa(newValue, buf, 10);
-		if (debugmode){SendMessage(buf,1);}
-		ltoa(servodata[datenfeld[id].target].last, buf, 10);
-		if (debugmode){SendMessage(buf,1);}
-	}*/
-
-  if (servodata[datenfeld[id].target].lu + SERVOSLEEPTIME < millis())
+  if (servodata[vars[p]->valIndex].lu + SERVOSLEEPTIME < millis())
   {
 	//if (debugmode){SendMessage("detaching Servo",1);}
-    servo[datenfeld[id].target].detach();                        //disable servo if no new signal for more than 5 seconds
-	servodata[datenfeld[id].target].lu = millis();
+    servo[vars[p]->valIndex].detach();                        //disable servo if no new signal for more than 5 seconds
+	servodata[vars[p]->valIndex].lu = millis();
   }
-  else if (servodata[datenfeld[id].target].lu + SERVODELAY < millis())
+else if (servodata[vars[p]->valIndex].lu + SERVODELAY < millis())
   {
-    servodata[datenfeld[id].target].lu = millis();  //pause servo
+    servodata[vars[p]->valIndex].lu = millis();  //pause servo
 
-	long newValue = 0;
-	if (datenfeld[id].format == 'f') {
-		// float tmpVal = atof(datenfeld[id].wert);
-		newValue = 10 * atof(datenfeld[id].wert); //tmpVal * 10;
+	unsigned long longVal = 0;
+  switch (vars[p]->type) {  
+    case f16var::INT:  
+        longVal = vars[p]->value.valI;  
+        break;  
+    case f16var::CHAR:  
+        longVal = vars[p]->value.valC;  
+        break;  
+    case f16var::STRING:  
+        longVal = atol((*vars[p]->value.valString).c_str());  
+        break;  
+    case f16var::LONG:  
+        longVal = vars[p]->value.valL;  
+        break;  
+  } 
+	/*if (vars[p].format == 'f') {
+		// float tmpVal = atof(vars[p].wert);
+		newValue = 10 * atof(vars[p].wert); //tmpVal * 10;
 	} else {
-		newValue = atol(datenfeld[id].wert);
-	}
+		newValue = atol(vars[p].wert);
+	}*/
 	
-    if (servodata[datenfeld[id].target].last != newValue)
+    if (servodata[vars[p]->valIndex].last != longVal)
     {
 	  uint16_t winkel;
-      servodata[datenfeld[id].target].last = newValue;
+      servodata[vars[p]->valIndex].last = longVal;
       
-	  if (!servo[datenfeld[id].target].attached()) servo[datenfeld[id].target].attach(servodata[datenfeld[id].target].pIN);  //reactivate servo
+	  if (!servo[vars[p]->valIndex].attached()) servo[vars[p]->valIndex].attach(servodata[vars[p]->valIndex].pIN);  //reactivate servo
 	  
-	  winkel = map(servodata[datenfeld[id].target].last, servodata[datenfeld[id].target].a_ug, servodata[datenfeld[id].target].a_og, servodata[datenfeld[id].target].p_ug, servodata[datenfeld[id].target].p_og);
-	  servo[datenfeld[id].target].write(winkel);
+	  winkel = map(servodata[vars[p]->valIndex].last, servodata[vars[p]->valIndex].a_ug, servodata[vars[p]->valIndex].a_og, servodata[vars[p]->valIndex].p_ug, servodata[vars[p]->valIndex].p_og);
+	  servo[vars[p]->valIndex].write(winkel);
     }
   }
 }
