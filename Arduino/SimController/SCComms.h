@@ -105,11 +105,11 @@ void parseUpateCommand() {
 		char typeConverted=power(2,typeNum); // use enum 0,1,2,3 from f16var as exponent, so it corresponds with VARCHAR, VARSHORT and VARLONG
     
     sprintf(rbMsg, "byteCount: %u, typeNum: %u, typeConverted: %u", byteCount, typeNum, typeConverted);
-    sendReadBackString(rbMsg);
+    // sendReadBackString(rbMsg);
 
     if (typeNum == f16var::STRING) {
       sprintf(rbMsg, "String incoming, byteCount is %u", byteCount);
-      sendReadBackString(rbMsg);      
+      // sendReadBackString(rbMsg);      
       String newValue = "";
       for (int i=0; i<byteCount; i++) {
         newValue.concat((char)receivedBytes[3+i]);
