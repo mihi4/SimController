@@ -45,15 +45,31 @@ void SetupMax7219()
 void UpdateMAX7219(byte p)
 {
   bool dp=false;
-  char Wert[DATENLAENGE]="";
+  char chars[8]=""; // store 8 characters (max one 7291 can display);
 
-  memcpy(Wert, datenfeld[p].wert, DATENLAENGE);
+  //memcpy(Wert, datenfeld[p].wert, DATENLAENGE);
  
 	/*if (debugmode){SendMessage("updating MAX",1);}
 	if (debugmode){SendMessage(datenfeld[p].ID,1);}
 	if (debugmode){SendMessage(datenfeld[p].wert,1);}*/
  
- 
+  unsigned long longVal = 0;
+  switch (vars[p]->type) {  
+    case f16var::INT:  
+        longVal = vars[p]->value.valI;  
+        break;  
+    case f16var::CHAR:  
+        longVal = vars[p]->value.valC;  
+        break;  
+    case f16var::STRING:  
+        longVal = atol((*vars[p]->value.valString).c_str());  
+        break;  
+    case f16var::LONG:  
+        longVal = vars[p]->value.valL;  
+        break;  
+  } 
+  
+  /*
   //byte stelle = 7-datenfeld[p].ref4;
   for (byte x=0 ; x<datenfeld[p].ref3 ; x++)
   {
@@ -62,4 +78,5 @@ void UpdateMAX7219(byte p)
     Max7219_display[datenfeld[p].target].setChar(0,x+datenfeld[p].ref4,Wert[x],dp);
     //stelle--;
   }          
+    */
 }
