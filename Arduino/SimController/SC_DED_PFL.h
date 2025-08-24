@@ -21,7 +21,7 @@
   #define PRE_BOOT_PAUSE 500
   #define POST_BOOT_PAUSE 1500
   #define DED_DRAW_PAUSE 200
-  #define DEDINDEX 5  // index of first var to store the ded/pfd data
+  #define DEDINDEX 8  // index of first var to store the ded/pfd data
   #define DIMPIN A1
   #define DEDUPATEINTERVALL 330 
   
