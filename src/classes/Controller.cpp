@@ -95,45 +95,52 @@ void Controller::buildVarString(int varNum, unsigned char value, std::vector<cha
 
 void Controller::buildVarString(int varNum, unsigned short value, std::vector<char>& updateString) {
     // std::cout << "buildShort. valsize: " << sizeof(value) << " strSize: " << updateString.size() << std::endl;
-    updateString.push_back(varNum);
-    updateString.push_back(sizeof(value));
+    //updateString.push_back(varNum);
+    //updateString.push_back(sizeof(value));
+    buildVarStringBegin(varNum, sizeof(value), updateString);
     std::vector<unsigned char> splitValues = splitValue(value, sizeof(value));
     for (int i = 0; i < splitValues.size(); i++) {
         updateString.push_back(splitValues[i]);
     }
+    buildVarStringEnd(updateString);
 }
+
 void Controller::buildVarString(int varNum, unsigned int value, std::vector<char>& updateString) {
     //std::cout << "buildIsnt. valsize: " << sizeof(value) << " strSize: " << updateString.size() << std::endl;
-    updateString.push_back(varNum);
-    updateString.push_back(sizeof(value));
+    //updateString.push_back(varNum);
+    //updateString.push_back(sizeof(value));
+    buildVarStringBegin(varNum, sizeof(value), updateString);
     std::vector<unsigned char> splitValues = splitValue(value, sizeof(value));
     for (int i = 0; i < splitValues.size(); i++) {
         updateString.push_back(splitValues[i]);
     }
+    buildVarStringEnd(updateString);
 }
 
 void Controller::buildVarString(int varNum, int value, std::vector<char>& updateString) {
     //std::cout << "buildIsnt. valsize: " << sizeof(value) << " strSize: " << updateString.size() << std::endl;
-    updateString.push_back(varNum);
-    updateString.push_back(sizeof(value));
+    
+    //updateString.push_back(varNum);
+    //updateString.push_back(sizeof(value));
+    buildVarStringBegin(varNum, sizeof(value), updateString);
     std::vector<unsigned char> splitValues = splitValue(value, sizeof(value));
     for (int i = 0; i < splitValues.size(); i++) {
         updateString.push_back(splitValues[i]);
     }
+    buildVarStringEnd(updateString);
 }
 
-void Controller::buildVarString(int varNum, std::string valueString, std::vector<char>& updateString) {
-    updateString.push_back(CMDSTART);
+void Controller::buildVarString(unsigned char varNum, std::string valueString, std::vector<char>& updateString) {
+    /*updateString.push_back(CMDSTART);
     updateString.push_back(CMDUPDATE);
     updateString.push_back(varNum);
-    updateString.push_back(VARSTRING);
+    updateString.push_back(VARSTRING);*/
+    buildVarStringBegin(varNum, VARSTRING, updateString);
     updateString.insert(updateString.end(), valueString.begin(), valueString.end());
-    updateString.push_back(CMDEND);
+    buildVarStringEnd(updateString);
 }
 
-void Controller::addVarDataToUpdateString(int varNum, std::vector<char> &updateString, F16Data* data, F16Data* prevData) {
-    
-    //std::cout << "comparing var " << varNum << ". ";
+void Controller::addVarDataToUpdateString(unsigned char varNum, std::vector<char> &updateString, F16Data* data, F16Data* prevData) {
     
     switch (varNum) {
     case SIMSTATES:

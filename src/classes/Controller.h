@@ -71,9 +71,9 @@ private:
     void buildVarString(int varNum, unsigned short value, std::vector<char>& updateString);
     void buildVarString(int varNum, unsigned int value, std::vector<char>& updateString);    
     void buildVarString(int varNum, int value, std::vector<char>& updateString);
-    void buildVarString(int varNum, std::string valueString, std::vector<char>& updateString);
+    void buildVarString(unsigned char varNum, std::string valueString, std::vector<char>& updateString);
 
-    void addVarDataToUpdateString(int i, std::vector<char> &updateString, F16Data * data, F16Data * prevData);
+    void addVarDataToUpdateString(unsigned char varNum, std::vector<char> &updateString, F16Data * data, F16Data * prevData);
     void addByteToUpdateString(std::vector<char>& updateString, char byte);
 };
 
