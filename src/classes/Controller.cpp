@@ -16,20 +16,23 @@ Controller::~Controller() {
 ////////////////////////////////////////
 
 void debugUpdateString(std::vector<char> updateString) {
-    std::string debugString = "";
-    for (int i = 0; i < updateString.size(); i++) {
-        if (updateString[i] < 32 || updateString[i]>127) {
-            if (updateString[i] == 0) break;
-            debugString += ".";
-            debugString += std::to_string(updateString[i]);
-            debugString += "_";
-        }
-        else {
-            char buf = updateString.at(i);
-            debugString += buf;
-        }
+    std::string debugString;    
+    std::ostringstream oss;
+
+    // Iteriere über die Bytes im Vektor  
+    for (char byte : updateString)  {
+        
+        oss << std::hex << std::setw(2) << std::setfill('0') << (static_cast<unsigned int>(byte) & 0xFF) << " ";
     }
-    std::cout << "debugString: " << debugString << "\n";
+   
+    debugString = oss.str();
+
+    // Optional: Entferne das letzte Leerzeichen  
+    if (!debugString.empty()) {
+        debugString.pop_back();
+    }   
+    // Ausgabe  
+    std::cout << "Debug String: " << debugString << std::endl;
 }
 
 std::vector<unsigned char> Controller::splitValue(int value, int size) {
@@ -64,7 +67,7 @@ void Controller::disconnect()
       
 }
 
-void Controller::addByteToUpdateString(std::vector<char>* updateString, char byte) {
+void Controller::addByteToUpdateString(std::vector<char>& updateString, char byte) {
    // FIXXXME not sure, if needed
 
 }
@@ -80,7 +83,7 @@ void Controller::buildVarStringBegin(int varNum, unsigned char size, std::vector
 }
 void Controller::buildVarStringEnd(std::vector<char>& updateString) {
     updateString.push_back(CMDEND);
-    updateString.push_back('\0');
+    //updateString.push_back('\0');
 }
 
 void Controller::buildVarString(int varNum, unsigned char value, std::vector<char>& updateString) {
@@ -119,11 +122,26 @@ void Controller::buildVarString(int varNum, int value, std::vector<char>& update
     }
 }
 
+void Controller::buildVarString(int varNum, std::string valueString, std::vector<char>& updateString) {
+    updateString.push_back(CMDSTART);
+    updateString.push_back(CMDUPDATE);
+    updateString.push_back(varNum);
+    updateString.push_back(VARSTRING);
+    updateString.insert(updateString.end(), valueString.begin(), valueString.end());
+    updateString.push_back(CMDEND);
+}
+
 void Controller::addVarDataToUpdateString(int varNum, std::vector<char> &updateString, F16Data* data, F16Data* prevData) {
     
     //std::cout << "comparing var " << varNum << ". ";
     
     switch (varNum) {
+    case SIMSTATES:
+        if (data->simStates != prevData->simStates) {
+            // std::cout << "powerstates, var = " << varNum << ", size: " << sizeof(data->powerStates) << ".\n";
+            buildVarString(varNum, data->simStates, updateString);
+        }        
+        break;
     case POWERSTATES:
         if (data->powerStates != prevData->powerStates) {
             // std::cout << "powerstates, var = " << varNum << ", size: " << sizeof(data->powerStates) << ".\n";
@@ -181,7 +199,56 @@ void Controller::addVarDataToUpdateString(int varNum, std::vector<char> &updateS
             // std::cout << "fuelFWD, var = " << varNum << ", size: " << sizeof(data->fuelFWD) << ".\n";
             buildVarString(varNum, data->cautionPanelLights, updateString);
         }
-    
+    case PFDLINE1:
+        if (data->pfdLine1 != prevData->pfdLine1) {
+            buildVarString(PFDLINE1, data->pfdLine1, updateString);            
+        }        
+        break;
+    case PFDLINE2:
+        if (data->pfdLine2 != prevData->pfdLine2) {
+            buildVarString(PFDLINE2, data->pfdLine2, updateString);
+        }
+        break;
+    case PFDLINE3:
+        if (data->pfdLine3 != prevData->pfdLine3) {
+            buildVarString(PFDLINE3, data->pfdLine3, updateString);
+        }
+        break;
+    case PFDLINE4:
+        if (data->pfdLine4 != prevData->pfdLine4) {
+            buildVarString(PFDLINE4, data->pfdLine4, updateString);
+        }
+        break;
+    case PFDLINE5:
+        if (data->pfdLine5 != prevData->pfdLine5) {
+            buildVarString(PFDLINE5, data->pfdLine5, updateString);
+        }
+        break;
+    case DEDLINE1:
+        if (data->dedLine1 != prevData->dedLine1) {
+            buildVarString(DEDLINE1, data->dedLine1, updateString);
+        }
+        break;
+    case DEDLINE2:
+        if (data->dedLine2 != prevData->dedLine2) {
+            buildVarString(DEDLINE2, data->dedLine2, updateString);
+        }
+        break;
+    case DEDLINE3:
+        if (data->dedLine3 != prevData->dedLine3) {
+            buildVarString(DEDLINE3, data->dedLine3, updateString);
+        }
+        break;
+    case DEDLINE4:
+        if (data->dedLine4 != prevData->dedLine4) {
+            buildVarString(DEDLINE4, data->dedLine4, updateString);
+        }
+        break;
+    case DEDLINE5:
+        if (data->dedLine5 != prevData->dedLine5) {
+            buildVarString(DEDLINE5, data->dedLine5, updateString);
+        }
+        break;
     default:
         break;
     }     
@@ -200,8 +267,9 @@ void Controller::updateController(F16Data* data, F16Data* prevData) {
         //updateString.push_back(CMDUPDATE);
 
         for (int i = 0; i < datafields.size(); i++) {
-            addVarDataToUpdateString(datafields[i], updateString, data, prevData);
-            if (updateString.size() > 2) serialHandler.sendDataUpdate(updateString);
+            updateString.clear();
+            addVarDataToUpdateString(datafields[i], updateString, data, prevData);            
+            if (updateString.size() > 3) debugUpdateString(updateString);// serialHandler.sendDataUpdate(updateString);
         }
         //addVarDataToUpdateString(6, updateString, data, prevData);
 
