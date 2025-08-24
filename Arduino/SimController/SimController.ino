@@ -100,7 +100,7 @@ unsigned int power(unsigned int base, unsigned int exp) {
 
 unsigned long lastDEDUpdate = 0;
 boolean varsChanged = false;
-boolean debugmode = true;
+boolean debugmode = false;
 
 // only for debugging ReadSerial char input[] = { '<', 'U', 10, 2, 100, 52, '>'};
 

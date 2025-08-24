@@ -54,13 +54,16 @@ Byte mismatch error, bytes sent does not match var datatype
 #define VARLONG     4   // unsigned long = 8 byte in win, 4 bytes on Arduino!!!
 #define VARSTRING   255
 
-// defines for the hardware modules, no need to memorize numbers ;-)
-#define MODNONE     255
-#define MODSERVO     40
-#define MODMM5451    13
-#define MODMAX7219      30
-#define MODTM1637      30
-#define MODDED       79
+// defines for the hardware modules, keep same as in BMSAIT
+#define MODNONE       255
+#define MODSERVO      40
+#define MODMM5451     13
+#define MODMAX7219    30
+#define MODTM1637     30
+#define MODDED        79
+#define MODX27        51
+#define MODX27VID     52
+#define MODFFI        72      
 
 #define FLOATMULT    100
 
