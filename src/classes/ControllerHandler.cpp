@@ -27,9 +27,9 @@ void ControllerHandler::createControllerVector()
 {
     // TODO: read this data from config file!
 
-    const int cCount = 2;
-    std::string cNames[cCount] = { "RightAux", "CenterCons" };
-    unsigned char cPortNums[cCount] = { 4, 3 };
+    const int cCount = 1;
+    std::string cNames[cCount] = { "RightAux" };
+    unsigned char cPortNums[cCount] = { 4 };
 
     for (int i = 0; i < cCount; i++) {
         std::cout << "adding controller " << std::dec << i << " COM" << std::dec << (int) cPortNums[i] << std::endl;
