@@ -7,7 +7,7 @@ Controller::Controller(std::string name, int comPortNum, long baudrate = 115200)
 }
 
 Controller::~Controller() {
-    //std::cout << "Controller " << controllerName << " deconstructor, deleting serial port\n";   
+    std::cout << "Controller " << controllerName << " deconstructor.\n"; 
     //delete serialPort;
 }
 
@@ -45,6 +45,7 @@ std::vector<unsigned char> Controller::splitValue(int value, int size) {
     return bytes;
 }
 
+// just calls the readSerial() function from the serialHandler
 void Controller::readSerial() {
     serialHandler.readSerial(datafields);
 }
@@ -72,8 +73,7 @@ void Controller::addByteToUpdateString(std::vector<char>& updateString, char byt
 
 }
 
-
-
+// add the first part of the updatestring, usually <U$varnum$varsize
 void Controller::buildVarStringBegin(int varNum, unsigned char size, std::vector<char>& updateString) {
     updateString.push_back(CMDSTART);
     updateString.push_back(CMDUPDATE);
@@ -86,6 +86,7 @@ void Controller::buildVarStringEnd(std::vector<char>& updateString) {
     //updateString.push_back('\0');
 }
 
+// create the updateString to the Arduino from a var with an Char value
 void Controller::buildVarString(int varNum, unsigned char value, std::vector<char>& updateString) {
     // std::cout << "buildChar. valsize: " << sizeof(value) << " strSize: " << updateString.size() << std::endl;
     buildVarStringBegin(varNum, sizeof(value), updateString);
@@ -93,10 +94,8 @@ void Controller::buildVarString(int varNum, unsigned char value, std::vector<cha
     buildVarStringEnd(updateString); 
 }
 
+// create the updateString to the Arduino from a var with a Short value
 void Controller::buildVarString(int varNum, unsigned short value, std::vector<char>& updateString) {
-    // std::cout << "buildShort. valsize: " << sizeof(value) << " strSize: " << updateString.size() << std::endl;
-    //updateString.push_back(varNum);
-    //updateString.push_back(sizeof(value));
     buildVarStringBegin(varNum, sizeof(value), updateString);
     std::vector<unsigned char> splitValues = splitValue(value, sizeof(value));
     for (int i = 0; i < splitValues.size(); i++) {
@@ -105,10 +104,8 @@ void Controller::buildVarString(int varNum, unsigned short value, std::vector<ch
     buildVarStringEnd(updateString);
 }
 
-void Controller::buildVarString(int varNum, unsigned int value, std::vector<char>& updateString) {
-    //std::cout << "buildIsnt. valsize: " << sizeof(value) << " strSize: " << updateString.size() << std::endl;
-    //updateString.push_back(varNum);
-    //updateString.push_back(sizeof(value));
+// create the updateString to the Arduino from a var with an UnsignedInt value
+void Controller::buildVarString(int varNum, unsigned int value, std::vector<char>& updateString) {    
     buildVarStringBegin(varNum, sizeof(value), updateString);
     std::vector<unsigned char> splitValues = splitValue(value, sizeof(value));
     for (int i = 0; i < splitValues.size(); i++) {
@@ -117,11 +114,8 @@ void Controller::buildVarString(int varNum, unsigned int value, std::vector<char
     buildVarStringEnd(updateString);
 }
 
+// create the updateString to the Arduino from a var with an Int value
 void Controller::buildVarString(int varNum, int value, std::vector<char>& updateString) {
-    //std::cout << "buildIsnt. valsize: " << sizeof(value) << " strSize: " << updateString.size() << std::endl;
-    
-    //updateString.push_back(varNum);
-    //updateString.push_back(sizeof(value));
     buildVarStringBegin(varNum, sizeof(value), updateString);
     std::vector<unsigned char> splitValues = splitValue(value, sizeof(value));
     for (int i = 0; i < splitValues.size(); i++) {
@@ -130,16 +124,14 @@ void Controller::buildVarString(int varNum, int value, std::vector<char>& update
     buildVarStringEnd(updateString);
 }
 
-void Controller::buildVarString(unsigned char varNum, std::string valueString, std::vector<char>& updateString) {
-    /*updateString.push_back(CMDSTART);
-    updateString.push_back(CMDUPDATE);
-    updateString.push_back(varNum);
-    updateString.push_back(VARSTRING);*/
+// create the updateString to the Arduino from a var with String value
+void Controller::buildVarString(unsigned char varNum, std::string valueString, std::vector<char>& updateString) {    
     buildVarStringBegin(varNum, VARSTRING, updateString);
     updateString.insert(updateString.end(), valueString.begin(), valueString.end());
     buildVarStringEnd(updateString);
 }
 
+// get the correct data for varNum from the internal F-16 data and call the corresponding "buildVarString" function 
 void Controller::addVarDataToUpdateString(unsigned char varNum, std::vector<char> &updateString, F16Data* data, F16Data* prevData) {
     
     switch (varNum) {
@@ -262,28 +254,17 @@ void Controller::addVarDataToUpdateString(unsigned char varNum, std::vector<char
     return;
 }
 
+// iterates through all vars defined in datafields, get updateString for it and send it to Arduino
 void Controller::updateController(F16Data* data, F16Data* prevData) {
-    //std::cout << "updating " << controllerName << "\n";    
-#
+
         std::vector<char> updateString;
-
-        // this and lower part removed to create separate update commands for each variable. 
-        // better to do it all in one update command?  
-
-        //updateString.push_back(CMDSTART);
-        //updateString.push_back(CMDUPDATE);
 
         for (int i = 0; i < datafields.size(); i++) {
             updateString.clear();
             addVarDataToUpdateString(datafields[i], updateString, data, prevData);            
-            if (updateString.size() > 3) debugUpdateString(updateString);// serialHandler.sendDataUpdate(updateString);
+            if (updateString.size() > 3) debugUpdateString(updateString);
+            if (updateString.size() > 3) serialHandler.sendDataUpdate(updateString);
         }
-        //addVarDataToUpdateString(6, updateString, data, prevData);
-
-        //updateString.push_back('>');
-        //updateString.push_back('\0');
-        
-
 }
 
 //////////////////////////////////////

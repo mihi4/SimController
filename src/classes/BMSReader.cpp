@@ -2,7 +2,7 @@
 
 BMSReader::BMSReader(void) {
     bool check = connectToSim();
-    std::cout << "BMSReader created\n";
+    //std::cout << "BMSReader created\n";
 }
 
 BMSReader::~BMSReader(void) {
@@ -49,22 +49,27 @@ void BMSReader::setSimVersion(F16Data* data, FlightData2* flightData2) {
     data->simVersion.append(buf);
 }
 
-
+// sets databit in uInt var, makes the code more readable than |=; 
 void BMSReader::setDatabit(unsigned int &var,  unsigned int bit) {    
     var |= bit;    
 }
+// clears databit in uInt var, makes the code more readable than &= ~; 
 void BMSReader::clearDatabit(unsigned int& var, unsigned int bit) {
     var &= ~bit;
 }
+// sets databit in uShort var, makes the code more readable than |=; 
 void BMSReader::setDatabit(unsigned short& var, unsigned short bit) {
     var |= bit;
 }
+// clears databit in uShort var, makes the code more readable than &= ~; 
 void BMSReader::clearDatabit(unsigned short& var, unsigned short bit) {
     var &= ~bit;
 }
+// sets databit in uChar var, makes the code more readable than |=; 
 void BMSReader::setDatabit(unsigned char &var, unsigned char bit) {
     var |= bit;    
 }
+// clears databit in uChar var, makes the code more readable than &= ~; 
 void BMSReader::clearDatabit(unsigned char &var, unsigned char bit) {
     var &= ~bit;
 }
@@ -168,7 +173,7 @@ void BMSReader::setCautionLightbits(F16Data* data, FlightData* flightdata) {
 }
 
 
-
+// prepare DED or PFD strings for using it in Arduino DED code
 std::string BMSReader::trimDED_PFD(std::string line, char inv[]) {    
     const char charNum = 25;
     if (line.empty()) return "";
@@ -219,6 +224,7 @@ std::string BMSReader::trimDED_PFD(std::string line, char inv[]) {
     return ergebnis;
 }
 
+// check, if the selected Blinkbit is set; if yes, return on/off in the configured interval (in vector "intervals")
 bool BMSReader::getBlinkStatus(FlightData2* flightdata2, FlightData2::BlinkBits blinkBit) {
     auto currentTime = std::chrono::steady_clock::now();
     unsigned short intervall = 0;
@@ -235,6 +241,7 @@ bool BMSReader::getBlinkStatus(FlightData2* flightdata2, FlightData2::BlinkBits 
     return status[vectorIndex];
 }
 
+// read shared mem data and store it in F16Data structure. F16Data will be the same for any sim used
 void BMSReader::readF16Data(F16Data* data) {
     // std::cout << "Reading from BMS!\n";    
 
