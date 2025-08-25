@@ -409,7 +409,7 @@ void BMSReader::readF16Data(F16Data* data) {
 
     // IFF/AUXCOMM
 
-    data->iffDisplay = flightData2->iffBackupMode1Digit1 + flightData2->iffBackupMode1Digit2 + flightData2->iffBackupMode3ADigit1 + flightData2->iffBackupMode3ADigit2;
+    data->iffDisplay = std::string() + flightData2->iffBackupMode1Digit1 + flightData2->iffBackupMode1Digit2 + flightData2->iffBackupMode3ADigit1 + flightData2->iffBackupMode3ADigit2;
     data->auxDisplay = std::to_string(flightData->AUXTChan);
 
     // MANTRIM
@@ -474,5 +474,6 @@ void BMSReader::readF16Data(F16Data* data) {
     if (flightData2->IsSetMisc(flightData2->Flcs_Flcc_B)) setDatabit(data->leftConsLights, TESTB); else clearDatabit(data->leftConsLights, TESTB);
     if (flightData2->IsSetMisc(flightData2->Flcs_Flcc_C)) setDatabit(data->leftConsLights, TESTC); else clearDatabit(data->leftConsLights, TESTC);
     if (flightData2->IsSetMisc(flightData2->Flcs_Flcc_D)) setDatabit(data->leftConsLights, TESTD); else clearDatabit(data->leftConsLights, TESTD);
+
 
 }
