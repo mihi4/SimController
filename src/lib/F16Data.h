@@ -95,10 +95,10 @@ public:
 	unsigned short hydB = 0;  // 0..4000
 
 	// ---- EPU FUEL ----
-	unsigned short epuFuel = 0; // 0..65535, pointer position
+	unsigned short epuFuel = 0; // 0..65535, pointer position, raw value 0-100 percent, * 100
 	
 	// ---- CABIN PRESSURE ALT ----
-	unsigned short cabinPress = 0; // 0..65535, pointer position
+	unsigned short cabinPress = 0; // 0..65535, pointer position, raw value 0-50000;
 
 	// ---- CAUTION PANEL ----
 	unsigned int cautionPanelLights = 0; // full 32 bits, bits start with CP
