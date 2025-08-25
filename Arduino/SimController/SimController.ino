@@ -124,6 +124,9 @@ boolean debugmode = false;
  #ifdef ServoMotor
   #include "SC_Servo.h"    
  #endif
+ #ifdef StepperX27
+  #include "SC_StepperX27.h"    
+ #endif
 
 //////////////////////////////
 // function imlementations
@@ -175,6 +178,11 @@ void outputVars() {
       #ifdef SSegMAX7219
         case MODMAX7219:
           UpdateMAX7219(i);
+          break;
+      #endif
+      #ifdef StepperX27
+        case MODX27:
+          UpdateStepperX27(i);
           break;
       #endif
 
