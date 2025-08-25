@@ -171,7 +171,7 @@ public:
 	unsigned int ecmLights = 0; // bits begin with ECM (ECM1 ECMEMPTY, eCMFRM, ECMSPL ,...)
 
 	std::string iffDisplay = "    ";  // usually only digits
-	std::string auxDisplay = "    "; //  tacan can be X or AA
+	std::string auxDisplay = "    "; //  tacan can be X or A IIRC
 
 	short trimPitch = 0; // -0.5 to +0.5, multiply with 100
 	short trimRoll = 0; // -0.5 to +0.5, multiply with 100
