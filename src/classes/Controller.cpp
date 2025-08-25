@@ -192,13 +192,13 @@ void Controller::addVarDataToUpdateString(unsigned char varNum, std::vector<char
         //std::cout << "fuel prev: " << prevData->fuelFWD << " fuel now " << data->fuelFWD;
         if (data->epuFuel != prevData->epuFuel) {
             // std::cout << "fuelFWD, var = " << varNum << ", size: " << sizeof(data->fuelFWD) << ".\n";
-            buildVarString(varNum, data->epuFuel, updateString);
+            buildVarString(varNum, (unsigned short) util.map(data->epuFuel, 0, 10000, 0, 65535), updateString);
         }
     case CABINPRESS:
         //std::cout << "fuel prev: " << prevData->fuelFWD << " fuel now " << data->fuelFWD;
         if (data->cabinPress != prevData->cabinPress) {
             // std::cout << "fuelFWD, var = " << varNum << ", size: " << sizeof(data->fuelFWD) << ".\n";
-            buildVarString(varNum, data->cabinPress, updateString);
+            buildVarString(varNum, (unsigned short) util.map(data->cabinPress, 0, 50000, 0, 65535), updateString);
         }
     case CAUTIONPANELLIGHTS:
         //std::cout << "fuel prev: " << prevData->fuelFWD << " fuel now " << data->fuelFWD;
