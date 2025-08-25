@@ -359,7 +359,7 @@ Byte mismatch error, bytes sent does not match var datatype
 #define ECMSPLT     0x80000000    
 
 #define IFFDISP         73  // 4byte string to display channel/digit data
-#define AUXDISP         74
+#define AUXDISP         74  // 4byte string to display channel/digit data
 
 #define TRIMROLL        80
 #define TRIMPITCH       81
