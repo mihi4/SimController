@@ -18,7 +18,7 @@ unsigned int last;  //current target
 } StepperdataX27;
 
 unsigned long lastUpdateX27=0;
-unsigned long lastMessageX27=0;
+// unsigned long lastMessageX27=0;
 
 StepperdataX27 stepperdataX27[] =
 {
@@ -118,14 +118,14 @@ void StepperX27_FastUpdate()
 ///iniate a single step movement 
 void UpdateStepperX27(byte pos)
 {
-  uint16_t newVal=atoi(datenfeld[pos].wert);
+  uint16_t newVal=vars[pos]->value.valI; //  atoi(datenfeld[pos].wert);
 
   if (newVal<0)newVal=0;
   if (newVal>65535)newVal=65535;
-  if (newVal!=stepperdataX27[datenfeld[pos].target].last)
+  if (newVal!=stepperdataX27[vars[pos]->modIndex].last)
   {
-    uint16_t  newStepperPos=map(newVal, 0, 65535,0, stepperdataX27[datenfeld[pos].target].arc);
-      if (debugmode)
+    uint16_t  newStepperPos=map(newVal, 0, 65535,0, stepperdataX27[vars[pos]->modIndex].arc);
+    /*if (debugmode)
     {
       if (millis()>lastMessageX27+1000)
       {
@@ -136,15 +136,15 @@ void UpdateStepperX27(byte pos)
         SERIALCOM.println(VAR_ENDE);
         lastMessageX27=millis();
       }
-    }
-    if (stepperdataX27[datenfeld[pos].target].invert) 
-      stepperX27[datenfeld[pos].target].setPosition(stepperdataX27[datenfeld[pos].target].arc - newStepperPos);
+    }*/
+    if (stepperdataX27[vars[pos]->modIndex].invert) 
+      stepperX27[vars[pos]->modIndex].setPosition(stepperdataX27[vars[pos]->modIndex].arc - newStepperPos);
     else
-      stepperX27[datenfeld[pos].target].setPosition(newStepperPos);
+      stepperX27[vars[pos]->modIndex].setPosition(newStepperPos);
       
-    stepperdataX27[datenfeld[pos].target].last=newVal;
+    stepperdataX27[vars[pos]->modIndex].last=newVal;
     lastUpdateX27=millis();
   }
   if (millis()-lastUpdateX27<5000)  //sleep if no new data since 5 seconds
-   {stepperX27[datenfeld[pos].target].update();}
+   {stepperX27[vars[pos]->modIndex].update();}
 }
