@@ -8,6 +8,7 @@
 #include <string>
 #include <functional>
 #include "../lib/F16Data.h"
+#include "../lib/miUtils.h"
 //#include "SerialPortHandler.h"
 //#include "../lib/ArduSerial.h"
 #include "CommsHandler.h"
@@ -35,7 +36,8 @@ public:
 
 private:
     // std::shared_ptr<WindowsSerial> serialPort;
-    
+    miUtility util;
+
     std::string controllerName;
     int comPortNum;
     long baudrate;
