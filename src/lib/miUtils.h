@@ -18,8 +18,8 @@ struct
 
 class miUtility {
 public:
-    long map(long x, long in_min, long in_max, long out_min, long out_max) {
-        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    unsigned short map(unsigned short x, unsigned short in_min, unsigned short in_max, unsigned short out_min, unsigned short out_max) {
+        return ((unsigned long) ((x - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min);
     }
 
     std::string getBinaryRep(int n) {
