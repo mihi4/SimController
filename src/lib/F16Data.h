@@ -118,7 +118,7 @@ public:
 
 	unsigned short oilPressure = 0; // 0-10000 (0-100 * 100)
 	unsigned short nozzlePos = 0; // 0-10000 (0-100 * 100)
-	unsigned short rpm = 0; // 0-10300 (0-103 * 100)
+	unsigned short rpm = 0; // 0-65535, scale is not linear
 	unsigned short ftit = 0; //0-65535, scale is not linear!
 
 	unsigned int fuelFlow = 0; // 0 - 99999; let's see later, if we need a string instead
