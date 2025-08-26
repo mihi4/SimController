@@ -290,35 +290,36 @@ void BMSReader::readF16Data(F16Data* data) {
     // HYD PRESS
     data->hydA = (unsigned short)flightData2->hydPressureA;
     data->hydB = (unsigned short)flightData2->hydPressureB;
-    data->epuFuel = (unsigned short)(flightData->epuFuel * FLOATMULT); // util.map((long)flightData->epuFuel*FLOATMULT, 0, 10000, 0, 65535);
-    data->cabinPress = (unsigned short)flightData2->cabinAlt;
+    data->epuFuel = (unsigned short)(util.map(flightData->epuFuel*FLOATMULT, 0, 100*FLOATMULT, 0, 65535)); 
+    data->cabinPress = (unsigned short)(util.map(flightData->CabinPress, 0, 50000, 0, 65535));
     // CautionPanel
     setCautionLightbits(data, flightData);
     // separat code for blinking CP lights PROBEHEAT and Elec_Fault   
     if (flightData->IsSet2(flightData->PROBEHEAT) && getBlinkStatus(flightData2, flightData2->PROBEHEAT)) setCPBit(data, CPPROBEHEAT); else clearCPBit(data, CPPROBEHEAT);
     if (flightData->IsSet3(flightData->Elec_Fault) && getBlinkStatus(flightData2, flightData2->Elec_Fault)) setCPBit(data, CPELECSYS); else clearCPBit(data, CPELECSYS);
 
-    // PFD and DED
+    // PFD
     data->pfdLine1 = trimDED_PFD(flightData->PFLLines[0], flightData->PFLInvert[0]);
     data->pfdLine2 = trimDED_PFD(flightData->PFLLines[1], flightData->PFLInvert[1]);
     data->pfdLine3 = trimDED_PFD(flightData->PFLLines[2], flightData->PFLInvert[2]);
     data->pfdLine4 = trimDED_PFD(flightData->PFLLines[3], flightData->PFLInvert[3]);
     data->pfdLine5 = trimDED_PFD(flightData->PFLLines[4], flightData->PFLInvert[4]);
 
+
+    /////////////////////////////////////////////////////////////////
+    //   Instrument Panel
+    ///////////////////////////////////////////////////////////////// 
+
+    // DED
     data->dedLine1 = trimDED_PFD(flightData->DEDLines[0], flightData->Invert[0]);
     data->dedLine2 = trimDED_PFD(flightData->DEDLines[1], flightData->Invert[1]);
     data->dedLine3 = trimDED_PFD(flightData->DEDLines[2], flightData->Invert[2]);
     data->dedLine4 = trimDED_PFD(flightData->DEDLines[3], flightData->Invert[3]);
     data->dedLine5 = trimDED_PFD(flightData->DEDLines[4], flightData->Invert[4]);
 
-
-    /////////////////////////////////////////////////////////////////
-    //   Instrument Panel
-    ///////////////////////////////////////////////////////////////// 
-
     //  Engine Cluster
-    data->oilPressure = (unsigned short)(flightData->oilPressure * FLOATMULT);  // bms val is 0-100, too coarse for smooth movement
-    data->nozzlePos = (unsigned short)(flightData->nozzlePos * FLOATMULT); // bms val is 0-100, too coarse for smooth movement
+    data->oilPressure = (unsigned short)(util.map(flightData->oilPressure * FLOATMULT, 0, 100 * FLOATMULT, 0, 65535));  // bms val is 0-100, too coarse for smooth movement
+    data->nozzlePos = (unsigned short)(util.map(flightData->nozzlePos * FLOATMULT, 0, 100 * FLOATMULT, 0, 65535)); // bms val is 0-100, too coarse for smooth movement
     data->rpm = (unsigned short)(flightData->rpm * FLOATMULT); // FIXXXME, use trim function
     data->ftit = (unsigned short)(flightData->ftit * FLOATMULT); // FIXXXME, use trim function
 

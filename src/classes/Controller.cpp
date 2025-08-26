@@ -248,6 +248,27 @@ void Controller::addVarDataToUpdateString(unsigned char varNum, std::vector<char
             buildVarString(DEDLINE5, data->dedLine5, updateString);
         }
         break;
+    case OILPRESS:
+        if (data->oilPressure != prevData->oilPressure) {
+            buildVarString(varNum, data->oilPressure, updateString);
+        }
+        break;
+    case NOZZLEPOS:
+        if (data->nozzlePos != prevData->nozzlePos) {
+            buildVarString(varNum, data->nozzlePos, updateString);
+        }
+        break;
+    case RPM:
+        if (data->rpm != prevData->rpm) {
+            buildVarString(varNum, data->rpm, updateString);
+        }
+        break;
+    case FTIT:
+        if (data->ftit != prevData->ftit) {
+            buildVarString(varNum, data->ftit, updateString);
+        }
+        break;
+
     default:
         break;
     }     
