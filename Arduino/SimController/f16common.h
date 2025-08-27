@@ -197,7 +197,7 @@ Byte mismatch error, bytes sent does not match var datatype
 // Main Instrument Panel 
 // **********************
 
-#define ASI                 38
+#define KIAS                38
 #define MACH                39
 #define ALTTHOUSANDS        40
 #define ALTPOINTER          41   
@@ -242,7 +242,7 @@ Byte mismatch error, bytes sent does not match var datatype
 // Left Instrument Panel
 // **********************
 
-// Nothing here to output, data for 12V relays (magnetic switches) is in separate var, all lights for MM5451 are in 
+// Nothing here to output, data for 12V relays (magnetic switches) is in separate var, all lights for MM5451 are in InstPanellights
 
 // **********************
 // All InstPanel lights 
