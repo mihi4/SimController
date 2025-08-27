@@ -263,16 +263,113 @@ void Controller::addVarDataToUpdateString(unsigned char varNum, std::vector<char
     case INSTPANELLIGHTS:
         if (data->instPanelLights != prevData->instPanelLights) {
             buildVarString(varNum, data->instPanelLights, updateString);
-        }
-    // CENTER CONSOLE INSTRUMENTS
+        }    
         break;
+    // CENTER CONSOLE INSTRUMENTS
+    case KIAS:
+        if (data->kias != prevData->kias) {
+            buildVarString(varNum, data->kias, updateString);
+        }
+        break;
+    case MACH:
+        if (data->mach != prevData->mach) {
+            buildVarString(varNum, data->mach, updateString);
+        }
+        break;
+    case ALTTHOUSANDS:
+        if (data->altThousands != prevData->altThousands) {
+            buildVarString(varNum, data->altThousands, updateString);
+        }
+        break;
+    case ALTPOINTER:
+        if (data->altPointer != prevData->altPointer) {
+            buildVarString(varNum, data->altPointer, updateString);
+        }
+        break;
+    case ALTITUDE:
+        if (data->altitude != prevData->altitude) {
+            buildVarString(varNum, data->altitude, updateString);
+        }
+        break;
+    case ALTCAL:
+        if (data->altCalibration != prevData->altCalibration) {
+            buildVarString(varNum, data->altCalibration, updateString);
+        }
+        break;
+    case VVIVAL:
+        if (data->vvi != prevData->vvi) {
+            buildVarString(varNum, data->vvi, updateString);
+        }
+        break;
+    case AOAVAL:
+        if (data->aoa != prevData->aoa) {
+            buildVarString(varNum, data->aoa, updateString);
+        }
+        break;
+    case HSIAIRBASEX:
+        if (data->hsiAirbaseX != prevData->hsiAirbaseX) {
+            buildVarString(varNum, data->hsiAirbaseX, updateString);
+        }
+        break;
+    case HSIAIRBASEY:
+        if (data->hsiAirbaseY != prevData->hsiAirbaseY) {
+            buildVarString(varNum, data->hsiAirbaseY, updateString);
+        }
+        break;
+    case HSIBEARINGTOBEACON:
+        if (data->hsiBearingToBeacon != prevData->hsiBearingToBeacon) {
+            buildVarString(varNum, data->hsiBearingToBeacon, updateString);
+        }
+        break;
+    case HSICOURSEDEVIATION :
+        if (data->hsiCourseDeviation != prevData->hsiCourseDeviation) {
+            buildVarString(varNum, data->hsiCourseDeviation, updateString);
+        }
+        break;
+    case HSICURRENTHEADING:
+        if (data->hsiCurrentHeading != prevData->hsiCurrentHeading) {
+            buildVarString(varNum, data->hsiCurrentHeading, updateString);
+        }
+        break;
+    case HSIDESIREDCOURSE:
+        if (data->hsiDesiredCourse != prevData->hsiDesiredCourse) {
+            buildVarString(varNum, data->hsiDesiredCourse, updateString);
+        }
+        break;
+    case HSIDESIREDHEADING:
+        if (data->hsiDesiredHeading != prevData->hsiDesiredHeading) {
+            buildVarString(varNum, data->hsiDesiredHeading, updateString);
+        }
+        break;
+    case HSIDEVIATIONLIMIT:
+        if (data->hsiDeviationLimit != prevData->hsiDeviationLimit) {
+            buildVarString(varNum, data->hsiDeviationLimit, updateString);
+        }
+        break;
+    case HSIDISTANCETOBEACON:
+        if (data->hsiDistanceToBeacon != prevData->hsiDistanceToBeacon) {
+            buildVarString(varNum, data->hsiDistanceToBeacon, updateString);
+        }
+        break;
+    case HSIHALFDEVIATIONLIMIT:
+        if (data->hsiHalfDeviationLimit != prevData->hsiHalfDeviationLimit) {
+            buildVarString(varNum, data->hsiHalfDeviationLimit, updateString);
+        }
+        break;
+    case HSILOCALIZERCOURSE:
+        if (data->hsiLocalizerCourse != prevData->hsiLocalizerCourse) {
+            buildVarString(varNum, data->hsiLocalizerCourse, updateString);
+        }
+        break;
+
     case INSTRUMENTBITS:
         if (data->instrumentBits != prevData->instrumentBits) {
             buildVarString(varNum, data->instrumentBits, updateString);
         }
         break;
+    /////////////////////////////        
     // LEFT CONSOLE
-
+    /////////////////////////////
 
     default:
         break;
