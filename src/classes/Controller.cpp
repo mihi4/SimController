@@ -306,6 +306,31 @@ void Controller::addVarDataToUpdateString(unsigned char varNum, std::vector<char
             buildVarString(varNum, data->aoa, updateString);
         }
         break;
+    case ADIILSHORPOS:
+        if (data->adiIlsHorPos != prevData->adiIlsHorPos) {
+            buildVarString(varNum, data->adiIlsHorPos, updateString);
+        }
+        break;
+    case ADIILSVERPOS:
+        if (data->adiIlsVerPos != prevData->adiIlsVerPos) {
+            buildVarString(varNum, data->adiIlsVerPos, updateString);
+        }
+        break;
+    case ADIPITCH:
+        if (data->adiPitch != prevData->adiPitch) {
+            buildVarString(varNum, data->adiPitch, updateString);
+        }
+        break;
+    case ADIROLL:
+        if (data->adiRoll != prevData->adiRoll) {
+            buildVarString(varNum, data->adiRoll, updateString);
+        }
+        break;
+    case ADISIDESLIP:
+        if (data->adiSideslip != prevData->adiSideslip) {
+            buildVarString(varNum, data->adiSideslip, updateString);
+        }
+        break;
     case HSIAIRBASEX:
         if (data->hsiAirbaseX != prevData->hsiAirbaseX) {
             buildVarString(varNum, data->hsiAirbaseX, updateString);
@@ -370,6 +395,72 @@ void Controller::addVarDataToUpdateString(unsigned char varNum, std::vector<char
     /////////////////////////////        
     // LEFT CONSOLE
     /////////////////////////////
+    case LEFTCONSLIGHTS:
+        if (data->leftConsLights != prevData->leftConsLights) {
+            buildVarString(varNum, data->leftConsLights, updateString);
+        }
+        break;
+    case ECMLIGHTS:
+        if (data->ecmLights != prevData->ecmLights) {
+            buildVarString(varNum, data->ecmLights, updateString);
+        }
+        break;
+    case UHFCHAN:
+        if (data->uhfChannel != prevData->uhfChannel) {
+            buildVarString(varNum, data->uhfChannel, updateString);
+        }
+        break;
+    case UHFFREQ:
+        if (data->uhfFrequency != prevData->uhfFrequency) {
+            buildVarString(varNum, data->uhfFrequency, updateString);
+        }
+        break;
+    case IFFDISP:
+        if (data->iffDisplay != prevData->iffDisplay) {
+            buildVarString(varNum, data->iffDisplay, updateString);
+        }
+        break;
+    case AUXDISP:
+        if (data->auxDisplay != prevData->auxDisplay) {
+            buildVarString(varNum, data->auxDisplay, updateString);
+        }
+        break;
+    case TRIMROLL:
+        if (data->trimRoll != prevData->trimRoll) {
+            buildVarString(varNum, data->trimRoll, updateString);
+        }
+        break;
+    case TRIMPITCH:
+        if (data->trimPitch != prevData->trimPitch) {
+            buildVarString(varNum, data->trimPitch, updateString);
+        }
+        break;
+    case CMDSBITS:
+        if (data->cmdsBits != prevData->cmdsBits) {
+            buildVarString(varNum, data->cmdsBits, updateString);
+        }
+        break;
+    case CMDS01STR:
+        if (data->cmds01Str != prevData->cmds01Str) {
+            buildVarString(varNum, data->cmds01Str, updateString);
+        }
+        break;
+    case CMDS02STR:
+        if (data->cmds02Str != prevData->cmds02Str) {
+            buildVarString(varNum, data->cmds02Str, updateString);
+        }
+        break;
+    case CMDSCHAFFSTR:
+        if (data->cmdsChaffStr != prevData->cmdsChaffStr) {
+            buildVarString(varNum, data->cmdsChaffStr, updateString);
+        }
+        break;
+    case CMDSFLARESTR:
+        if (data->cmdsFlareStr != prevData->cmdsFlareStr) {
+            buildVarString(varNum, data->cmdsFlareStr, updateString);
+        }
+        break;
+
 
     default:
         break;
