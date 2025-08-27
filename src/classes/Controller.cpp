@@ -19,7 +19,7 @@ void debugUpdateString(std::vector<char> updateString) {
     std::string debugString;    
     std::ostringstream oss;
 
-    // Iteriere über die Bytes im Vektor  
+    // Iteriere ï¿½ber die Bytes im Vektor  
     for (char byte : updateString)  {
         
         oss << std::hex << std::setw(2) << std::setfill('0') << (static_cast<unsigned int>(byte) & 0xFF) << " ";
@@ -135,67 +135,53 @@ void Controller::buildVarString(unsigned char varNum, std::string valueString, s
 void Controller::addVarDataToUpdateString(unsigned char varNum, std::vector<char> &updateString, F16Data* data, F16Data* prevData) {
     
     switch (varNum) {
+    // states
     case SIMSTATES:
         if (data->simStates != prevData->simStates) {
-            // std::cout << "powerstates, var = " << varNum << ", size: " << sizeof(data->powerStates) << ".\n";
             buildVarString(varNum, data->simStates, updateString);
         }        
         break;
     case POWERSTATES:
         if (data->powerStates != prevData->powerStates) {
-            // std::cout << "powerstates, var = " << varNum << ", size: " << sizeof(data->powerStates) << ".\n";
             buildVarString(varNum, data->powerStates, updateString);
         }
-        //prevData->powerStates = data->powerStates;
         break;
+    case RELAYSTATES:
+        if (data->relayStates != prevData->relayStates) {
+            buildVarString(varNum, data->relayStates, updateString);
+        }
+        break;
+    // RIGHT AUX
     case FUELFWD:
-        //std::cout << "fuel prev: " << prevData->fuelFWD << " fuel now " << data->fuelFWD;
         if (data->fuelFWD != prevData->fuelFWD) {
-            // std::cout << "fuelFWD, var = " << varNum << ", size: " << sizeof(data->fuelFWD) << ".\n";
             buildVarString(varNum, data->fuelFWD, updateString);
         }
     case FUELAFT:
-        //std::cout << "fuel prev: " << prevData->fuelFWD << " fuel now " << data->fuelFWD;
         if (data->fuelAFT != prevData->fuelAFT) {
-            // std::cout << "fuelFWD, var = " << varNum << ", size: " << sizeof(data->fuelFWD) << ".\n";
             buildVarString(varNum, data->fuelAFT, updateString);
         }
-        //prevData->fuelFWD = data->fuelFWD;
     case FUELTOTAL:
-        //std::cout << "fuel prev: " << prevData->fuelFWD << " fuel now " << data->fuelFWD;
         if (data->fuelTotal != prevData->fuelTotal) {            
-            //std::cout << "fueltotal, var = " << varNum << ", size: " << sizeof(data->fuelTotal) << ". value: " << std::to_string(data->fuelTotal) << "\n";
             buildVarString(varNum, data->fuelTotal, updateString);
         }
-        //prevData->fuelTotal = data->fuelTotal;
     case HYDA:
-        //std::cout << "fuel prev: " << prevData->fuelFWD << " fuel now " << data->fuelFWD;
         if (data->hydA != prevData->hydA) {
-            // std::cout << "fuelFWD, var = " << varNum << ", size: " << sizeof(data->fuelFWD) << ".\n";
             buildVarString(varNum, data->hydA, updateString);
         }
-    case HYDB:
-        //std::cout << "fuel prev: " << prevData->fuelFWD << " fuel now " << data->fuelFWD;
-        if (data->hydB != prevData->hydB) {
-            // std::cout << "fuelFWD, var = " << varNum << ", size: " << sizeof(data->fuelFWD) << ".\n";
+    case HYDB:        
+        if (data->hydB != prevData->hydB) {        
             buildVarString(varNum, data->hydB, updateString);
         }
-    case EPUFUEL:
-        //std::cout << "fuel prev: " << prevData->fuelFWD << " fuel now " << data->fuelFWD;
-        if (data->epuFuel != prevData->epuFuel) {
-            // std::cout << "fuelFWD, var = " << varNum << ", size: " << sizeof(data->fuelFWD) << ".\n";
+    case EPUFUEL:        
+        if (data->epuFuel != prevData->epuFuel) {        
             buildVarString(varNum, (unsigned short) util.map(data->epuFuel, 0, 10000, 0, 65535), updateString);
         }
-    case CABINPRESS:
-        //std::cout << "fuel prev: " << prevData->fuelFWD << " fuel now " << data->fuelFWD;
-        if (data->cabinPress != prevData->cabinPress) {
-            // std::cout << "fuelFWD, var = " << varNum << ", size: " << sizeof(data->fuelFWD) << ".\n";
+    case CABINPRESS:        
+        if (data->cabinPress != prevData->cabinPress) {        
             buildVarString(varNum, (unsigned short) util.map(data->cabinPress, 0, 50000, 0, 65535), updateString);
         }
-    case CAUTIONPANELLIGHTS:
-        //std::cout << "fuel prev: " << prevData->fuelFWD << " fuel now " << data->fuelFWD;
-        if (data->cautionPanelLights != prevData->cautionPanelLights) {
-            // std::cout << "fuelFWD, var = " << varNum << ", size: " << sizeof(data->fuelFWD) << ".\n";
+    case CAUTIONPANELLIGHTS:        
+        if (data->cautionPanelLights != prevData->cautionPanelLights) {        
             buildVarString(varNum, data->cautionPanelLights, updateString);
         }
     case PFDLINE1:
@@ -223,6 +209,7 @@ void Controller::addVarDataToUpdateString(unsigned char varNum, std::vector<char
             buildVarString(PFDLINE5, data->pfdLine5, updateString);
         }
         break;
+    // INSTRUMENT PANEL
     case DEDLINE1:
         if (data->dedLine1 != prevData->dedLine1) {
             buildVarString(DEDLINE1, data->dedLine1, updateString);
@@ -268,6 +255,24 @@ void Controller::addVarDataToUpdateString(unsigned char varNum, std::vector<char
             buildVarString(varNum, data->ftit, updateString);
         }
         break;
+    case FUELFLOW:
+        if (data->fuelFlow != prevData->fuelFlow) {
+            buildVarString(varNum, data->fuelFlow, updateString);
+        }
+        break;
+    case INSTPANELLIGHTS:
+        if (data->instPanelLights != prevData->instPanelLights) {
+            buildVarString(varNum, data->instPanelLights, updateString);
+        }
+    // CENTER CONSOLE INSTRUMENTS
+        break;
+    case INSTRUMENTBITS:
+        if (data->instrumentBits != prevData->instrumentBits) {
+            buildVarString(varNum, data->instrumentBits, updateString);
+        }
+        break;
+    // LEFT CONSOLE
+
 
     default:
         break;
