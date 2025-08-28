@@ -209,7 +209,7 @@ std::string BMSReader::trimDED_PFD(std::string line, char inv[]) {
             { lineCompiled[ctr] = '_'; }
             else if (line[ctr] == '~')    //Pfeil nach unten
             { lineCompiled[ctr] = (char)29; }
-            else if (line[ctr] == 94)     // �
+            else if (line[ctr] == 94)     // 
             { lineCompiled[ctr] = (char)63; }
             else if (line[ctr] == 125)    // }
             { lineCompiled[ctr] = (char)30; }
