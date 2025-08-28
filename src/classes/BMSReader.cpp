@@ -321,14 +321,14 @@ void BMSReader::readF16Data(F16Data* data) {
     //  Engine Cluster
     data->oilPressure = (unsigned short)(util.map(flightData->oilPressure * FLOATMULT, 0, 100 * FLOATMULT, 0, 65535));  // bms val is 0-100, too coarse for smooth movement
     data->nozzlePos = (unsigned short)(util.map(flightData->nozzlePos * FLOATMULT, 0, 100 * FLOATMULT, 0, 65535)); // bms val is 0-100, too coarse for smooth movement
-    data->rpm = (unsigned short)(flightData->rpm * FLOATMULT); // FIXXXME, use trim function
-    data->ftit = (unsigned short)(flightData->ftit * FLOATMULT); // FIXXXME, use trim function
+    data->rpm = (unsigned short) (util.TrimGauge(flightData->rpm, GAUGERPM)); // (unsigned short)(flightData->rpm * FLOATMULT);
+    data->ftit = (unsigned short) (util.TrimGauge(flightData->ftit, GAUGEFTIT)); 
 
     data->fuelFlow = (unsigned int)(flightData->fuelFlow / 100); // only the first 3 digits change in fuelflow
 
     // main instruments
 
-    data->kias = (unsigned int)(flightData->kias * FLOATMULT); //FIXXXME, use trim function
+    data->kias = (unsigned short) (util.TrimGauge(flightData->kias, GAUGEASI)); 
     data->mach = (unsigned short)(flightData->mach * FLOATMULT);
 
     data->altitude = (int)(flightData2->AAUZ * -1);
