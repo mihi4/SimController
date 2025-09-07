@@ -202,11 +202,11 @@ void setup() {
   // put your setup code here, to run once:
 	SERIALCOM.begin(BAUDRATE);
 	while (!SERIALCOM) {}
-	SERIALCOM.println("Arduino is ready");
+	/* SERIALCOM.println("Arduino is ready");
 
   varsChanged = true;
   outputVars();
-  /* debugging escaping
+  // debugging escaping
   ReadSerial();
   showNewData();
   parseSerialCommand();
@@ -217,6 +217,23 @@ void setup() {
   showNewData();
   parseSerialCommand();
   outputVars(); */
+
+  #ifdef DED_PFL
+    SetupDED();
+  #endif
+  #ifdef LED_MM5451
+    SetupLED_MM5451();
+  #endif
+  #ifdef SSegMAX7219
+    SetupMax7219();
+  #endif
+  #ifdef ServoMotor
+    SetupServo();
+  #endif
+  #ifdef StepperX27
+    SetupStepperX27();
+  #endif
+
 }
 
 void loop() {
