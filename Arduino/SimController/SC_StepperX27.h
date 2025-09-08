@@ -23,7 +23,7 @@ unsigned long lastUpdateX27=0;
 StepperdataX27 stepperdataX27[] =
 {
   //  {PIN1 PIN2 PIN3 PIN4}    arc    invert   last
-    { {  22,   23,   24,   25   }, 315*3 , false,    0   },  // EPU FUEL
+    { {  25,   24,   24,   22   }, 315*3 , false,    0   },  // EPU FUEL// { {  22,   23,   24,   25   }, 315*3 , false,    0   },  // EPU FUEL
     { {  28,   29,   30,   31   }, 315*3 , false,    0   }  // CABIN PRESS 
 };
 
