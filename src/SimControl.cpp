@@ -2,6 +2,7 @@
 //
 #include "SimControl.h"
 
+
 bool checkParameter(int argNum) {
     if (argNum == 2) return false;
     return true;
@@ -90,7 +91,7 @@ int main(int argc, char* argv[])
     ControllerHandler cHandler("dummyFilename");  // later read config from file, maybe
 
     cHandler.setupControllers();
-    cHandler.showControllers();
+    cHandler.showControllers();    
     Sleep(2000); // let arduinos reboot
     cHandler.readControllerComms();
     Sleep(500);
