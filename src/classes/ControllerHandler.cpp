@@ -1,5 +1,8 @@
 #include "ControllerHandler.h"
 
+
+
+
 ControllerHandler::ControllerHandler(std::string cfgFileName)
 {
 
@@ -12,7 +15,7 @@ ControllerHandler::~ControllerHandler()
 void ControllerHandler::showControllers()
 {
     for (int i = 0; i < contNumber; i++) {
-        std::cout << i << ": " << allControllers.at(i).getName() << std::endl;
+       std::cout << i << ": " << allControllers.at(i).getName() << " portNum: " << allControllers.at(i).getComport() << " baudrate: " << allControllers.at(i).getBaudrate() << std::endl;
     }
 }
 
