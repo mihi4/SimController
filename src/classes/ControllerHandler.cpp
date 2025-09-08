@@ -63,15 +63,6 @@ void ControllerHandler::createControllerVector()
         allControllers.emplace_back(Controller(row.at(0), std::stoi(row.at(1)), std::stol(row.at(2))));
     }
 
-    /*const int cCount = 1;
-    std::string cNames[cCount] = { "RightAux" };
-    unsigned char cPortNums[cCount] = { 4 };
-
-    for (int i = 0; i < cCount; i++) {
-        std::cout << "adding controller " << std::dec << i << " COM" << std::dec << (int) cPortNums[i] << std::endl;
-        allControllers.emplace_back(Controller(cNames[i],cPortNums[i], 115200));
-    } */
-
     contNumber = (int) allControllers.size();
     
 }

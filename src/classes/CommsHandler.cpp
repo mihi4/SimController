@@ -15,7 +15,6 @@ unsigned char CommsHandler::getComPortNum() { return portNum;  }
 bool CommsHandler::isSerialConnected() { return serialConnected; }
 bool CommsHandler::isArduinoConnected() { return arduinoConnected; }
 
-
 bool CommsHandler::initializeComport(int comPortNum, long baudrate, std::string controllerNameIn)
 {
     controllerName = controllerNameIn;
@@ -47,8 +46,6 @@ bool CommsHandler::sendCommand(std::string cmdString)
     std::cout << "ERROR: " << controllerName << " serialPort not connected!\n";
     return false;
 }
-
-
 
 void CommsHandler::readFromPort()
 {
