@@ -149,6 +149,9 @@
     <ClInclude Include="lib\miUtils.h" />
     <ClInclude Include="SimControl.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="simcontrol.conf" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
