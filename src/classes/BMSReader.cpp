@@ -371,7 +371,7 @@ void BMSReader::readF16Data(F16Data* data) {
     if (flightData->IsSet3(flightData->SysTest)) setDatabit(data->instPanelLights, TWPSYSTEST); else clearDatabit(data->instPanelLights, TWPSYSTEST);
     if (flightData->IsSet2(flightData->TgtSep)) setDatabit(data->instPanelLights, TWPTGTSEP); else clearDatabit(data->instPanelLights, TWPTGTSEP);
     // ECM light
-    if (flightData->IsSet2(flightData->EcmPwr) && getBlinkStatus(flightData2, flightData2->ECM_Oper)) setDatabit(data->instPanelLights, ECMON); else clearDatabit(data->instPanelLights, ECMON);
+    if (flightData->IsSet2(flightData->EcmPwr)) setDatabit(data->instPanelLights, ECMON); else clearDatabit(data->instPanelLights, ECMON); //  FIXXXME, should only be the consent light  && getBlinkStatus(flightData2, flightData2->ECM_Oper)) setDatabit(data->instPanelLights, ECMON); else clearDatabit(data->instPanelLights, ECMON);
     // MISC Panel TFR light
     if (flightData->IsSet2(flightData->TFR_ENGAGED)) setDatabit(data->instPanelLights, MODEACTIVE); else clearDatabit(data->instPanelLights, MODEACTIVE);
     if (flightData->IsSet(flightData->TFR_STBY)) setDatabit(data->instPanelLights, MODESTBY); else clearDatabit(data->instPanelLights, MODESTBY);
@@ -426,7 +426,19 @@ void BMSReader::readF16Data(F16Data* data) {
     data->trimPitch = flightData->TrimPitch * FLOATMULT;
     data->trimRoll = flightData->TrimRoll * FLOATMULT;
 
-    // ECM Bits  FIXXXME    
+    // ECM Bits  FIXXXME  
+    for (int x = 0; x < MAX_ECM_PROGRAMS; x++) {  // at the moment only buttons 1-5 available, MAX_ECM_PROGRAMS is defined in Flightdata.h
+        if (flightData2->ecmBits[x] == flightData2->ECM_PRESSED_ALL_LIT) {
+            setDatabit(data->ecmLights, ECM1A + (x * 16));
+            setDatabit(data->ecmLights, ECM1S + (x * 16));
+            setDatabit(data->ecmLights, ECM1F + (x * 16));
+            setDatabit(data->ecmLights, ECM1T + (x * 16));
+        }
+        if (flightData2->ecmBits[x] == flightData2->ECM_PRESSED_ACTIVE) setDatabit(data->ecmLights, ECM1A * (x * 16)); else clearDatabit(data->ecmLights, ECM1A * (x * 16));
+    }
+
+
+
 
     // Left Console Lightbits
     // Gear panel lights
