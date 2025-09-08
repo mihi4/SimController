@@ -19,6 +19,7 @@ void ControllerHandler::showControllers()
     }
 }
 
+
 void ControllerHandler::readControllerComms() {
     for (int i = 0; i < allControllers.size(); i++) {
         allControllers[i].readSerial();
@@ -26,18 +27,50 @@ void ControllerHandler::readControllerComms() {
 }
 
 
+std::vector<std::vector<std::string>> ControllerHandler::readConfig(const std::string& filename) {
+    std::vector<std::vector<std::string>> data;
+    std::ifstream file(filename);
+
+    if (!file.is_open()) {
+        std::cerr << "Failed to open file: " << filename << std::endl;
+        return data;
+    }
+
+    std::string line;
+    while (std::getline(file, line)) {
+        std::vector<std::string> row;
+        std::stringstream ss(line);
+        std::string cell;
+
+        while (std::getline(ss, cell, ';')) {
+            row.push_back(cell);
+        }
+
+        data.push_back(row);
+    }
+
+    file.close();
+    return data;
+}
+
+
 void ControllerHandler::createControllerVector()
 {
     // TODO: read this data from config file!
+    auto conf = readConfig(CONFIGFILE);
 
-    const int cCount = 1;
+    for (const auto& row : conf) {
+        allControllers.emplace_back(Controller(row.at(0), std::stoi(row.at(1)), std::stol(row.at(2))));
+    }
+
+    /*const int cCount = 1;
     std::string cNames[cCount] = { "RightAux" };
     unsigned char cPortNums[cCount] = { 4 };
 
     for (int i = 0; i < cCount; i++) {
         std::cout << "adding controller " << std::dec << i << " COM" << std::dec << (int) cPortNums[i] << std::endl;
         allControllers.emplace_back(Controller(cNames[i],cPortNums[i], 115200));
-    }
+    } */
 
     contNumber = (int) allControllers.size();
     

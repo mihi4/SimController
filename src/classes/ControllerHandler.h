@@ -4,10 +4,13 @@
 #include <bit>
 #include <string>
 #include <functional>
+#include <iostream>
+#include <fstream>
 #include "../lib/F16Data.h"
-//#include "SerialPortHandler.h"
-//#include "../lib/ArduSerial.h"
+
 #include "Controller.h"
+
+#define CONFIGFILE "simcontrol.conf"
 
 class ControllerHandler {
 
@@ -22,6 +25,8 @@ public:
     void readControllerComms();
 
 private:
+    std::vector<std::vector<std::string>> readConfig(const std::string& filename);
+
     std::vector<Controller> allControllers;
     std::vector<WindowsSerial> allComports;
 
