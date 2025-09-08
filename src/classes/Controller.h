@@ -9,8 +9,6 @@
 #include <functional>
 #include "../lib/F16Data.h"
 #include "../lib/miUtils.h"
-//#include "SerialPortHandler.h"
-//#include "../lib/ArduSerial.h"
 #include "CommsHandler.h"
 
 
@@ -21,9 +19,10 @@ public:
     Controller(std::string name, int comPortNum, long baudrate);
     
     ~Controller();
+
     std::string getName();
     int getComport();
-    long getBaudrate();
+    int getBaudrate();
     
     void setDataField(int pos, int value);
     void addDataField(unsigned char value);
@@ -42,7 +41,7 @@ private:
 
     std::string controllerName;
     int comPortNum;
-    long baudrate;
+    int baudrate;
 
     std::vector<unsigned char> datafields;
 
