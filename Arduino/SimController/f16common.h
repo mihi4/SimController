@@ -37,6 +37,8 @@ WRONG COMMAND; command sent from app not recognized
 Byte mismatch error, bytes sent does not match var datatype
 */
 
+#define DEFAULTBAUDRATE 115200
+
 #define ER_WRONGVAR "<E1>"
 #define ER_WRONGCMD "<E2>"
 #define ER_BYTEMATCH "<E3>"
@@ -65,7 +67,7 @@ Byte mismatch error, bytes sent does not match var datatype
 #define MODX27VID     52
 #define MODFFI        72      
 
-#define FLOATMULT    100  // amount to multiply float value with to get smoother data
+#define FLOATMULT    1000  // amount to multiply float value with to get smoother data
 
 #define BLINKBITNUM  13
 #define BLINKSLOW    600  // intervalls in milliseconds for blinking warning lights
