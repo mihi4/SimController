@@ -429,17 +429,17 @@ void BMSReader::readF16Data(F16Data* data) {
     // ECM Bits  FIXXXME  
     for (int x = 0; x < MAX_ECM_PROGRAMS; x++) {  // at the moment only buttons 1-5 available, MAX_ECM_PROGRAMS is defined in Flightdata.h
         if (flightData2->ecmBits[x] == flightData2->ECM_PRESSED_ALL_LIT || flightData2->ecmBits[x] == flightData2->ECM_UNPRESSED_NO_LIT) {
-            setDatabit(data->ecmLights, ECM1A * (pow(16,x));
-            setDatabit(data->ecmLights, ECM1S * (pow(16,x));
-            setDatabit(data->ecmLights, ECM1F * (pow(16,x));
-            setDatabit(data->ecmLights, ECM1T * (pow(16,x));
+            setDatabit(data->ecmLights, ECM1A * (pow(16,x)));
+            setDatabit(data->ecmLights, ECM1S * (pow(16,x)));
+            setDatabit(data->ecmLights, ECM1F * (pow(16,x)));
+            setDatabit(data->ecmLights, ECM1T * (pow(16,x)));
             break;
         }
         if (flightData2->ecmBits[x] == flightData2->ECM_PRESSED_NO_LIT || flightData2->ecmBits[x] == flightData2->ECM_UNPRESSED_NO_LIT) {
-            clearDatabit(data->ecmLights, ECM1A * (pow(16,x));
-            clearDatabit(data->ecmLights, ECM1S * (pow(16,x));
-            clearDatabit(data->ecmLights, ECM1F * (pow(16,x));
-            clearDatabit(data->ecmLights, ECM1T * (pow(16,x));
+            clearDatabit(data->ecmLights, ECM1A * (pow(16,x)));
+            clearDatabit(data->ecmLights, ECM1S * (pow(16,x)));
+            clearDatabit(data->ecmLights, ECM1F * (pow(16,x)));
+            clearDatabit(data->ecmLights, ECM1T * (pow(16,x)));
             break;
         }
         if (flightData2->ecmBits[x] == flightData2->ECM_PRESSED_ACTIVE) setDatabit(data->ecmLights, ECM1A * (pow(16,x))); else clearDatabit(data->ecmLights, ECM1A * (pow(16,x)));
