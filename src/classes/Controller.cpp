@@ -500,6 +500,6 @@ std::vector<unsigned char> Controller::getDatafields() {
 
 std::string Controller::getName() { return controllerName; }
 int Controller::getComport() { return comPortNum; }
-long Controller::getBaudrate() { return baudrate; }
+int Controller::getBaudrate() { return baudrate; }
 
 
