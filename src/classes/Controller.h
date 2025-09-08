@@ -22,6 +22,8 @@ public:
     
     ~Controller();
     std::string getName();
+    int getComport();
+    long getBaudrate();
     
     void setDataField(int pos, int value);
     void addDataField(unsigned char value);

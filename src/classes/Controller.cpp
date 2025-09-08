@@ -19,7 +19,7 @@ void debugUpdateString(std::vector<char> updateString) {
     std::string debugString;    
     std::ostringstream oss;
 
-    // Iteriere �ber die Bytes im Vektor  
+    // Iteriere ueber die Bytes im Vektor  
     for (char byte : updateString)  {
         
         oss << std::hex << std::setw(2) << std::setfill('0') << (static_cast<unsigned int>(byte) & 0xFF) << " ";
@@ -499,4 +499,7 @@ std::vector<unsigned char> Controller::getDatafields() {
 }
 
 std::string Controller::getName() { return controllerName; }
+int Controller::getComport() { return comPortNum; }
+long Controller::getBaudrate() { return baudrate; }
+
 
