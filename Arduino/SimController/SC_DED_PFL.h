@@ -86,9 +86,8 @@ void TestDED()
     do {
   #endif
       //SendMessage("settingStrings",1);
-	  displayDED.drawStr(23,0, "MICHIS F-16 SIMULATOR");	  	  
-	  displayDED.drawStr(37, 20, "PILOT FAULT DISPLAY");
-	  displayDED.drawStr(92, 50, "BMSAIT");
+	  displayDED.drawStr(23,15, "MICHIS F-16 SIMULATOR");	  	  
+	  displayDED.drawStr(37, 35, "PILOT FAULT DISPLAY");
       /*displayDED.drawFrame(1,1,255,63);
       displayDED.drawFrame(32,16,195,32);
       displayDED.drawStr(30+DED_H_CONST, DED_V_CONST+11+DED_CHAR_H , "PILOT FAULT DISPLAY");
