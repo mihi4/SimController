@@ -476,7 +476,7 @@ void Controller::updateController(F16Data* data, F16Data* prevData) {
         for (int i = 0; i < datafields.size(); i++) {
             updateString.clear();
             addVarDataToUpdateString(datafields[i], updateString, data, prevData);            
-            if (updateString.size() > 3) debugUpdateString(updateString);
+            // if (updateString.size() > 3) debugUpdateString(updateString);
             if (updateString.size() > 3) serialHandler.sendDataUpdate(updateString);
         }
 }
