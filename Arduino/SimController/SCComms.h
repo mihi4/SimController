@@ -104,11 +104,11 @@ void parseUpateCommand() {
 		char typeNum = vars[varIndex]->type;
 		char typeConverted=power(2,typeNum); // use enum 0,1,2,3 from f16var as exponent, so it corresponds with VARCHAR, VARSHORT and VARLONG
     
-    sprintf(rbMsg, "byteCount: %u, typeNum: %u, typeConverted: %u", byteCount, typeNum, typeConverted);
+    // sprintf(rbMsg, "byteCount: %u, typeNum: %u, typeConverted: %u", byteCount, typeNum, typeConverted);
     // sendReadBackString(rbMsg);
 
     if (typeNum == f16var::STRING) {
-      sprintf(rbMsg, "String incoming, byteCount is %u", byteCount);
+      // sprintf(rbMsg, "String incoming, byteCount is %u", byteCount);
       // sendReadBackString(rbMsg);      
       String newValue = "";
       for (int i=0; i<byteCount; i++) {
@@ -221,15 +221,15 @@ void parseSerialCommand() {
 
 
 void ReadSerial() {
-	static boolean recvInProgress = false;
-  static byte ndx = 0;
-  char startMarker = CMDSTART;
-  char endMarker = CMDEND;
-  byte rb;
+    static boolean recvInProgress = false;
+    static byte ndx = 0;
+    char startMarker = CMDSTART;
+    char endMarker = CMDEND;
+    byte rb;
 
-	byte escapeBytenum = -2;  // escape "counter", shows the index, where escape character (dec 27, hex 0x1B) was found; -1 is bad, sind index 0-1 is -1 :-D
-  
-  
+    byte escapeBytenum = -2;  // escape "counter", shows the index, where escape character (dec 27, hex 0x1B) was found; -1 is bad, sind index 0-1 is -1 :-D
+
+
 
   // debugging part for the algorithm
   /*
