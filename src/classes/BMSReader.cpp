@@ -426,23 +426,45 @@ void BMSReader::readF16Data(F16Data* data) {
     data->trimPitch = flightData->TrimPitch * FLOATMULT;
     data->trimRoll = flightData->TrimRoll * FLOATMULT;
 
-    // ECM Bits  FIXXXME
+    // ECM Bits  FIXXXME - check with BMS running, if it's working
     // 
     // first part only for the non-numbered buttons (not in shared mem)
-    if (flightData2->ecmOper == flightData2->ECM_OPER_ALL_LIT) {
-        for (int i = 0; i < 3; i++) {  // light up the 3 non-numbered buttons
-            for (int j = 1; j < 5; j = pow(2, j)) {   // 4 for the lights
-                setDatabit(data->ecmLights, ECMEMPTYA * j * (pow(16,i)));
-            }
+    if (flightData2->ecmOper == flightData2->ECM_OPER_ACTIVE) {
+        for (int i = 0; i < 3; i++) {  // light up all the non-numbered button's "A"s
+            setDatabit(data->ecmLights, ECMEMPTYA * (pow(16, i)));
         }
     }
     else {
+        for (int i = 0; i < 3; i++) {  // clear the non-numbered button's "A"s
+            clearDatabit(data->ecmLights, ECMEMPTYA * (pow(16, i)));
+        }
+    }
+    if (flightData2->ecmOper == flightData2->ECM_OPER_STDBY) {
+        for (int i = 0; i < 3; i++) {  // clear the non-numbered button's "S"s
+            setDatabit(data->ecmLights, ECMEMPTYS * (pow(16, i)));
+        }
+    }
+    else {
+        for (int i = 0; i < 3; i++) {  // clear the non-numbered button's "S"s
+            clearDatabit(data->ecmLights, ECMEMPTYS * (pow(16, i)));
+        }
+    }
+    if (flightData2->ecmOper == flightData2->ECM_OPER_ALL_LIT) {
+        for (int i = 0; i < 3; i++) {  // light up the 3 non-numbered buttons
+            for (int j = 1; j < 5; j = pow(2, j)) {   // 4 for all the lights
+                setDatabit(data->ecmLights, ECMEMPTYA * j * (pow(16,i)));
+            }
+        }
+    } 
+    if (flightData2->ecmOper == flightData2->ECM_OPER_NO_LIT) {
         for (int i = 0; i < 3; i++) {  // clear the non-numbered buttons
             for (int j = 1; j < 5; j = pow(2, j)) {
                 clearDatabit(data->ecmLights, ECMEMPTYA * j * (pow(16,i)));
             }
         }
     }
+
+    // now all the numbered buttons (in shared mem)
     for (int x = 0; x < MAX_ECM_PROGRAMS; x++) {  // at the moment only buttons 1-5 available, MAX_ECM_PROGRAMS is defined in Flightdata.h
         
         if (flightData2->ecmBits[x] == flightData2->ECM_PRESSED_ALL_LIT || flightData2->ecmBits[x] == flightData2->ECM_UNPRESSED_NO_LIT) {
@@ -464,9 +486,6 @@ void BMSReader::readF16Data(F16Data* data) {
         if (flightData2->ecmBits[x] == flightData2->ECM_PRESSED_STANDBY) setDatabit(data->ecmLights, ECM1S * (pow(16,x))); else clearDatabit(data->ecmLights, ECM1S * (pow(16,x)));
         if (flightData2->ecmBits[x] == flightData2->ECM_PRESSED_TRANSMIT) setDatabit(data->ecmLights, ECM1T * (pow(16,x))); else clearDatabit(data->ecmLights, ECM1T * (pow(16,x)));
     }
-
-
-
 
     // Left Console Lightbits
     // Gear panel lights
