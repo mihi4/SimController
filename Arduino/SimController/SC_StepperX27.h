@@ -23,8 +23,8 @@ unsigned long lastUpdateX27=0;
 StepperdataX27 stepperdataX27[] =
 {
   //  {PIN1 PIN2 PIN3 PIN4}    arc    invert   last
-    { {  25,   24,   24,   22   }, 315*3 , false,    0   },  // EPU FUEL// { {  22,   23,   24,   25   }, 315*3 , false,    0   },  // EPU FUEL
-    { {  28,   29,   30,   31   }, 315*3 , false,    0   }  // CABIN PRESS 
+    { {  23,   22,   25,   24   }, 315*3 , false,    0   },  // EPU FUEL// { {  22,   23,   24,   25   }, 315*3 , false,    0   },  // EPU FUEL
+    { {  27,   26,   29,   28   }, 315*3 , false,    0   }  // CABIN PRESS // { {  28,   29,   30,   31   }, 315*3 , false,    0   }  // CABIN PRESS 
 };
 
 SwitecX25 stepperX27[]=
