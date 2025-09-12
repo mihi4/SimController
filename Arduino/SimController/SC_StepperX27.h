@@ -23,8 +23,8 @@ unsigned long lastUpdateX27=0;
 StepperdataX27 stepperdataX27[] =
 {
   //  {PIN1 PIN2 PIN3 PIN4}    arc    invert   last
-    { {  23,   22,   25,   24   }, 315*3 , false,    0   },  // EPU FUEL// { {  22,   23,   24,   25   }, 315*3 , false,    0   },  // EPU FUEL
-    { {  27,   26,   29,   28   }, 315*3 , false,    0   }  // CABIN PRESS // { {  28,   29,   30,   31   }, 315*3 , false,    0   }  // CABIN PRESS 
+    { {  23,   22,   25,   24   }, 315*3 , false,    0   }  // EPU FUEL// { {  22,   23,   24,   25   }, 315*3 , false,    0   },  // EPU FUEL
+    ,{ {  27,   26,   29,   28   }, 315*3 , false,    0   }  // CABIN PRESS // { {  28,   29,   30,   31   }, 315*3 , false,    0   }  // CABIN PRESS 
 };
 
 
@@ -35,15 +35,6 @@ SwitecX25 stepperX27[]=
   SwitecX25(945,0,0,0,0),
   SwitecX25(945,0,0,0,0)
 }; 
-
-void SetupStepperX27(void)
-{
-  for (byte x=0;x<stepperzahlX27;x++)
-  {
-    stepperX27[x]=SwitecX25(stepperdataX27[x].arc, stepperdataX27[x].pIN[0], stepperdataX27[x].pIN[1], stepperdataX27[x].pIN[2], stepperdataX27[x].pIN[3]); 
-  }
-  StepperX27_Zeroize(true);
-}
 
 void StepperX27_Zeroize(bool m)
 {
@@ -109,6 +100,16 @@ void StepperX27_Zeroize(bool m)
       }
     }
   }
+}
+
+
+void SetupStepperX27(void)
+{
+  for (byte x=0;x<stepperzahlX27;x++)
+  {
+    stepperX27[x]=SwitecX25(stepperdataX27[x].arc, stepperdataX27[x].pIN[0], stepperdataX27[x].pIN[1], stepperdataX27[x].pIN[2], stepperdataX27[x].pIN[3]); 
+  }
+  StepperX27_Zeroize(true);
 }
 
 void StepperX27_FastUpdate()
