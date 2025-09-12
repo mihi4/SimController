@@ -72,6 +72,7 @@ void Controller::addByteToUpdateString(std::vector<char>& updateString, char byt
 
 // add the first part of the updatestring, usually <U$varnum$varsize
 void Controller::buildVarStringBegin(int varNum, unsigned char size, std::vector<char>& updateString) {
+    //updateString.clear();
     updateString.push_back(CMDSTART);
     updateString.push_back(CMDUPDATE);
 
@@ -92,13 +93,13 @@ void Controller::buildVarString(int varNum, unsigned char value, std::vector<cha
 }
 
 // create the updateString to the Arduino from a var with a Short value
-void Controller::buildVarString(int varNum, unsigned short value, std::vector<char>& updateString) {
+void Controller::buildVarString(int varNum, unsigned short value, std::vector<char>& updateString) {    
     buildVarStringBegin(varNum, sizeof(value), updateString);
     std::vector<unsigned char> splitValues = splitValue(value, sizeof(value));
-    for (int i = 0; i < splitValues.size(); i++) {
+    for (int i = 0; i < splitValues.size(); i++) {    
         updateString.push_back(splitValues[i]);
     }
-    buildVarStringEnd(updateString);
+    buildVarStringEnd(updateString);    
 }
 
 // create the updateString to the Arduino from a var with an UnsignedInt value
@@ -150,37 +151,45 @@ void Controller::addVarDataToUpdateString(unsigned char varNum, std::vector<char
         break;
     // RIGHT AUX
     case FUELFWD:
-        if (data->fuelFWD != prevData->fuelFWD) {
+        if (data->fuelFWD != prevData->fuelFWD) {                 
             buildVarString(varNum, data->fuelFWD, updateString);
         }
+        break;
     case FUELAFT:
-        if (data->fuelAFT != prevData->fuelAFT) {
+        if (data->fuelAFT != prevData->fuelAFT) {            
             buildVarString(varNum, data->fuelAFT, updateString);
         }
+        break;
     case FUELTOTAL:
         if (data->fuelTotal != prevData->fuelTotal) {            
             buildVarString(varNum, data->fuelTotal, updateString);
         }
+        break;
     case HYDA:
         if (data->hydA != prevData->hydA) {
             buildVarString(varNum, data->hydA, updateString);
         }
+        break;
     case HYDB:        
         if (data->hydB != prevData->hydB) {        
             buildVarString(varNum, data->hydB, updateString);
         }
+        break;
     case EPUFUEL:        
         if (data->epuFuel != prevData->epuFuel) {        
             buildVarString(varNum, (unsigned short) util.map(data->epuFuel, 0, 10000, 0, 65535), updateString);
         }
+        break;
     case CABINPRESS:        
         if (data->cabinPress != prevData->cabinPress) {        
             buildVarString(varNum, (unsigned short) util.map(data->cabinPress, 0, 50000, 0, 65535), updateString);
         }
+        break;
     case CAUTIONPANELLIGHTS:        
         if (data->cautionPanelLights != prevData->cautionPanelLights) {        
             buildVarString(varNum, data->cautionPanelLights, updateString);
         }
+        break;
     case PFDLINE1:
         if (data->pfdLine1 != prevData->pfdLine1) {
             buildVarString(PFDLINE1, data->pfdLine1, updateString);            
@@ -471,22 +480,20 @@ void Controller::updateController(F16Data* data, F16Data* prevData) {
         std::vector<char> updateString;
 
         for (int i = 0; i < datafields.size(); i++) {
-            updateString.clear();
-            std::cout << "checking var " << std::dec << (int)datafields[i] << std::endl;
-            addVarDataToUpdateString(datafields[i], updateString, data, prevData);
-            
-            if (updateString.size() > 3) debugUpdateString(updateString); else std::cout << "Nothing changed for var" << std::endl;
+            updateString.clear();                        
+            addVarDataToUpdateString(datafields[i], updateString, data, prevData);            
+            if (updateString.size() > 3) debugUpdateString(updateString);
             if (updateString.size() > 3) serialHandler.sendDataUpdate(updateString);
         }
 }
 
 void Controller::initController(F16Data* data, F16Data* prevData) {
-
+    std::cout << "initializing controller variables" << std::endl;
     std::vector<char> updateString;
 
     for (int i = 0; i < datafields.size(); i++) {
         updateString.clear();
-        std::cout << "checking var " << std::dec << (int)datafields[i] << std::endl;
+        std::cout << "init var " << std::dec << (int)datafields[i] << std::endl;
         addVarDataToUpdateString(datafields[i], updateString, data, prevData);
         if (updateString.size() > 3) serialHandler.sendDataUpdate(updateString);
     }
