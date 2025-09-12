@@ -19,19 +19,16 @@ void debugUpdateString(std::vector<char> updateString) {
     std::string debugString;    
     std::ostringstream oss;
 
-    // Iteriere ueber die Bytes im Vektor  
-    for (char byte : updateString)  {
-        
+    
+    for (char byte : updateString)  {        
         oss << std::hex << std::setw(2) << std::setfill('0') << (static_cast<unsigned int>(byte) & 0xFF) << " ";
-    }
-   
+    }   
     debugString = oss.str();
 
-    // Optional: Entferne das letzte Leerzeichen  
+    // remove last space
     if (!debugString.empty()) {
         debugString.pop_back();
     }   
-    // Ausgabe  
     std::cout << "Debug String: " << debugString << std::endl;
 }
 
