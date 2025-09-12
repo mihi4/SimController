@@ -80,6 +80,8 @@ void Servo_Zeroize(bool mode)
 
 void UpdateServo(byte p)
 {
+  
+  sendReadBackString("UpdateServo");
   if (servodata[vars[p]->modIndex].lu + SERVOSLEEPTIME < millis())
   {
 	//if (debugmode){SendMessage("detaching Servo",1);}
@@ -105,6 +107,9 @@ else if (servodata[vars[p]->modIndex].lu + SERVODELAY < millis())
         longVal = vars[p]->value.valL;  
         break;  
   } 
+  
+  sprintf(rbMsg, "updateServo, longVal: %u", longVal);
+  sendReadBackString(rbMsg);
 	/*if (vars[p].format == 'f') {
 		// float tmpVal = atof(vars[p].wert);
 		newValue = 10 * atof(vars[p].wert); //tmpVal * 10;
@@ -120,7 +125,9 @@ else if (servodata[vars[p]->modIndex].lu + SERVODELAY < millis())
 	  if (!servo[vars[p]->modIndex].attached()) servo[vars[p]->modIndex].attach(servodata[vars[p]->modIndex].pIN);  //reactivate servo
 	  
 	  winkel = map(servodata[vars[p]->modIndex].last, servodata[vars[p]->modIndex].a_ug, servodata[vars[p]->modIndex].a_og, servodata[vars[p]->modIndex].p_ug, servodata[vars[p]->modIndex].p_og);
-	  servo[vars[p]->modIndex].write(winkel);
+	  sprintf(rbMsg, "updateServo, Winkel: %u", winkel);
+  sendReadBackString(rbMsg);
+    servo[vars[p]->modIndex].write(winkel);
     }
   }
 }

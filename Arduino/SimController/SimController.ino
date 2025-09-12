@@ -172,6 +172,8 @@ void outputVars() {
       #endif
       #ifdef ServoMotor
         case MODSERVO:
+        //sprintf(rbMsg, "updateServo, longVal: %u", longVal);
+        sendReadBackString("calling Servoupdate");
           UpdateServo(i);
           break;
       #endif

@@ -88,7 +88,9 @@ void sendCheckReply(){
 }
 
 void parseUpateCommand() {
-	  
+	
+  sprintf(rbMsg, "parsing command");
+  sendReadBackString(rbMsg);
   char varNumber = receivedBytes[1];
 	
 	char varIndex = -1;

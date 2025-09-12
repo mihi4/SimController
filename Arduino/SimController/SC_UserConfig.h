@@ -28,7 +28,7 @@
   #define ServoMotor        //drive servo motors directly connected to the arduino
   //#define ServoPWM          //drive multiple servo motors via pwm shield
   //#define StepperBYJ        //drive stepper motor 28BYJ-48
-  #define StepperX27        //drive stepper motor X27.168
+  //#define StepperX27        //drive stepper motor X27.168
   //#define StepperVID        //drive multiple stepper motors X25.168 with a VID66-06 controller
   //#define CompassX27        //drive a compass with a Xxx.xxx -class stepper motor
   //#define AirCore           //drive multiple Air Core motors (via CS4192 controller chip)
