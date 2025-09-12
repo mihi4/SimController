@@ -80,15 +80,15 @@ void Servo_Zeroize(bool mode)
 
 void UpdateServo(byte p)
 {
-  if (servodata[vars[p]->valIndex].lu + SERVOSLEEPTIME < millis())
+  if (servodata[vars[p]->modIndex].lu + SERVOSLEEPTIME < millis())
   {
 	//if (debugmode){SendMessage("detaching Servo",1);}
-    servo[vars[p]->valIndex].detach();                        //disable servo if no new signal for more than 5 seconds
-	servodata[vars[p]->valIndex].lu = millis();
+    servo[vars[p]->modIndex].detach();                        //disable servo if no new signal for more than 5 seconds
+	servodata[vars[p]->modIndex].lu = millis();
   }
-else if (servodata[vars[p]->valIndex].lu + SERVODELAY < millis())
+else if (servodata[vars[p]->modIndex].lu + SERVODELAY < millis())
   {
-    servodata[vars[p]->valIndex].lu = millis();  //pause servo
+    servodata[vars[p]->modIndex].lu = millis();  //pause servo
 
 	unsigned long longVal = 0;
   switch (vars[p]->type) {  
@@ -112,15 +112,15 @@ else if (servodata[vars[p]->valIndex].lu + SERVODELAY < millis())
 		newValue = atol(vars[p].wert);
 	}*/
 	
-    if (servodata[vars[p]->valIndex].last != longVal)
+    if (servodata[vars[p]->modIndex].last != longVal)
     {
 	  uint16_t winkel;
-      servodata[vars[p]->valIndex].last = longVal;
+      servodata[vars[p]->modIndex].last = longVal;
       
-	  if (!servo[vars[p]->valIndex].attached()) servo[vars[p]->valIndex].attach(servodata[vars[p]->valIndex].pIN);  //reactivate servo
+	  if (!servo[vars[p]->modIndex].attached()) servo[vars[p]->modIndex].attach(servodata[vars[p]->modIndex].pIN);  //reactivate servo
 	  
-	  winkel = map(servodata[vars[p]->valIndex].last, servodata[vars[p]->valIndex].a_ug, servodata[vars[p]->valIndex].a_og, servodata[vars[p]->valIndex].p_ug, servodata[vars[p]->valIndex].p_og);
-	  servo[vars[p]->valIndex].write(winkel);
+	  winkel = map(servodata[vars[p]->modIndex].last, servodata[vars[p]->modIndex].a_ug, servodata[vars[p]->modIndex].a_og, servodata[vars[p]->modIndex].p_ug, servodata[vars[p]->modIndex].p_og);
+	  servo[vars[p]->modIndex].write(winkel);
     }
   }
 }
