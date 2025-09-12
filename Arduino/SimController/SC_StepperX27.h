@@ -13,6 +13,7 @@ typedef struct
 {
 byte pIN[4];        //PINs the motor is connected to
 uint16_t arc;       //max steps for the motor
+uint16_t maxArc;    // set upper Position if needle is shorter then full max steps
 bool invert;         //mark if the motor has its 0 Position on the clockwise end
 unsigned int last;  //current target
 } StepperdataX27;
@@ -22,9 +23,9 @@ unsigned long lastUpdateX27=0;
 
 StepperdataX27 stepperdataX27[] =
 {
-  //  {PIN1 PIN2 PIN3 PIN4}    arc    invert   last
-    { {  23,   22,   25,   24   }, 315*3 , false,    0   }  // EPU FUEL// { {  22,   23,   24,   25   }, 315*3 , false,    0   },  // EPU FUEL
-    ,{ {  27,   26,   29,   28   }, 315*3 , false,    0   }  // CABIN PRESS // { {  28,   29,   30,   31   }, 315*3 , false,    0   }  // CABIN PRESS 
+  //  {PIN1 PIN2 PIN3 PIN4}    arc    maxArc    invert   last
+    { {  23,   22,   25,   24   }, 315*3 , 627, false,    0   }  // EPU FUEL// { {  22,   23,   24,   25   }, 315*3 , false,    0   },  // EPU FUEL
+    ,{ {  27,   26,   29,   28   }, 315*3 , 315*3, false,    0   }  // CABIN PRESS // { {  28,   29,   30,   31   }, 315*3 , false,    0   }  // CABIN PRESS 
 };
 
 
@@ -38,7 +39,16 @@ SwitecX25 stepperX27[]=
 
 void StepperX27_Zeroize(bool m)
 {
-  unsigned long now=0;
+  for (byte motor=0;motor<stepperzahlX27;motor++)
+  {
+    stepperdataX27[motor].zero();
+    //bring Steppers back down to 0
+    if (stepperdataX27[motor].invert) 
+      stepperX27[motor].setPosition(stepperdataX27[motor].arc-1);
+    else
+      stepperX27[motor].setPosition(1);
+  }
+  /* unsigned long now=0;
   bool busy=true;
   for (byte motor=0;motor<stepperzahlX27;motor++)
   { 
@@ -99,7 +109,7 @@ void StepperX27_Zeroize(bool m)
         delayMicroseconds(100);
       }
     }
-  }
+  } */
 }
 
 
@@ -127,7 +137,7 @@ void UpdateStepperX27(byte pos)
   if (newVal>65535)newVal=65535;
   if (newVal!=stepperdataX27[vars[pos]->modIndex].last)
   {
-    uint16_t  newStepperPos=map(newVal, 0, 65535,0, stepperdataX27[vars[pos]->modIndex].arc);
+    uint16_t  newStepperPos=map(newVal, 0, 65535,0, stepperdataX27[vars[pos]->modIndex].maxArc);
     /*if (debugmode)
     {
       if (millis()>lastMessageX27+1000)
