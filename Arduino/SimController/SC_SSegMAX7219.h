@@ -36,7 +36,20 @@ void SetupMax7219()
 	Max7219_display[x].setIntensity(0,0); 
   }
   delay(2000);
-  
+  for (byte x=0;x<max7219anz;x++)
+  {
+    Max7219_display[x].shutdown(0,false);
+    Max7219_display[x].setIntensity(0,MAX_BRIGHTNESS);
+    Max7219_display[x].setDigit(0,0,0,false);
+    Max7219_display[x].setDigit(0,1,1,false);
+    Max7219_display[x].setDigit(0,2,2,false);
+    Max7219_display[x].setDigit(0,3,3,false);
+    Max7219_display[x].setDigit(0,4,4,false);
+    Max7219_display[x].setDigit(0,5,5,false);
+    Max7219_display[x].setDigit(0,6,6,false);
+    Max7219_display[x].setDigit(0,7,7,false);
+  }
+  delay(500);
   for (byte x=0;x<max7219anz;x++)
     {Max7219_display[x].clearDisplay(0);}
 }
@@ -53,6 +66,8 @@ void UpdateMAX7219(byte p)
 	if (debugmode){SendMessage(datenfeld[p].ID,1);}
 	if (debugmode){SendMessage(datenfeld[p].wert,1);}*/
  
+ 
+  
   unsigned long longVal = 0;
   switch (vars[p]->type) {  
     case f16var::INT:  
@@ -68,6 +83,22 @@ void UpdateMAX7219(byte p)
         longVal = vars[p]->value.valL;  
         break;  
   } 
+  
+  // for fqti only, remove for others
+  longVal *= 100;
+  char digits[8];
+  sprintf(digits, "%d", longVal);
+  char digitLength = strlen(digits);
+  
+  char startPos = 5 - digitLength;
+  if (startPos>0) Max7219_display[vars[p]->modIndex].setChar(0,0,' ',0); // remove leading number from display, if less than 10000 lbs remaining
+  for (int i=0; i<digitLength; i++) {
+    Max7219_display[vars[p]->modIndex].setChar(0,i+startPos,digits[i],0);
+  }
+  
+  
+  
+  
   
   /*
   //byte stelle = 7-datenfeld[p].ref4;
