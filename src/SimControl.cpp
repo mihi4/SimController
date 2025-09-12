@@ -98,28 +98,33 @@ int main(int argc, char* argv[])
 
     std::cout << "------ Controller Setup done  ------\n";
     std::cout << std::endl;
+    
     /****************************************
      
-                    main loop
+               connecting and init
     
     *****************************************/    
-    boolean initNeeded = true;
-    while (true) {
+    while(true) {
         if (!simConnected) {
             std::cout << "connecting to sim...\r";
             if (reader->connectToSim()) {
                 simConnected = true;
-                reader->readF16Data(&data);
+                reader->readF16Data(&data);                
                 std::cout << "\nConnected to " << argv[1] << data.simVersion << "\n";
+                cHandler.initControllers(&data, &prevData);
+                break;
             }
         }
-                        
+        if ((GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)) { break; }
+    }   
+    /****************************************
+     
+                    main loop
+    
+    *****************************************/        
+    while (true) {                                
         if (reader->connectToSim()) {            
-            reader->readF16Data(&data);      
-            if (initNeeded) {
-                cHandler.initControllers(&data, &prevData);
-                initNeeded = false;
-            }
+            reader->readF16Data(&data);                  
             if (!prevData.isSameAs(data)) {  // only send data if anything has changed 
                 cHandler.updateControllers(&data, &prevData);
             }
@@ -136,8 +141,7 @@ int main(int argc, char* argv[])
         // check for quit keycommand LCTRL+LSHIFT+LALT+BACKSPACE
         if ((GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)) { break; }
         
-        Sleep(200);
-        
+        Sleep(200);        
     }
 
     std::cout << "\n\nquitting!\n";   
