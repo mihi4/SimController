@@ -41,7 +41,7 @@ void StepperX27_Zeroize(bool m)
 {
   for (byte motor=0;motor<stepperzahlX27;motor++)
   {
-    stepperdataX27[motor].zero();
+    stepperX27[motor].zero();
     //bring Steppers back down to 0
     if (stepperdataX27[motor].invert) 
       stepperX27[motor].setPosition(stepperdataX27[motor].arc-1);
