@@ -27,13 +27,14 @@ StepperdataX27 stepperdataX27[] =
     { {  27,   26,   29,   28   }, 315*3 , false,    0   }  // CABIN PRESS // { {  28,   29,   30,   31   }, 315*3 , false,    0   }  // CABIN PRESS 
 };
 
+
+const int stepperzahlX27 = sizeof(stepperdataX27)/sizeof(stepperdataX27[0]);
+
 SwitecX25 stepperX27[]=
 {
   SwitecX25(945,0,0,0,0),
   SwitecX25(945,0,0,0,0)
 }; 
-
-const int stepperzahlX27 = sizeof(stepperdataX27)/sizeof(stepperdataX27[0]);
 
 void SetupStepperX27(void)
 {
@@ -41,6 +42,7 @@ void SetupStepperX27(void)
   {
     stepperX27[x]=SwitecX25(stepperdataX27[x].arc, stepperdataX27[x].pIN[0], stepperdataX27[x].pIN[1], stepperdataX27[x].pIN[2], stepperdataX27[x].pIN[3]); 
   }
+  StepperX27_Zeroize(true);
 }
 
 void StepperX27_Zeroize(bool m)
