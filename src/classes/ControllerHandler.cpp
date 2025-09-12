@@ -84,3 +84,10 @@ void ControllerHandler::updateControllers(F16Data* data, F16Data *prevData)
     }
 }
 
+void ControllerHandler::initControllers(F16Data* data, F16Data* prevData)
+{
+    for (int i = 0; i < contNumber; i++) {
+        allControllers.at(i).initController(data, prevData);
+    }
+}
+

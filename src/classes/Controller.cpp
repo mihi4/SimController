@@ -475,11 +475,24 @@ void Controller::updateController(F16Data* data, F16Data* prevData) {
 
         for (int i = 0; i < datafields.size(); i++) {
             updateString.clear();
+            std::cout << "checking var " << std::dec << (int)datafields[i] << std::endl;
             addVarDataToUpdateString(datafields[i], updateString, data, prevData);
             
-            if (updateString.size() > 3) debugUpdateString(updateString);
+            if (updateString.size() > 3) debugUpdateString(updateString); else std::cout << "Nothing changed for var" << std::endl;
             if (updateString.size() > 3) serialHandler.sendDataUpdate(updateString);
         }
+}
+
+void Controller::initController(F16Data* data, F16Data* prevData) {
+
+    std::vector<char> updateString;
+
+    for (int i = 0; i < datafields.size(); i++) {
+        updateString.clear();
+        std::cout << "checking var " << std::dec << (int)datafields[i] << std::endl;
+        addVarDataToUpdateString(datafields[i], updateString, data, prevData);
+        if (updateString.size() > 3) serialHandler.sendDataUpdate(updateString);
+    }
 }
 
 //////////////////////////////////////

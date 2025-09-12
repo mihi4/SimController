@@ -22,6 +22,7 @@ public:
     void showControllers();
     void setupControllers();
     void updateControllers(F16Data *data, F16Data *prevData);
+    void initControllers(F16Data* data, F16Data* prevData);
     void readControllerComms();
 
 private:

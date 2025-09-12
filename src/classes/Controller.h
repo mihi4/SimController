@@ -33,6 +33,7 @@ public:
 
     //void sendDataUpdate(std::vector<char> updateString);
     void updateController(F16Data * data, F16Data * prevData);
+    void initController(F16Data* data, F16Data* prevData);
     void readSerial();
 
 private:

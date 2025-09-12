@@ -103,7 +103,7 @@ int main(int argc, char* argv[])
                     main loop
     
     *****************************************/    
-    
+    boolean initNeeded = true;
     while (true) {
         if (!simConnected) {
             std::cout << "connecting to sim...\r";
@@ -115,7 +115,11 @@ int main(int argc, char* argv[])
         }
                         
         if (reader->connectToSim()) {            
-            reader->readF16Data(&data);         
+            reader->readF16Data(&data);      
+            if (initNeeded) {
+                cHandler.initControllers(&data, &prevData);
+                initNeeded = false;
+            }
             if (!prevData.isSameAs(data)) {  // only send data if anything has changed 
                 cHandler.updateControllers(&data, &prevData);
             }
