@@ -89,7 +89,8 @@ void sendCheckReply(){
 
 void parseUpateCommand() {
 	
-  sprintf(rbMsg, "parsing command");
+  time = millis();
+  sprintf(rbMsg, "parsing update command");
   sendReadBackString(rbMsg);
   char varNumber = receivedBytes[1];
 	
@@ -167,7 +168,9 @@ void parseUpateCommand() {
     sendReadBackString(rbMsg);
 		SERIALCOM.println(ER_WRONGVAR);  // send error message to pc
 	}
-		
+  	gap = millis() - time;
+  sprintf(rbMsg, "ParseMain Done, %u ms",gap);
+  sendReadBackString(rbMsg);
 	return;	
 }
 
@@ -185,8 +188,11 @@ void resetController () {  // this function should reset the arduino
 }
 
 void parseSerialCommand() {
-	if (newData == true) {
     
+	if (newData == true) {
+  time = millis();
+  sendReadBackString("parseSerial started");  
+
     /*SERIALCOM.print("received Bytes: ");SERIALCOM.println(numReceived, DEC);
     for (int i=0;i<numReceived;i++) {
       SERIALCOM.print(receivedBytes[i], HEX);SERIALCOM.print("-");
@@ -215,7 +221,9 @@ void parseSerialCommand() {
 		}    
         newData = false;
     }
-	
+	gap = millis() - time;
+  sprintf(rbMsg, "ParseMain Done, %u ms",gap);
+  sendReadBackString(rbMsg);
 		
 	//if (receivedBytes[0] == 'C') SERIALCOM.println("Connect command!");
 	
@@ -223,6 +231,9 @@ void parseSerialCommand() {
 
 
 void ReadSerial() {
+    time = millis();
+    sendReadBackString("readSerial started");
+
     static boolean recvInProgress = false;
     static byte ndx = 0;
     char startMarker = CMDSTART;
@@ -290,6 +301,8 @@ void ReadSerial() {
     }
   }
 
-
+  gap = millis() - time;
+  sprintf(rbMsg, "Read Done, %u ms",gap);
+  sendReadBackString(rbMsg);
 }	
 

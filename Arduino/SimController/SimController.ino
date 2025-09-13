@@ -103,7 +103,8 @@ boolean varsChanged = false;
 boolean debugmode = false;
 
 // only for debugging ReadSerial char input[] = { '<', 'U', 10, 2, 100, 52, '>'};
-
+unsigned long time =0;
+unsigned long gap = 0;
 
 //////////////////////////////
 //        includes
@@ -240,9 +241,12 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+  
 	ReadSerial();	
+  
   // showNewData();
-	parseSerialCommand();
+  parseSerialCommand();
+  
   if (varsChanged) outputVars();	
-  delay(5);
+  delay(300);
 }
