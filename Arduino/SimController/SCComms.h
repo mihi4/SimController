@@ -14,16 +14,19 @@ const byte msgLen = 50;
 char rbMsg[msgLen] = ""; // readBackMessage buffer
 
 unsigned short shortFromBytes(unsigned char bytes[2]) {     
-    return (bytes[0] << 8) | bytes[1];
+    unsigned short retVal;
+    memcpy(&retVal, bytes, sizeof(retVal));
+    return retVal;// return (bytes[0] << 8) | bytes[1];
 }
 
-unsigned long longFromBytes(unsigned char bytes[4]) {         
-    SERIALCOM.println();
-    unsigned long retVal = ((unsigned long) bytes[0] << 24)
+unsigned long longFromBytes(unsigned char bytes[4]) {             
+    unsigned long retVal;
+/*    = ((unsigned long) bytes[0] << 24)
                         | ((unsigned long) bytes[1] << 16)
                         | ((unsigned long) bytes[2] << 8)
                         | (unsigned long) bytes[3];    
-    //SERIALCOM.print("retVal: ");SERIALCOM.println(retVal, DEC);
+    */
+    memcpy(&retVal, bytes, sizeof(retVal));
     return retVal;
 }
 
@@ -82,9 +85,9 @@ void sendCheckReply(){
 
 void parseUpateCommand() {
 	
-  time = millis();
+  /*time = millis();
   sprintf(rbMsg, "parsing update command");
-  sendReadBackString(rbMsg);
+  sendReadBackString(rbMsg);*/
   char varNumber = receivedBytes[1];
 	
 	char varIndex = -1;
@@ -93,6 +96,7 @@ void parseUpateCommand() {
 		if (vars[i]->number == varNumber) varIndex = i;
 	}
 	if (varIndex > -1) {
+    lastParsedVar = varIndex;
 		//SERIALCOM.println("Var found");
     
 		char byteCount = receivedBytes[2];
@@ -123,13 +127,14 @@ void parseUpateCommand() {
           varsChanged = true;
       } 
       else if (byteCount == VARSHORT) {
-        //SERIALCOM.println("varshort");
+        
         unsigned char shortBytes[VARSHORT] = {0};
           
         for (int i=0; i<VARSHORT; i++) {
-              shortBytes[i] = receivedBytes[3+i];
+              shortBytes[i] = receivedBytes[3+i];              
         }
         dataValue = shortFromBytes(shortBytes);
+                
         vars[varIndex]->value.valI = (unsigned int)dataValue;
         
         varsChanged = true;
@@ -158,31 +163,24 @@ void parseUpateCommand() {
     sendReadBackString(rbMsg);
 		SERIALCOM.println(ER_WRONGVAR);  // send error message to pc
 	}
-  gap = millis() - time;
-  sprintf(rbMsg, "ParseMain Done, %u ms",gap);
-  sendReadBackString(rbMsg);
+  /*gap = millis() - time;
+  sprintf(rbMsg, "parsing update Done, %u ms",gap);
+  sendReadBackString(rbMsg);*/
 	return;	
 }
 
 void resetController () {  // this function should reset the arduino
 	
-	//FIXXXME 
-    sendReadBackString("reset called");
+  sendReadBackString("reset called");
 	setupModules();
 
-   /*asm volatile ("jmp 0x7800");;
-	do                          
-	{                           
-        wdt_enable(WDTO_15MS);  
-        for(;;){}               
-	} while(0);*/
 }
 
 void parseSerialCommand() {
     
   if (newData == true) {
-  time = millis();
-  sendReadBackString("parseSerial started");  
+  /*time = millis();
+  sendReadBackString("parseSerial started");  */
 
     /*SERIALCOM.print("received Bytes: ");SERIALCOM.println(numReceived, DEC);
     for (int i=0;i<numReceived;i++) {
@@ -211,33 +209,23 @@ void parseSerialCommand() {
 				break;
 		}    
         newData = false;
-		gap = millis() - time;
-		sprintf(rbMsg, "ParseMain Done, %u ms",gap);
-		sendReadBackString(rbMsg);
+		/*gap = millis() - time;
+		sprintf(rbMsg, "ParseSerial Done, %u ms",gap);
+		sendReadBackString(rbMsg);*/
     }	
 }
 
 
 void ReadSerial() {
 
-    static boolean recvInProgress = false;
-    static byte ndx = 0;
-    char startMarker = CMDSTART;
-    char endMarker = CMDEND;
-    byte rb;
+  static boolean recvInProgress = false;
+  static byte ndx = 0;
+  char startMarker = CMDSTART;
+  char endMarker = CMDEND;
+  byte rb;
 
-    byte escapeBytenum = -2;  // escape "counter", shows the index, where escape character (dec 27, hex 0x1B) was found; -1 is bad, sind index 0-1 is -1 :-D
-
-
-
-  // debugging part for the algorithm
-  /*
-  char input[] = { '<', 'U', 10, 2, 100, 52, '>'};
-  const int size = sizeof(input)/sizeof(input[0]);
-  SERIALCOM.print("size: ");SERIALCOM.println(size, DEC);
-  for (int i=0; i<size; i++) {
-    rb = input[i]; */
-    
+  byte escapeBytenum = -2;  // escape "counter", shows the index, where escape character (dec 27, hex 0x1B) was found; -1 is bad, sind index 0-1 is -1 :-D
+   
   while (SERIALCOM.available() > 0 && newData == false) {
     rb = SERIALCOM.read();
     
@@ -286,7 +274,5 @@ void ReadSerial() {
         numReceived = 0;
     }
   }
-
-
 }	
 
