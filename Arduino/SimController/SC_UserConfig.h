@@ -62,7 +62,7 @@ int scNameSize = sizeof(scName)/sizeof(scName[0]);
 f16var* vars[] = { 
     new f16varC(SIMSTATES, MODNONE, 0, 0, 0)
   ,  new f16varC(POWERSTATES, MODNONE, 0, 0, 0)   // First 2 should always be configured in every module  
-  ,  new f16varI(FUELTOTAL, MODMAX7219, 0, 0, 0)
+  ,  new f16varC(FUELTOTAL, MODMAX7219, 0, 0, 0)
   ,  new f16varI(FUELFWD, MODSERVO, 2, 0, 0)
   ,  new f16varI(FUELAFT, MODSERVO, 3, 0, 0)
   /*,  new f16varI(HYDA, MODSERVO, 0, 0, 0)
