@@ -111,18 +111,19 @@ else if (servodata[vars[p]->modIndex].lu + SERVODELAY < millis())
   } */
   #include "dataConversion.h"
   
+  
   if (servodata[vars[p]->modIndex].last != longVal)
-  {
-    sprintf(rbMsg, "updateServo, longVal: %u", longVal);
-    sendReadBackString(rbMsg);
+  {    
 	  uint16_t winkel;
     servodata[vars[p]->modIndex].last = longVal;
       
 	  if (!servo[vars[p]->modIndex].attached()) servo[vars[p]->modIndex].attach(servodata[vars[p]->modIndex].pIN);  //reactivate servo      
 
     winkel = map(servodata[vars[p]->modIndex].last, servodata[vars[p]->modIndex].a_ug, servodata[vars[p]->modIndex].a_og, servodata[vars[p]->modIndex].p_ug, servodata[vars[p]->modIndex].p_og);
-    sprintf(rbMsg, "updateServo, Winkel: %u", winkel);
-    sendReadBackString(rbMsg);
+      
+    if (winkel > servodata[vars[p]->modIndex].p_og) winkel = servodata[vars[p]->modIndex].p_og;
+    if (winkel < servodata[vars[p]->modIndex].p_ug) winkel = servodata[vars[p]->modIndex].p_ug;
+      
     servo[vars[p]->modIndex].write(winkel);
   }
   
