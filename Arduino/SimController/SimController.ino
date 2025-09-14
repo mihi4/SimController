@@ -83,8 +83,8 @@ struct f16varS : public f16var {
 // function definitions
 //////////////////////////////
 
-void outputVar(char varIndex, unsigned long value);
 bool checkBit(unsigned long var, unsigned long bit);
+void setupModules();
 
 unsigned int power(unsigned int base, unsigned int exp) {
 	int retVal = 1;
@@ -102,7 +102,7 @@ unsigned long lastDEDUpdate = 0;
 boolean varsChanged = false;
 boolean debugmode = false;
 
-// only for debugging ReadSerial char input[] = { '<', 'U', 10, 2, 100, 52, '>'};
+// only for debugging
 unsigned long time =0;
 unsigned long gap = 0;
 
@@ -137,6 +137,24 @@ bool checkBit(unsigned long var, unsigned long bit) {
   return false;
 }
 
+void setupModules() {
+  #ifdef DED_PFL
+    SetupDED();
+  #endif
+  #ifdef LED_MM5451
+    SetupLED_MM5451();
+  #endif
+  #ifdef SSegMAX7219
+    SetupMax7219();
+  #endif
+  #ifdef ServoMotor
+    SetupServo();
+  #endif
+  #ifdef StepperX27
+    SetupStepperX27();
+  #endif
+}
+
 
 void outputVars() {
 	
@@ -164,7 +182,8 @@ void outputVars() {
           SERIALCOM.println(vars[i]->value.valL);  
           break;  
     } */
-   
+    sprintf(rbMsg, "updating Varnum %u", i);
+    sendReadBackString(rbMsg);
     switch (vars[i]->module) {
       #ifdef LED_MM5451
         case MODMM5451:
@@ -173,8 +192,6 @@ void outputVars() {
       #endif
       #ifdef ServoMotor
         case MODSERVO:
-        //sprintf(rbMsg, "updateServo, longVal: %u", longVal);
-        sendReadBackString("calling Servoupdate");
           UpdateServo(i);
           break;
       #endif
@@ -205,8 +222,8 @@ void setup() {
   // put your setup code here, to run once:
 	SERIALCOM.begin(BAUDRATE);
 	while (!SERIALCOM) {}
-	/* SERIALCOM.println("Arduino is ready");
-
+	 SERIALCOM.println("Arduino is ready");
+/*
   varsChanged = true;
   outputVars();
   // debugging escaping
@@ -220,33 +237,19 @@ void setup() {
   showNewData();
   parseSerialCommand();
   outputVars(); */
+	setupModules();
 
-  #ifdef DED_PFL
-    SetupDED();
-  #endif
-  #ifdef LED_MM5451
-    SetupLED_MM5451();
-  #endif
-  #ifdef SSegMAX7219
-    SetupMax7219();
-  #endif
-  #ifdef ServoMotor
-    SetupServo();
-  #endif
-  #ifdef StepperX27
-    SetupStepperX27();
-  #endif
-
+	SERIALCOM.println("Setup Done");
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   
-	ReadSerial();	
+  ReadSerial();	
   
   // showNewData();
   parseSerialCommand();
   
   if (varsChanged) outputVars();	
-  delay(300);
+  delay(5);
 }
