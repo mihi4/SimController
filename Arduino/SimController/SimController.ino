@@ -102,6 +102,8 @@ unsigned long lastDEDUpdate = 0;
 boolean varsChanged = false;
 boolean debugmode = false;
 
+char lastParsedVar;
+
 // only for debugging
 unsigned long time =0;
 unsigned long gap = 0;
@@ -166,7 +168,7 @@ void outputVars() {
   #endif
 
 
-	for (int i=0;i<varCount;i++) {
+	//for (int i=0;i<varCount;i++) {
     /*SERIALCOM.print("var ");SERIALCOM.print(i, DEC);SERIALCOM.print(" type ");SERIALCOM.print(vars[i]->type, DEC);SERIALCOM.print(" value: ");
     switch (vars[i]->type) {  
       case f16var::INT:  
@@ -182,6 +184,7 @@ void outputVars() {
           SERIALCOM.println(vars[i]->value.valL);  
           break;  
     } */
+    int i = lastParsedVar;
     sprintf(rbMsg, "updating Varnum %u", i);
     sendReadBackString(rbMsg);
     switch (vars[i]->module) {
@@ -207,7 +210,7 @@ void outputVars() {
       #endif
 
 
-    }
+    //}
 
   }
   varsChanged = false;
