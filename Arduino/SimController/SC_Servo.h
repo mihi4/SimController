@@ -74,25 +74,27 @@ void Servo_Zeroize(bool mode)
 	servo[lauf].write(servodata[lauf].p_ug);
 	delay(300);
     servo[lauf].detach();
+	servodata[lauf].lu = millis();
   }
 }
 
 
 void UpdateServo(byte p)
 {
-  
-  sendReadBackString("UpdateServo");
-  if (servodata[vars[p]->modIndex].lu + SERVOSLEEPTIME < millis())
-  {
+    
+  /* if (servodata[vars[p]->modIndex].lu + SERVOSLEEPTIME < millis())
+  {    
+    sendReadBackString("sleeptime reached");
 	//if (debugmode){SendMessage("detaching Servo",1);}
-    servo[vars[p]->modIndex].detach();                        //disable servo if no new signal for more than 5 seconds
+  servo[vars[p]->modIndex].detach();                        //disable servo if no new signal for more than 5 seconds
 	servodata[vars[p]->modIndex].lu = millis();
   }
 else if (servodata[vars[p]->modIndex].lu + SERVODELAY < millis())
-  {
-    servodata[vars[p]->modIndex].lu = millis();  //pause servo
-
-	unsigned long longVal = 0;
+  { 
+  servodata[vars[p]->modIndex].lu = millis();  //pause servo
+  */
+	/*
+  unsigned long longVal = 0;
   switch (vars[p]->type) {  
     case f16var::INT:  
         longVal = vars[p]->value.valI;  
@@ -106,28 +108,22 @@ else if (servodata[vars[p]->modIndex].lu + SERVODELAY < millis())
     case f16var::LONG:  
         longVal = vars[p]->value.valL;  
         break;  
-  } 
+  } */
+  #include "dataConversion.h"
   
-  sprintf(rbMsg, "updateServo, longVal: %u", longVal);
-  sendReadBackString(rbMsg);
-	/*if (vars[p].format == 'f') {
-		// float tmpVal = atof(vars[p].wert);
-		newValue = 10 * atof(vars[p].wert); //tmpVal * 10;
-	} else {
-		newValue = atol(vars[p].wert);
-	}*/
-	
-    if (servodata[vars[p]->modIndex].last != longVal)
-    {
+  if (servodata[vars[p]->modIndex].last != longVal)
+  {
+    sprintf(rbMsg, "updateServo, longVal: %u", longVal);
+    sendReadBackString(rbMsg);
 	  uint16_t winkel;
-      servodata[vars[p]->modIndex].last = longVal;
+    servodata[vars[p]->modIndex].last = longVal;
       
-	  if (!servo[vars[p]->modIndex].attached()) servo[vars[p]->modIndex].attach(servodata[vars[p]->modIndex].pIN);  //reactivate servo
-	  
-	  winkel = map(servodata[vars[p]->modIndex].last, servodata[vars[p]->modIndex].a_ug, servodata[vars[p]->modIndex].a_og, servodata[vars[p]->modIndex].p_ug, servodata[vars[p]->modIndex].p_og);
-	  sprintf(rbMsg, "updateServo, Winkel: %u", winkel);
-  sendReadBackString(rbMsg);
+	  if (!servo[vars[p]->modIndex].attached()) servo[vars[p]->modIndex].attach(servodata[vars[p]->modIndex].pIN);  //reactivate servo      
+
+    winkel = map(servodata[vars[p]->modIndex].last, servodata[vars[p]->modIndex].a_ug, servodata[vars[p]->modIndex].a_og, servodata[vars[p]->modIndex].p_ug, servodata[vars[p]->modIndex].p_og);
+    sprintf(rbMsg, "updateServo, Winkel: %u", winkel);
+    sendReadBackString(rbMsg);
     servo[vars[p]->modIndex].write(winkel);
-    }
   }
+  
 }
