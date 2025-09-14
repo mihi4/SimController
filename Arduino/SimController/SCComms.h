@@ -58,24 +58,17 @@ void sendConnectReply(){
 		SERIALCOM.print((char)vars[i]->number);	
 	}
 	SERIALCOM.println(CMDEND);
-	/*char buf[50] = { CMDSTART, 'H', 'I', '.' };
-	strncat(buf, scName, scNameSize);
-	char delimiter[2] = { '.', varCount };	
-	strncat(buf, delimiter, 2);	
-	for (char i=0; i<varCount; i++) {
-		char buf2[3];
-		strncat(buf, itoa(vars[i].number, buf2,10), 1);
-	}
-	
-	strncat(buf, ">", 1);
-	
-	SERIALCOM.println(buf);	*/
+
 }
 
 void sendReadBackString(char message[msgLen]) {
+    char timestamp[20];    
+    sprintf(timestamp, "%u",millis());
     String msg = "";
     msg.concat(CMDSTART);
     msg.concat("R");
+    msg.concat(timestamp);
+    msg.concat(": ");
     msg.concat(message);
     msg.concat(CMDEND);
     SERIALCOM.println(msg);
@@ -96,8 +89,7 @@ void parseUpateCommand() {
 	
 	char varIndex = -1;
   
-	for (char i = 0; i<varCount; i++) {
-    // SERIALCOM.print("varNumber: ");SERIALCOM.println(vars[i]->number, DEC);
+	for (char i = 0; i<varCount; i++) {    
 		if (vars[i]->number == varNumber) varIndex = i;
 	}
 	if (varIndex > -1) {
@@ -155,9 +147,7 @@ void parseUpateCommand() {
         
         varsChanged = true;
         
-      } else {
-          
-      }
+      } 
     }	else {      
       sprintf(rbMsg, "ParseERR, Var %u byteCnt %u",varNumber, byteCount);
       sendReadBackString(rbMsg);
@@ -168,7 +158,7 @@ void parseUpateCommand() {
     sendReadBackString(rbMsg);
 		SERIALCOM.println(ER_WRONGVAR);  // send error message to pc
 	}
-  	gap = millis() - time;
+  gap = millis() - time;
   sprintf(rbMsg, "ParseMain Done, %u ms",gap);
   sendReadBackString(rbMsg);
 	return;	
@@ -178,6 +168,7 @@ void resetController () {  // this function should reset the arduino
 	
 	//FIXXXME 
     sendReadBackString("reset called");
+	setupModules();
 
    /*asm volatile ("jmp 0x7800");;
 	do                          
@@ -189,7 +180,7 @@ void resetController () {  // this function should reset the arduino
 
 void parseSerialCommand() {
     
-	if (newData == true) {
+  if (newData == true) {
   time = millis();
   sendReadBackString("parseSerial started");  
 
@@ -220,19 +211,14 @@ void parseSerialCommand() {
 				break;
 		}    
         newData = false;
-    }
-	gap = millis() - time;
-  sprintf(rbMsg, "ParseMain Done, %u ms",gap);
-  sendReadBackString(rbMsg);
-		
-	//if (receivedBytes[0] == 'C') SERIALCOM.println("Connect command!");
-	
+		gap = millis() - time;
+		sprintf(rbMsg, "ParseMain Done, %u ms",gap);
+		sendReadBackString(rbMsg);
+    }	
 }
 
 
 void ReadSerial() {
-    time = millis();
-    sendReadBackString("readSerial started");
 
     static boolean recvInProgress = false;
     static byte ndx = 0;
@@ -301,8 +287,6 @@ void ReadSerial() {
     }
   }
 
-  gap = millis() - time;
-  sprintf(rbMsg, "Read Done, %u ms",gap);
-  sendReadBackString(rbMsg);
+
 }	
 
