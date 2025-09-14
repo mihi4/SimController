@@ -91,8 +91,9 @@ int main(int argc, char* argv[])
     ControllerHandler cHandler("dummyFilename");  // later read config from file, maybe
 
     cHandler.setupControllers();
-    cHandler.showControllers();    
-    Sleep(2000); // let arduinos reboot
+    
+    Sleep(8000); // let arduinos reboot
+    cHandler.showControllers();
     cHandler.readControllerComms();
     Sleep(500);
 
@@ -141,7 +142,7 @@ int main(int argc, char* argv[])
         // check for quit keycommand LCTRL+LSHIFT+LALT+BACKSPACE
         if ((GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)) { break; }
         
-        Sleep(200);        
+        Sleep(50);        
     }
 
     std::cout << "\n\nquitting!\n";   
