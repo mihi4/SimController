@@ -56,9 +56,13 @@ void UpdateBlink()
 */
 
 void LED_On(byte chipIndex, byte ledNumber) {  // this function sets the status of the appropriate output of the chip, but doesn't send it yet
+    sprintf(rbMsg, "setting bit %u ON", ledNumber);
+    sendReadBackString(rbMsg);
     mm5451[chipIndex].setOutput(ledNumber, true);
 }
 void LED_Off(byte chipIndex, byte ledNumber) {
+    sprintf(rbMsg, "setting bit %u OFF", ledNumber);
+    sendReadBackString(rbMsg);
     mm5451[chipIndex].setOutput(ledNumber, false);
 }
 
@@ -112,27 +116,28 @@ void UpdateLED_MM5451(byte p)
 	  mm5451[0].lightAll();  // we can assume here's only one MM5451 included for the CP
 	  return;
   }
-  /*
-  unsigned long longVal = 0;
+ 
+  #include "dataConversion.h"
+ 
+  sprintf(rbMsg, "MM incoming val %lu", longVal);
+  sendReadBackString(rbMsg); 
+  
+  char bitNum = 0;
   switch (vars[p]->type) {  
-    case f16var::INT:  
-        longVal = vars[p]->value.valI;  
+    case f16var::INT:          
+        bitNum = 16;
         break;  
     case f16var::CHAR:  
-        longVal = vars[p]->value.valC;  
-        break;  
-    case f16var::STRING:  
-        longVal = atol((*vars[p]->value.valString).c_str());  
-        break;  
+        bitNum = 8;
+        break;      
     case f16var::LONG:  
-        longVal = vars[p]->value.valL;  
+        bitNum = 32;
         break;  
-  }  */
-  #include "dataConversion.h"
-
+  } 
   if (vars[p]->valIndex == 255) { // use full varvalue to set output bits
-    for (int i=0; i<32; i++) {  // maximum is 4byte long (32bit) as value to send
-      if ( (longVal >> (i)) && 1) LED_On(vars[p]->modIndex, i); else LED_Off(vars[p]->modIndex, i);
+    for (int i=0; i<bitNum; i++) {  // maximum is 4byte long (32bit) as value to send
+      // if ( (longVal >> (i)) && 1) LED_On(vars[p]->modIndex, i); else LED_Off(vars[p]->modIndex, i);
+      if (bitRead(longVal, i)) LED_On(vars[p]->modIndex, i); else LED_Off(vars[p]->modIndex, i);
     }
   } else {
     if (longVal) LED_On(vars[p]->modIndex, vars[p]->valIndex); else LED_Off(vars[p]->modIndex, vars[p]->valIndex); 
