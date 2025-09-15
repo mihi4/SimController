@@ -36,7 +36,7 @@ std::vector<unsigned char> Controller::splitValue(int value, int size) {
     std::vector<unsigned char> bytes;
     for (size_t i = 0; i < size; ++i) {
         // Maskieren und Verschieben, um das i-te Byte zu erhalten
-        unsigned char byte = (value >> (8 * i)) & 0xFF;
+        unsigned char byte = (value >> (8 * i)) & 0xFF;        
         bytes.push_back(byte);
     }
     return bytes;
@@ -49,7 +49,7 @@ void Controller::readSerial() {
 
 void Controller::connect()
 {
-    if (serialHandler.initializeComport(comPortNum, baudrate, controllerName)) {
+    if (serialHandler.initializeComport(comPortNum, baudrate, controllerName)) {        
         std::cout << controllerName << " sending connect command\n";
         serialHandler.sendCommand("<C>");
     }
@@ -96,7 +96,9 @@ void Controller::buildVarString(int varNum, unsigned char value, std::vector<cha
 void Controller::buildVarString(int varNum, unsigned short value, std::vector<char>& updateString) {    
     buildVarStringBegin(varNum, sizeof(value), updateString);
     std::vector<unsigned char> splitValues = splitValue(value, sizeof(value));
-    for (int i = 0; i < splitValues.size(); i++) {    
+    std::cout << "SHORTvar " << std::dec << varNum << ", value " << std::dec << value << std::endl;
+    for (int i = 0; i < splitValues.size(); i++) { 
+        std::cout << "SHORTvar " << std::dec << varNum << ", byte " << std::dec << i << ": " << std::hex << (int)splitValues[i] << std::endl;
         updateString.push_back(splitValues[i]);
     }
     buildVarStringEnd(updateString);    
@@ -106,7 +108,9 @@ void Controller::buildVarString(int varNum, unsigned short value, std::vector<ch
 void Controller::buildVarString(int varNum, unsigned int value, std::vector<char>& updateString) {    
     buildVarStringBegin(varNum, sizeof(value), updateString);
     std::vector<unsigned char> splitValues = splitValue(value, sizeof(value));
+    std::cout << "INTvar " << std::dec << varNum << ", value " << std::dec << value << std::endl;
     for (int i = 0; i < splitValues.size(); i++) {
+        std::cout << "iNTvar " << std::dec << varNum << ", byte " << std::dec << i << ": " << std::hex << (int)splitValues[i] << std::endl;
         updateString.push_back(splitValues[i]);
     }
     buildVarStringEnd(updateString);
