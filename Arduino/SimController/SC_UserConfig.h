@@ -37,7 +37,7 @@
   //#define SpeedBrake        //Enable display of the SpeedBrake indicator on an 128x64 OLED display (DEDunino)
   //#define FuelFlowIndicator //Enable display of the FuelFlow indicator on an 128x64 OLED display (DEDunino)
   //#define OLED_Compass      //Enable display of the wet compass on an 128x32 OLED display 
-  #define DED_PFL           //Enable display of DED or PFL on an 254x64 OLED display (DEDunino)
+  //#define DED_PFL           //Enable display of DED or PFL on an 254x64 OLED display (DEDunino)
   //#define Switches          //use the arduino to read switch positions and send keyboard commands
   //#define MagSwitch         //enable magnetic held switches														   
   //#define ButtonMatrix      //use the arduino to read switch positions and send keyboard commands
@@ -62,11 +62,11 @@ int scNameSize = sizeof(scName)/sizeof(scName[0]);
 f16var* vars[] = { 
     new f16varC(SIMSTATES, MODNONE, 0, 0, 0)
   ,  new f16varC(POWERSTATES, MODNONE, 0, 0, 0)   // First 2 should always be configured in every module    
-  ,  new f16varI(HYDA, MODSERVO, 0, 0, 0)
-  ,  new f16varI(HYDB, MODSERVO, 1, 0, 0)  
+ /* ,  new f16varI(HYDA, MODSERVO, 0, 0, 0)
+  ,  new f16varI(HYDB, MODSERVO, 1, 0, 0)  */
   ,  new f16varI(FUELFWD, MODSERVO, 2, 0, 0)
   ,  new f16varI(FUELAFT, MODSERVO, 3, 0, 0)  
-  ,  new f16varC(FUELTOTAL, MODMAX7219, 0, 0, 0)
+  ,  new f16varC(FUELTOTAL, MODMAX7219, 0, 0, 0) 
   ,  new f16varL(CAUTIONPANELLIGHTS, MODMM5451, 0, 0, 0)  
   /*,  new f16varS(PFDLINE1, MODDED, 255, 0, "                         " )
   ,  new f16varS(PFDLINE2, MODDED, 255, 0, "                         " )
