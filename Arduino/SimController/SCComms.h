@@ -13,6 +13,19 @@ boolean newData = false;
 const byte msgLen = 50;
 char rbMsg[msgLen] = ""; // readBackMessage buffer
 
+void sendReadBackString(char message[msgLen]) {
+    char timestamp[20];    
+    sprintf(timestamp, "%u",millis());
+    String msg = "";
+    msg.concat(CMDSTART);
+    msg.concat("R");
+    msg.concat(timestamp);
+    msg.concat(": ");
+    msg.concat(message);
+    msg.concat(CMDEND);
+    SERIALCOM.println(msg);
+}
+
 unsigned short shortFromBytes(unsigned char bytes[2]) {     
     unsigned short retVal;// = (bytes[0] << 8) | bytes[1];
     memcpy(&retVal, bytes, sizeof(retVal));
@@ -20,12 +33,21 @@ unsigned short shortFromBytes(unsigned char bytes[2]) {
 }
 
 unsigned long longFromBytes(unsigned char bytes[4]) {             
-    unsigned long retVal; /* = ((unsigned long) bytes[0] << 24)
-                        | ((unsigned long) bytes[1] << 16)
-                        | ((unsigned long) bytes[2] << 8)
-                        | (unsigned long) bytes[3];    */
+
+   /* for (int i=0; i<4; i++) {
+      sprintf(rbMsg, "LongFromByte %u, hexVal 0x%x", i, bytes[i]);
+      sendReadBackString(rbMsg);
+    } */
+
+    unsigned long retVal = 0; // = *(unsigned long*)(bytes);
+    retVal |= (unsigned long)bytes[0] << 24; // Most significant byte
+    retVal |= (unsigned long)bytes[1] << 16;
+    retVal |= (unsigned long)bytes[2] << 8;
+    retVal |= (unsigned long)bytes[3]; // Least significant byte */
     
-    memcpy(&retVal, bytes, sizeof(retVal));
+    //memcpy(&retVal, bytes, 4); //sizeof(unsigned long));
+    /*sprintf(rbMsg, "retVal longBytes: dec %lu hex 0x%lx", retVal, retVal);
+    sendReadBackString(rbMsg);*/
     return retVal;
 }
 
@@ -61,19 +83,6 @@ void sendConnectReply(){
 	}
 	SERIALCOM.println(CMDEND);
 
-}
-
-void sendReadBackString(char message[msgLen]) {
-    char timestamp[20];    
-    sprintf(timestamp, "%u",millis());
-    String msg = "";
-    msg.concat(CMDSTART);
-    msg.concat("R");
-    msg.concat(timestamp);
-    msg.concat(": ");
-    msg.concat(message);
-    msg.concat(CMDEND);
-    SERIALCOM.println(msg);
 }
 
 void sendCheckReply(){
@@ -131,11 +140,12 @@ void parseUpateCommand() {
           
         for (int i=0; i<VARSHORT; i++) {
               shortBytes[i] = receivedBytes[3+i];  
-             //sprintf(rbMsg, "byte %u, value %x", i, shortBytes[i]);
-             // sendReadBackString(rbMsg); 
+              sprintf(rbMsg, "SHORTbyte %u, value %x", i, shortBytes[i]);
+              sendReadBackString(rbMsg); 
         }
         dataValue = shortFromBytes(shortBytes);
-                
+        sprintf(rbMsg, "SHORTvar %u datvalue %u", varIndex, dataValue);
+        sendReadBackString(rbMsg);
         vars[varIndex]->value.valI = (unsigned int)dataValue;
         
         varsChanged = true;
@@ -146,10 +156,14 @@ void parseUpateCommand() {
         unsigned char bytes[VARLONG] = {0};
        
         for (int i=0; i<VARLONG; i++) {
-            bytes[i] = receivedBytes[3+i];       
+            bytes[i] = receivedBytes[3+i];   
+           /* sprintf(rbMsg, "INTvarnum %u byte %u, value %x", varIndex, i, bytes[i]);
+            sendReadBackString(rbMsg); */
         }           
         dataValue = longFromBytes(bytes);
-        vars[varIndex]->value.valL = dataValue;
+        /* sprintf(rbMsg, "INTvar %u datvalue %lu", varIndex, dataValue);
+        sendReadBackString(rbMsg); */
+        vars[varIndex]->value.valL = (unsigned long)dataValue;
         
         varsChanged = true;
         
