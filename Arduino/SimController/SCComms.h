@@ -14,18 +14,17 @@ const byte msgLen = 50;
 char rbMsg[msgLen] = ""; // readBackMessage buffer
 
 unsigned short shortFromBytes(unsigned char bytes[2]) {     
-    unsigned short retVal;
+    unsigned short retVal;// = (bytes[0] << 8) | bytes[1];
     memcpy(&retVal, bytes, sizeof(retVal));
     return retVal;// return (bytes[0] << 8) | bytes[1];
 }
 
 unsigned long longFromBytes(unsigned char bytes[4]) {             
-    unsigned long retVal;
-/*    = ((unsigned long) bytes[0] << 24)
+    unsigned long retVal; /* = ((unsigned long) bytes[0] << 24)
                         | ((unsigned long) bytes[1] << 16)
                         | ((unsigned long) bytes[2] << 8)
-                        | (unsigned long) bytes[3];    
-    */
+                        | (unsigned long) bytes[3];    */
+    
     memcpy(&retVal, bytes, sizeof(retVal));
     return retVal;
 }
@@ -131,7 +130,9 @@ void parseUpateCommand() {
         unsigned char shortBytes[VARSHORT] = {0};
           
         for (int i=0; i<VARSHORT; i++) {
-              shortBytes[i] = receivedBytes[3+i];              
+              shortBytes[i] = receivedBytes[3+i];  
+             //sprintf(rbMsg, "byte %u, value %x", i, shortBytes[i]);
+             // sendReadBackString(rbMsg); 
         }
         dataValue = shortFromBytes(shortBytes);
                 

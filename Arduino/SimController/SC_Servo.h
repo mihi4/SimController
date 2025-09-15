@@ -113,7 +113,7 @@ else if (servodata[vars[p]->modIndex].lu + SERVODELAY < millis())
   
   
   if (servodata[vars[p]->modIndex].last != longVal)
-  {    
+  {        
 	  uint16_t winkel;
     servodata[vars[p]->modIndex].last = longVal;
       
@@ -123,7 +123,8 @@ else if (servodata[vars[p]->modIndex].lu + SERVODELAY < millis())
       
     if (winkel > servodata[vars[p]->modIndex].p_og) winkel = servodata[vars[p]->modIndex].p_og;
     if (winkel < servodata[vars[p]->modIndex].p_ug) winkel = servodata[vars[p]->modIndex].p_ug;
-      
+    //sprintf(rbMsg, "sending var %u servopos %u: winkel %u", p, longVal, winkel);
+    //sendReadBackString(rbMsg);
     servo[vars[p]->modIndex].write(winkel);
   }
   

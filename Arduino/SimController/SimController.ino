@@ -222,8 +222,8 @@ void outputVars() {
           break;  
     } */
   int i = lastParsedVar;
-  sprintf(rbMsg, "updating Varnum %u", i);
-  sendReadBackString(rbMsg);
+  //sprintf(rbMsg, "updating Varnum %u", i);
+  //sendReadBackString(rbMsg);
   switch (vars[i]->module) {
     #ifdef LED_MM5451
     case MODMM5451:

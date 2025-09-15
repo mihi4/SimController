@@ -285,8 +285,9 @@ void BMSReader::readF16Data(F16Data* data) {
     //   Right AUX
     ///////////////////////////////////////////////////////////////// 
     // fuel data    
-    data->fuelFWD = (unsigned short)flightData->fwd; // util.map((long)flightData->fwd, 0, 42000, 0, 65535);
-    data->fuelAFT = (unsigned short)flightData->aft;  // util.map((long)flightData->aft, 0, 42000, 0, 65535);
+    data->fuelFWD = (unsigned short)flightData->fwd/10; // util.map((long)flightData->fwd, 0, 42000, 0, 65535);
+    //std::cout << "fuelFWD raw: " << flightData->fwd << " data: " << data->fuelFWD << std::endl;
+    data->fuelAFT = (unsigned short)flightData->aft/10;  // util.map((long)flightData->aft, 0, 42000, 0, 65535);
     data->fuelTotal = ((unsigned short)flightData->total) / 100;
     // HYD PRESS
     data->hydA = (unsigned short)flightData2->hydPressureA;
