@@ -85,6 +85,7 @@ struct f16varS : public f16var {
 
 bool checkBit(unsigned long var, unsigned long bit);
 void setupModules();
+void fastUpdate();
 
 unsigned int power(unsigned int base, unsigned int exp) {
 	int retVal = 1;
@@ -157,17 +158,53 @@ void setupModules() {
   #endif
 }
 
+///Call for another update of the motors to allow for fast, fluent movement
+void fastUpdate()
+{
+  #ifdef ServoMotor                       
+    Servo_FastUpdate();            
+  #endif                            
+
+  #ifdef ServoPWM                       
+    ServoPWM_FastUpdate();              
+  #endif 
+
+  #ifdef StepperVID
+    StepperVID_FastUpdate();   
+  #endif
+   
+  #ifdef StepperX27
+    StepperX27_FastUpdate();  
+  #endif
+   
+  #ifdef Stepper28BYJ48
+    Stepper28BYJ48_FastUpdate();  
+  #endif 
+
+  #ifdef CompassX27
+    CompassX27_FastUpdate();
+  #endif      
+
+  #ifdef AltimeterX27
+    AltimeterX27_FastUpdate();
+  #endif      
+
+  #ifdef MotorPoti
+    MotorPoti_FastUpdate(); 
+  #endif  
+}
+
 
 void outputVars() {
 	
-	#ifdef DED_PFL  
+/* 	#ifdef DED_PFL  
   if (millis() > lastDEDUpdate + DEDUPATEINTERVALL) {
     UpdateDED();  
     lastDEDUpdate = millis();
   }  
   #endif
 
-
+ */
 	//for (int i=0;i<varCount;i++) {
     /*SERIALCOM.print("var ");SERIALCOM.print(i, DEC);SERIALCOM.print(" type ");SERIALCOM.print(vars[i]->type, DEC);SERIALCOM.print(" value: ");
     switch (vars[i]->type) {  
@@ -184,31 +221,38 @@ void outputVars() {
           SERIALCOM.println(vars[i]->value.valL);  
           break;  
     } */
-    int i = lastParsedVar;
-    sprintf(rbMsg, "updating Varnum %u", i);
-    sendReadBackString(rbMsg);
-    switch (vars[i]->module) {
-      #ifdef LED_MM5451
-        case MODMM5451:
-          UpdateLED_MM5451(i);
-          break;
-      #endif
-      #ifdef ServoMotor
-        case MODSERVO:
-          UpdateServo(i);
-          break;
-      #endif
-      #ifdef SSegMAX7219
-        case MODMAX7219:
-          UpdateMAX7219(i);
-          break;
-      #endif
-      #ifdef StepperX27
-        case MODX27:
-          UpdateStepperX27(i);
-          break;
-      #endif
-
+  int i = lastParsedVar;
+  sprintf(rbMsg, "updating Varnum %u", i);
+  sendReadBackString(rbMsg);
+  switch (vars[i]->module) {
+    #ifdef LED_MM5451
+    case MODMM5451:
+      UpdateLED_MM5451(i);
+      break;
+    #endif
+    #ifdef ServoMotor
+    case MODSERVO:
+      UpdateServo(i);
+      break;
+    #endif
+    #ifdef SSegMAX7219
+    case MODMAX7219:
+      UpdateMAX7219(i);
+      break;
+    #endif
+    #ifdef StepperX27
+    case MODX27:
+      UpdateStepperX27(i);
+      break;
+    #endif
+    #ifdef DED_PFL  
+    case MODDED:
+      if (millis() > lastDEDUpdate + DEDUPATEINTERVALL) {
+          UpdateDED();  
+          lastDEDUpdate = millis();
+      }  
+      break;
+    #endif
 
     //}
 
@@ -246,13 +290,15 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  
-  ReadSerial();	
-  
+
+  fastUpdate();
+  ReadSerial();
+  fastUpdate();
   // showNewData();
   parseSerialCommand();
-  
+  fastUpdate();
   if (varsChanged) outputVars();	
-  delay(5);
+  fastUpdate();
+  //delay(5);
+  
 }
