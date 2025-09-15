@@ -112,7 +112,7 @@ void UpdateLED_MM5451(byte p)
 	  mm5451[0].lightAll();  // we can assume here's only one MM5451 included for the CP
 	  return;
   }
-  
+  /*
   unsigned long longVal = 0;
   switch (vars[p]->type) {  
     case f16var::INT:  
@@ -127,7 +127,8 @@ void UpdateLED_MM5451(byte p)
     case f16var::LONG:  
         longVal = vars[p]->value.valL;  
         break;  
-  }  
+  }  */
+  #include "dataConversion.h"
 
   if (vars[p]->valIndex == 255) { // use full varvalue to set output bits
     for (int i=0; i<32; i++) {  // maximum is 4byte long (32bit) as value to send
