@@ -39,13 +39,14 @@ unsigned long longFromBytes(unsigned char bytes[4]) {
       sendReadBackString(rbMsg);
     } */
 
-    unsigned long retVal = 0; // = *(unsigned long*)(bytes);
+    unsigned long retVal; 
+    /* unsigned long retVal = 0;
     retVal |= (unsigned long)bytes[0] << 24; // Most significant byte
     retVal |= (unsigned long)bytes[1] << 16;
     retVal |= (unsigned long)bytes[2] << 8;
     retVal |= (unsigned long)bytes[3]; // Least significant byte */
     
-    //memcpy(&retVal, bytes, 4); //sizeof(unsigned long));
+    memcpy(&retVal, bytes, 4); //sizeof(unsigned long));
     /*sprintf(rbMsg, "retVal longBytes: dec %lu hex 0x%lx", retVal, retVal);
     sendReadBackString(rbMsg);*/
     return retVal;
