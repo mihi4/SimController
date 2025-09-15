@@ -141,9 +141,6 @@ bool checkBit(unsigned long var, unsigned long bit) {
 }
 
 void setupModules() {
-  #ifdef DED_PFL
-    SetupDED();
-  #endif
   #ifdef LED_MM5451
     SetupLED_MM5451();
   #endif
@@ -155,6 +152,9 @@ void setupModules() {
   #endif
   #ifdef StepperX27
     SetupStepperX27();
+  #endif
+  #ifdef DED_PFL
+    SetupDED();
   #endif
 }
 
@@ -221,12 +221,10 @@ void outputVars() {
           SERIALCOM.println(vars[i]->value.valL);  
           break;  
     } */
-  int i = lastParsedVar;
-  //sprintf(rbMsg, "updating Varnum %u", i);
-  //sendReadBackString(rbMsg);
+  int i = lastParsedVar;  
   switch (vars[i]->module) {
     #ifdef LED_MM5451
-    case MODMM5451:
+    case MODMM5451:            
       UpdateLED_MM5451(i);
       break;
     #endif
@@ -270,20 +268,7 @@ void setup() {
 	SERIALCOM.begin(BAUDRATE);
 	while (!SERIALCOM) {}
 	 SERIALCOM.println("Arduino is ready");
-/*
-  varsChanged = true;
-  outputVars();
-  // debugging escaping
-  ReadSerial();
-  showNewData();
-  parseSerialCommand();
-  outputVars();
-  char newInput[] = { '<', 'U', 1, 1, 27, '>' , '>'};
-  strcpy(input, newInput);
-  ReadSerial();
-  showNewData();
-  parseSerialCommand();
-  outputVars(); */
+
 	setupModules();
 
 	SERIALCOM.println("Setup Done");
@@ -291,14 +276,11 @@ void setup() {
 
 void loop() {
 
-  fastUpdate();
   ReadSerial();
-  fastUpdate();
   // showNewData();
   parseSerialCommand();
-  fastUpdate();
   if (varsChanged) outputVars();	
-  fastUpdate();
-  //delay(5);
+
+  delay(5);
   
 }
