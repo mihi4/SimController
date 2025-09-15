@@ -1,6 +1,7 @@
 // SimControl.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 #include "SimControl.h"
+#include <bitset>
 
 
 bool checkParameter(int argNum) {
@@ -92,7 +93,7 @@ int main(int argc, char* argv[])
 
     cHandler.setupControllers();
     
-    Sleep(8000); // let arduinos reboot
+    Sleep(6000); // let arduinos reboot
     cHandler.showControllers();
     cHandler.readControllerComms();
     Sleep(500);
@@ -123,10 +124,17 @@ int main(int argc, char* argv[])
                     main loop
     
     *****************************************/        
+    char buf[100];
     while (true) {                                
         if (reader->connectToSim()) {            
             reader->readF16Data(&data);                  
+            //std::bitset<32> y(data.cautionPanelLights);
+            //sprintf_s(buf, "fwd: %5u aft: %5u total: %5u hydA: %6u hydB %6u CP: 0x%8x bits: ", data.fuelFWD, data.fuelAFT, data.fuelTotal, data.hydA, data.hydB, data.cautionPanelLights);            
+            //std::cout << buf << y << std::endl;
             if (!prevData.isSameAs(data)) {  // only send data if anything has changed 
+                std::bitset<32> y(data.cautionPanelLights);
+                sprintf_s(buf, "CP: 0x%8x bits: ", data.cautionPanelLights);            
+                std::cout << buf << y << std::endl;
                 cHandler.updateControllers(&data, &prevData);
             }
             prevData = data;
