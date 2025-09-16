@@ -22,7 +22,7 @@ bool CommsHandler::initializeComport(int comPortNum, long baudrate, std::string 
     portNum = comPortNum;
     serialPort.begin(baudrate);
     if (serialPort.connected()) {
-        Sleep(500); // wait for Arduino to boot
+        //Sleep(500); // wait for Arduino to boot
         return true;
     }
     // if any error during connection occurs:
