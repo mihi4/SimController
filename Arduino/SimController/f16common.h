@@ -67,7 +67,7 @@ Byte mismatch error, bytes sent does not match var datatype
 #define MODX27VID     52
 #define MODFFI        72      
 
-#define FLOATMULT    1000  // amount to multiply float value with to get smoother data
+#define FLOATMULT    100  // amount to multiply float value with to get smoother data
 
 #define BLINKBITNUM  13
 #define BLINKSLOW    600  // intervalls in milliseconds for blinking warning lights
