@@ -121,16 +121,16 @@ void SetupDED()
   //SendMessage("Setting up DED",1);
   //setDEDBrightness();
   delay(PRE_BOOT_PAUSE);
-  Serial.println("before begin");
+  //Serial.println("before begin");
   displayDED.begin();
-  Serial.println("before setfont");
+  //Serial.println("before setfont");
   displayDED.setFont(FalconDED);
-  Serial.println("before setfontPos");
+  //Serial.println("before setfontPos");
   displayDED.setFontPosTop();
-  Serial.println("before test");
+  //Serial.println("before test");
   TestDED();
   delay(POST_BOOT_PAUSE);
-  Serial.println("before clear");
+  //Serial.println("before clear");
   ClearDED();
   //SERIALCOM.setTimeout(500);
 }
