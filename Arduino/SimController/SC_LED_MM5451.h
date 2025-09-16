@@ -133,8 +133,8 @@ void UpdateLED_MM5451(byte p)
  
   #include "dataConversion.h"
  
-  sprintf(rbMsg, "MM incoming val %lu", longVal);
-  sendReadBackString(rbMsg); 
+ /*  sprintf(rbMsg, "MM incoming val %lu", longVal);
+  sendReadBackString(rbMsg);  */
   
   char bitNum = 0;
   switch (vars[p]->type) {  
