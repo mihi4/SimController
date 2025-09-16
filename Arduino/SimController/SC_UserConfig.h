@@ -37,7 +37,7 @@
   //#define SpeedBrake        //Enable display of the SpeedBrake indicator on an 128x64 OLED display (DEDunino)
   //#define FuelFlowIndicator //Enable display of the FuelFlow indicator on an 128x64 OLED display (DEDunino)
   //#define OLED_Compass      //Enable display of the wet compass on an 128x32 OLED display 
-  //#define DED_PFL           //Enable display of DED or PFL on an 254x64 OLED display (DEDunino)
+  #define DED_PFL           //Enable display of DED or PFL on an 254x64 OLED display (DEDunino)
   //#define Switches          //use the arduino to read switch positions and send keyboard commands
   //#define MagSwitch         //enable magnetic held switches														   
   //#define ButtonMatrix      //use the arduino to read switch positions and send keyboard commands
