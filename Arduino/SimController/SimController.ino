@@ -276,10 +276,14 @@ void setup() {
 
 void loop() {
 
+  fastUpdate();
   ReadSerial();
+  fastUpdate();
   // showNewData();
   parseSerialCommand();
+  fastUpdate();
   if (varsChanged) outputVars();	
+  fastUpdate();
 
   delay(5);
   
