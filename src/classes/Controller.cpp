@@ -96,7 +96,7 @@ void Controller::buildVarString(int varNum, unsigned char value, std::vector<cha
 void Controller::buildVarString(int varNum, unsigned short value, std::vector<char>& updateString) {    
     buildVarStringBegin(varNum, sizeof(value), updateString);
     std::vector<unsigned char> splitValues = splitValue(value, sizeof(value));
-    //std::cout << "SHORTvar " << std::dec << varNum << ", value " << std::dec << value << std::endl;
+    std::cout << "SHORTvar " << std::dec << varNum << ", value " << std::dec << value << std::endl;
     for (int i = 0; i < splitValues.size(); i++) { 
         //std::cout << "SHORTvar " << std::dec << varNum << ", byte " << std::dec << i << ": " << std::hex << (int)splitValues[i] << std::endl;
         updateString.push_back(splitValues[i]);
@@ -181,12 +181,12 @@ void Controller::addVarDataToUpdateString(unsigned char varNum, std::vector<char
         break;
     case EPUFUEL:        
         if (data->epuFuel != prevData->epuFuel) {        
-            buildVarString(varNum, (unsigned short) util.map(data->epuFuel, 0, 10000, 0, 65535), updateString);
+            buildVarString(varNum, data->epuFuel, updateString);
         }
         break;
     case CABINPRESS:        
         if (data->cabinPress != prevData->cabinPress) {        
-            buildVarString(varNum, (unsigned short) util.map(data->cabinPress, 0, 50000, 0, 65535), updateString);
+            buildVarString(varNum, data->cabinPress, updateString);
         }
         break;
     case CAUTIONPANELLIGHTS:        
@@ -486,7 +486,7 @@ void Controller::updateController(F16Data* data, F16Data* prevData) {
         for (int i = 0; i < datafields.size(); i++) {
             updateString.clear();                        
             addVarDataToUpdateString(datafields[i], updateString, data, prevData); 
-            //if (updateString.size() > 3) debugUpdateString(updateString);
+            // if (updateString.size() > 3) debugUpdateString(updateString);
             if (updateString.size() > 3) serialHandler.sendDataUpdate(updateString);
             readSerial();
             //Sleep(10);
