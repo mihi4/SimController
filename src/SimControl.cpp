@@ -89,15 +89,12 @@ int main(int argc, char* argv[])
 
     std::cout << "------ Setting up Controllers ------\n";    
     
-    ControllerHandler cHandler("dummyFilename");  // later read config from file, maybe
+    ControllerHandler cHandler(CONFIGFILE);  // later read config from file, maybe
 
     cHandler.setupControllers();
-    //
-    Sleep(6000); // let arduinos reboot
-    cHandler.showControllers();
-    cHandler.readControllerComms();
-    Sleep(500);
-
+       
+    cHandler.showControllers();    
+    
     std::cout << "------ Controller Setup done  ------\n";
     std::cout << std::endl;
     
