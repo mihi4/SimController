@@ -141,12 +141,12 @@ void parseUpateCommand() {
           
         for (int i=0; i<VARSHORT; i++) {
               shortBytes[i] = receivedBytes[3+i];  
-              sprintf(rbMsg, "SHORTbyte %u, value %x", i, shortBytes[i]);
-              sendReadBackString(rbMsg); 
+              /* sprintf(rbMsg, "SHORTbyte %u, value %x", i, shortBytes[i]);
+              sendReadBackString(rbMsg); */ 
         }
         dataValue = shortFromBytes(shortBytes);
-        sprintf(rbMsg, "SHORTvar %u datvalue %u", varIndex, dataValue);
-        sendReadBackString(rbMsg);
+        /* sprintf(rbMsg, "SHORTvar %u datvalue %u", varIndex, dataValue);
+        sendReadBackString(rbMsg); */
         vars[varIndex]->value.valI = (unsigned int)dataValue;
         
         varsChanged = true;
