@@ -67,7 +67,7 @@ f16var* vars[] = {
   ,  new f16varI(FUELFWD, MODSERVO, 2, 0, 0)
   ,  new f16varI(FUELAFT, MODSERVO, 3, 0, 0)  
   ,  new f16varC(FUELTOTAL, MODMAX7219, 0, 0, 0) 
-  ,  new f16varL(CAUTIONPANELLIGHTS, MODMM5451, 0, 0, 0)  
+  ,  new f16varL(CAUTIONPANELLIGHTS, MODMM5451, 0, 255, 0)  
   /*,  new f16varS(PFDLINE1, MODDED, 255, 0, "                         " )
   ,  new f16varS(PFDLINE2, MODDED, 255, 0, "                         " )
   ,  new f16varS(PFDLINE3, MODDED, 255, 0, "                         " )
