@@ -30,7 +30,7 @@ void MM5451::pulseCLK() {
 }
 
 void MM5451::outputDataBits() {
-    sendStartBit();    
+    sendStartBit();
     for(byte x=0; x < OUTPUTS; x++) {
         digitalWrite(DATA, databits[x]);
         pulseCLK();
