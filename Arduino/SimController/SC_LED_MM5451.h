@@ -56,13 +56,13 @@ void UpdateBlink()
 */
 
 void LED_On(byte chipIndex, byte ledNumber) {  // this function sets the status of the appropriate output of the chip, but doesn't send it yet
-    sprintf(rbMsg, "setting bit %u ON", ledNumber);
-    sendReadBackString(rbMsg);
+    /* sprintf(rbMsg, "setting bit %u ON", ledNumber);
+    sendReadBackString(rbMsg); */
     mm5451[chipIndex].setOutput(ledNumber, true);
 }
 void LED_Off(byte chipIndex, byte ledNumber) {
-    sprintf(rbMsg, "setting bit %u OFF", ledNumber);
-    sendReadBackString(rbMsg);
+    /* sprintf(rbMsg, "setting bit %u OFF", ledNumber);
+    sendReadBackString(rbMsg); */
     mm5451[chipIndex].setOutput(ledNumber, false);
 }
 
@@ -84,21 +84,35 @@ void SetupLED_MM5451()
 			mm5451[x].lightAll();	
 			//debugDatabits(x);
 		}	
-		delay(800);
+		delay(200);
 		for (byte x=0; x<mm5451anz; x++) {		
 			mm5451[x].clearAll();
 			//debugDatabits(x);
 		}
-		delay(800);
+		delay(200);
 	//}
 	for (byte x=0; x<mm5451anz; x++) {
         mm5451[x].lightAll();
     }	
-    delay(1000);
+    delay(500);
 	for (byte x=0; x<mm5451anz; x++) {
         mm5451[x].clearAll();
 		//debugDatabits(x);
 	}		
+  
+  int p=7;
+  for (int i=0; i<33;i++) {
+    LED_On(vars[p]->modIndex, i);
+    mm5451[(vars[p]->modIndex)].outputDataBits();
+    delay(100);
+  }
+  delay(500);
+  for (int i=0; i<33;i++) {
+    LED_Off(vars[p]->modIndex, i);
+    mm5451[(vars[p]->modIndex)].outputDataBits();
+    delay(100);
+  }
+
 }
 
 void debugTime(int x) {
@@ -136,8 +150,12 @@ void UpdateLED_MM5451(byte p)
   } 
   if (vars[p]->valIndex == 255) { // use full varvalue to set output bits
     for (int i=0; i<bitNum; i++) {  // maximum is 4byte long (32bit) as value to send
+      int j=i;
+      //only for CautionPanel, it's is soldered strange, first 16 (0-15) pins are regular, but 2nd 16 leds start at pin 17, not 16
+      if (i >=16) j=i+1;  // remove this line if not used with caution panel
+
       // if ( (longVal >> (i)) && 1) LED_On(vars[p]->modIndex, i); else LED_Off(vars[p]->modIndex, i);
-      if (bitRead(longVal, i)) LED_On(vars[p]->modIndex, i); else LED_Off(vars[p]->modIndex, i);
+      if (bitRead(longVal, i)) LED_On(vars[p]->modIndex, j); else LED_Off(vars[p]->modIndex, j);
     }
   } else {
     if (longVal) LED_On(vars[p]->modIndex, vars[p]->valIndex); else LED_Off(vars[p]->modIndex, vars[p]->valIndex); 
