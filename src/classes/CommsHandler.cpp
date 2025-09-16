@@ -23,9 +23,11 @@ bool CommsHandler::initializeComport(int comPortNum, long baudrate, std::string 
     serialPort.begin(baudrate);
     if (serialPort.connected()) {
         //Sleep(500); // wait for Arduino to boot
+        serialConnected = true;
         return true;
     }
     // if any error during connection occurs:
+    serialConnected = false;
     return false;
 }
 
@@ -141,6 +143,7 @@ bool CommsHandler::parseControllerInfo(std::vector<unsigned char>& datafields) {
     }
     std::cout << std::endl;
     arduinoConnected = true;
+    return true;
 }
 
 bool CommsHandler::parseSerialInput(std::vector<unsigned char>& datafields) {
