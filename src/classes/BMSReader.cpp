@@ -292,7 +292,7 @@ void BMSReader::readF16Data(F16Data* data) {
     // HYD PRESS
     data->hydA = (unsigned short)flightData2->hydPressureA;
     data->hydB = (unsigned short)flightData2->hydPressureB;
-    data->epuFuel = (unsigned short)(util.map(flightData->epuFuel*FLOATMULT, 0, 100*FLOATMULT, 0, 65535)); 
+    data->epuFuel = (unsigned short)(util.map(flightData->epuFuel*FLOATMULT, 0, 100*FLOATMULT, 0, 65535));     
     data->cabinPress = (unsigned short)(util.map(flightData2->cabinAlt, 0, 50000, 0, 65535));
     // CautionPanel
     setCautionLightbits(data, flightData);
