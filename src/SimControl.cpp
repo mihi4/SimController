@@ -132,9 +132,9 @@ int main(int argc, char* argv[])
             //sprintf_s(buf, "fwd: %5u aft: %5u total: %5u hydA: %6u hydB %6u CP: 0x%8x bits: ", data.fuelFWD, data.fuelAFT, data.fuelTotal, data.hydA, data.hydB, data.cautionPanelLights);            
             //std::cout << buf << y << std::endl;
             if (!prevData.isSameAs(data)) {  // only send data if anything has changed 
-                std::bitset<32> y(data.cautionPanelLights);
+                /*std::bitset<32> y(data.cautionPanelLights);
                 sprintf_s(buf, "CP: 0x%8x bits: ", data.cautionPanelLights);            
-                std::cout << buf << y << std::endl;
+                std::cout << buf << y << std::endl;*/
                 cHandler.updateControllers(&data, &prevData);
             }
             prevData = data;
