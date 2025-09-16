@@ -36,6 +36,9 @@ public:
     void initController(F16Data* data, F16Data* prevData);
     void readSerial();
 
+    bool serialConnected();
+    bool arduinoConnected();
+
 private:
     // std::shared_ptr<WindowsSerial> serialPort;
     miUtility util;

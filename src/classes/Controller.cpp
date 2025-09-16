@@ -47,16 +47,22 @@ void Controller::readSerial() {
     serialHandler.readSerial(datafields);
 }
 
+bool Controller::serialConnected() { return serialHandler.isSerialConnected(); }
+bool Controller::arduinoConnected() { return serialHandler.isArduinoConnected(); }
+
 void Controller::connect()
 {
     if (serialHandler.initializeComport(comPortNum, baudrate, controllerName)) {        
-        std::cout << controllerName << " sending connect command\n";
-        serialHandler.sendCommand("<C>");
+        std::cout << controllerName << " initialized\n";
+        
+        //serialHandler.sendCommand("<C>");
     }
     else {
         std::cout << controllerName << " Cannot initialize Comport " << std::dec << comPortNum << std::endl;
     }
 }
+
+
 
 void Controller::disconnect()
 {
@@ -96,7 +102,7 @@ void Controller::buildVarString(int varNum, unsigned char value, std::vector<cha
 void Controller::buildVarString(int varNum, unsigned short value, std::vector<char>& updateString) {    
     buildVarStringBegin(varNum, sizeof(value), updateString);
     std::vector<unsigned char> splitValues = splitValue(value, sizeof(value));
-    std::cout << "SHORTvar " << std::dec << varNum << ", value " << std::dec << value << std::endl;
+    //std::cout << "SHORTvar " << std::dec << varNum << ", value " << std::dec << value << std::endl;
     for (int i = 0; i < splitValues.size(); i++) { 
         //std::cout << "SHORTvar " << std::dec << varNum << ", byte " << std::dec << i << ": " << std::hex << (int)splitValues[i] << std::endl;
         updateString.push_back(splitValues[i]);
