@@ -27,9 +27,15 @@ void sendReadBackString(char message[msgLen]) {
 }
 
 unsigned short shortFromBytes(unsigned char bytes[2]) {     
+    /*for (int i=0; i<2; i++) {
+      sprintf(rbMsg, "shortFromByte %u, hexVal 0x%x", i, bytes[i]);
+      sendReadBackString(rbMsg);
+    }*/
+    
+    
     unsigned short retVal;// = (bytes[0] << 8) | bytes[1];
     memcpy(&retVal, bytes, sizeof(retVal));
-    return retVal;// return (bytes[0] << 8) | bytes[1];
+    return retVal;// return (bytes[0] << 8) | bytes[1];    
 }
 
 unsigned long longFromBytes(unsigned char bytes[4]) {             
