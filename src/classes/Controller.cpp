@@ -7,7 +7,7 @@ Controller::Controller(std::string name, int comPortNum, long baudrate = 115200)
 }
 
 Controller::~Controller() {
-    std::cout << "Controller " << controllerName << " deconstructor.\n"; 
+    //std::cout << "Controller " << controllerName << " deconstructor.\n"; 
     //delete serialPort;
 }
 
@@ -47,19 +47,29 @@ void Controller::readSerial() {
     serialHandler.readSerial(datafields);
 }
 
-bool Controller::serialConnected() { return serialHandler.isSerialConnected(); }
+bool Controller::serialConnected()  { return serialHandler.isSerialConnected(); }
 bool Controller::arduinoConnected() { return serialHandler.isArduinoConnected(); }
 
 void Controller::connect()
 {
     if (serialHandler.initializeComport(comPortNum, baudrate, controllerName)) {        
-        std::cout << controllerName << " initialized\n";
-        
-        //serialHandler.sendCommand("<C>");
+        std::cout << controllerName << " Comport initialized\n";
     }
     else {
         std::cout << controllerName << " Cannot initialize Comport " << std::dec << comPortNum << std::endl;
     }
+}
+
+bool Controller::connectArduino() {
+    auto start = std::chrono::steady_clock::now();
+    auto work_duration = std::chrono::seconds(ARDUINOTIMEOUT);
+
+    while (std::chrono::steady_clock::now() - start < work_duration) {
+        serialHandler.readSerial(datafields);
+        if (arduinoConnected()) return true;
+    }
+    std::cout << "Timeout while waiting for Arduino to send identification" << std::endl;
+    return false;
 }
 
 

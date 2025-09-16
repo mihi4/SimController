@@ -7,10 +7,12 @@
 #include <bit>
 #include <string>
 #include <functional>
+#include <chrono>
 #include "../lib/F16Data.h"
 #include "../lib/miUtils.h"
 #include "CommsHandler.h"
 
+#define ARDUINOTIMEOUT  20
 
 class Controller
 {
@@ -35,6 +37,7 @@ public:
     void updateController(F16Data * data, F16Data * prevData);
     void initController(F16Data* data, F16Data* prevData);
     void readSerial();
+    bool connectArduino();
 
     bool serialConnected();
     bool arduinoConnected();

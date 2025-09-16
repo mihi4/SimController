@@ -6,11 +6,9 @@
 #include <functional>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 #include "../lib/F16Data.h"
-
 #include "Controller.h"
-
-#define CONFIGFILE "simcontrol.conf"
 
 class ControllerHandler {
 
@@ -20,7 +18,7 @@ public:
     ~ControllerHandler();
 
     void showControllers();
-    void setupControllers();
+    bool setupControllers();
     void updateControllers(F16Data *data, F16Data *prevData);
     void initControllers(F16Data* data, F16Data* prevData);
     void readControllerComms();
@@ -30,6 +28,8 @@ private:
 
     std::vector<Controller> allControllers;
     std::vector<WindowsSerial> allComports;
+
+    std::string confFileName;
 
     int contNumber = 0;
 
