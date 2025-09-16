@@ -267,11 +267,12 @@ void setup() {
   // put your setup code here, to run once:
 	SERIALCOM.begin(BAUDRATE);
 	while (!SERIALCOM) {}
-	 SERIALCOM.println("Arduino is ready");
+	SERIALCOM.println("Simcontroller starting");
 
 	setupModules();
 
-	SERIALCOM.println("Setup Done");
+	//SERIALCOM.println("Setup Done");
+  sendConnectReply();
 }
 
 void loop() {
