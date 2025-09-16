@@ -7,7 +7,7 @@
 //ref4= not used
 //ref5= not used
 
-#include <SwitecX25.h>
+#include "miSwitecX27.h"
 
 typedef struct
 {
@@ -25,7 +25,7 @@ StepperdataX27 stepperdataX27[] =
 {
   //  {PIN1 PIN2 PIN3 PIN4}    arc    maxArc    invert   last
     { {  23,   22,   25,   24   }, 315*3 , 627, false,    0   }  // EPU FUEL// { {  22,   23,   24,   25   }, 315*3 , false,    0   },  // EPU FUEL
-    ,{ {  27,   26,   29,   28   }, 315*3 , 315*3, false,    0   }  // CABIN PRESS // { {  28,   29,   30,   31   }, 315*3 , false,    0   }  // CABIN PRESS 
+    //,{ {  27,   26,   29,   28   }, 315*3 , 315*3, false,    0   }  // CABIN PRESS // { {  28,   29,   30,   31   }, 315*3 , false,    0   }  // CABIN PRESS 
 };
 
 
@@ -42,11 +42,24 @@ void StepperX27_Zeroize(bool m)
   for (byte motor=0;motor<stepperzahlX27;motor++)
   {
     stepperX27[motor].zero();
+    
+    uint16_t newStepperPos=map(stepperdataX27[motor].maxArc, 0, 65535,0, stepperdataX27[motor].maxArc);
+    stepperX27[motor].setPosition(newStepperPos);
+    
+    stepperX27[motor].updateBlocking();
+    
+    newStepperPos=map(1, 0, 65535,0, stepperdataX27[motor].maxArc);
+    stepperX27[motor].setPosition(newStepperPos);    
+    
+    stepperX27[motor].updateBlocking();
+    
     //bring Steppers back down to 0
     if (stepperdataX27[motor].invert) 
       stepperX27[motor].setPosition(stepperdataX27[motor].arc-1);
     else
       stepperX27[motor].setPosition(1);
+    
+    stepperX27[motor].updateBlocking();
   }
   /* unsigned long now=0;
   bool busy=true;
@@ -133,11 +146,16 @@ void UpdateStepperX27(byte pos)
 {
   uint16_t newVal=vars[pos]->value.valI; //  atoi(datenfeld[pos].wert);
 
+  sprintf(rbMsg, "x27 incoming val %u", newVal);
+  sendReadBackString(rbMsg);
+
   if (newVal<0)newVal=0;
   if (newVal>65535)newVal=65535;
   if (newVal!=stepperdataX27[vars[pos]->modIndex].last)
   {
     uint16_t  newStepperPos=map(newVal, 0, 65535,0, stepperdataX27[vars[pos]->modIndex].maxArc);
+    sprintf(rbMsg, "x27 new stepper pos %u", newStepperPos);
+    sendReadBackString(rbMsg);
     /*if (debugmode)
     {
       if (millis()>lastMessageX27+1000)
@@ -157,7 +175,9 @@ void UpdateStepperX27(byte pos)
       
     stepperdataX27[vars[pos]->modIndex].last=newVal;
     lastUpdateX27=millis();
+    stepperX27[vars[pos]->modIndex].update();
   }
   if (millis()-lastUpdateX27<5000)  //sleep if no new data since 5 seconds
    {stepperX27[vars[pos]->modIndex].update();}
+   
 }
