@@ -32,7 +32,7 @@ std::vector<std::vector<std::string>> ControllerHandler::readConfig(const std::s
     std::ifstream file(filename);
 
     if (!file.is_open()) {
-        std::cerr << "Failed to open file: " << filename << std::endl;
+        std::cerr << "Failed to open controller config file: " << filename << std::endl;
         return data;
     }
 
