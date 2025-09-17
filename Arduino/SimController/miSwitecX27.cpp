@@ -20,11 +20,10 @@
 // 1st value in each subsequent row must be > 1st value in previous row
 // The delay in the last row determines the maximum angular velocity.
 static unsigned short defaultAccelTable[][2] = {
-  {   5, 4000},
-  {   20,2000},
-  {  40, 640},
-  {  150,  640},
-  {  300,  640} 
+  {   5, 1000},
+  {  20, 800},
+  {  40, 600}
+  
   
  /*  original 
   {   20, 3000},
