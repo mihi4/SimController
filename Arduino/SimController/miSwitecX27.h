@@ -7,8 +7,8 @@
  *  All text above must be included in any redistribution.
  */
 
-#ifndef SwitecX25_h
-#define SwitecX25_h
+#ifndef miSwitecX25_h
+#define miSwitecX25_h
 #include <Arduino.h>
 
 class SwitecX25
