@@ -74,7 +74,7 @@ f16var* vars[] = {
   ,  new f16varS(PFDLINE4, MODDED, 255, 0, "                         " )
   ,  new f16varS(PFDLINE5, MODDED, 255, 0, "                         " )
   ,  new f16varI(EPUFUEL, MODX27, 0, 0, 0)
- // ,  new f16varI(CABINPRESS, MODX27, 1, 0, 0) 
+  ,  new f16varI(CABINPRESS, MODX27, 1, 0, 0) 
 };
 const char varCount = sizeof(vars)/sizeof(vars[0]);
 

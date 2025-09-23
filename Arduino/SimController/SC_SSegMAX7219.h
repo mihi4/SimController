@@ -24,7 +24,7 @@ void SetupMax7219()
   for (byte x=0;x<max7219anz;x++)
   {
     Max7219_display[x].shutdown(0,false);
-    Max7219_display[x].setIntensity(0,MAX_BRIGHTNESS);
+    Max7219_display[x].setIntensity(0,0); 
     Max7219_display[x].setDigit(0,0,8,false);
     Max7219_display[x].setDigit(0,1,8,false);
     Max7219_display[x].setDigit(0,2,8,false);
@@ -39,7 +39,7 @@ void SetupMax7219()
   for (byte x=0;x<max7219anz;x++)
   {
     Max7219_display[x].shutdown(0,false);
-    Max7219_display[x].setIntensity(0,MAX_BRIGHTNESS);
+    Max7219_display[x].setIntensity(0,0); 
     Max7219_display[x].setDigit(0,0,0,false);
     Max7219_display[x].setDigit(0,1,1,false);
     Max7219_display[x].setDigit(0,2,2,false);
@@ -92,7 +92,8 @@ void UpdateMAX7219(byte p)
   char digitLength = strlen(digits);
   
   char startPos = 5 - digitLength;
-  if (startPos>0) Max7219_display[vars[p]->modIndex].setChar(0,0,' ',0); // remove leading number from display, if less than 10000 lbs remaining
+  Max7219_display[vars[p]->modIndex].setIntensity(0,0); 
+  if (startPos>0) Max7219_display[vars[p]->modIndex].setChar(0,0,' ',0); // remove leading number from display, if less than 10000 lbs remaining  
   for (int i=0; i<digitLength; i++) {    
     Max7219_display[vars[p]->modIndex].setChar(0,i+startPos,digits[i],0);
   }

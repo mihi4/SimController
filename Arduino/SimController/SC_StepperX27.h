@@ -7,7 +7,8 @@
 //ref4= not used
 //ref5= not used
 
-#include "miSwitecX27.h"
+//#include "miSwitecX27.h"
+#include <SwitecX25.h>
 
 typedef struct
 {
@@ -24,8 +25,8 @@ unsigned long lastUpdateX27=0;
 StepperdataX27 stepperdataX27[] =
 {
   //  {PIN1 PIN2 PIN3 PIN4}    arc    maxArc    invert   last
-    { {  23,   22,   25,   24   }, 315*3 , 627, false,    0   }  // EPU FUEL// { {  22,   23,   24,   25   }, 315*3 , false,    0   },  // EPU FUEL
-    //,{ {  27,   26,   29,   28   }, 315*3 , 315*3, false,    0   }  // CABIN PRESS // { {  28,   29,   30,   31   }, 315*3 , false,    0   }  // CABIN PRESS 
+    { {  23,   22,   25,   24   }, 315*3 , 630, false,    0   }  // EPU FUEL// { {  22,   23,   24,   25   }, 315*3 , false,    0   },  // EPU FUEL
+   ,{ {  27,   26,   29,   28   }, 315*3 , 900, false,    0   }  // CABIN PRESS // { {  28,   29,   30,   31   }, 315*3 , false,    0   }  // CABIN PRESS 
 };
 
 
@@ -42,22 +43,18 @@ void StepperX27_Zeroize(bool m)
   for (byte motor=0;motor<stepperzahlX27;motor++)
   {
     stepperX27[motor].zero();
-    
-    uint16_t newStepperPos=map(stepperdataX27[motor].maxArc, 0, 65535,0, stepperdataX27[motor].maxArc);
-    stepperX27[motor].setPosition(newStepperPos);
-    
+ 
+    stepperX27[motor].setPosition(stepperdataX27[motor].maxArc);   
     stepperX27[motor].updateBlocking();
-    
-    newStepperPos=map(1, 0, 65535,0, stepperdataX27[motor].maxArc);
-    stepperX27[motor].setPosition(newStepperPos);    
-    
+    delay(200);    
+    stepperX27[motor].setPosition(0);        
     stepperX27[motor].updateBlocking();
-    
+    delay(200);
     //bring Steppers back down to 0
     if (stepperdataX27[motor].invert) 
       stepperX27[motor].setPosition(stepperdataX27[motor].arc-1);
     else
-      stepperX27[motor].setPosition(1);
+      stepperX27[motor].setPosition(0);
     
     stepperX27[motor].updateBlocking();
   }
