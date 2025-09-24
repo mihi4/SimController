@@ -63,7 +63,7 @@ Byte mismatch error, bytes sent does not match var datatype
 #define MODLCD        20
 #define MODMAX7219    30
 #define MODTM1637     31
-#define MODHSP253X    35
+#define MODHDSP253X   35
 #define MODSERVO      40
 #define MODSERVOPWM   41
 #define MODSTEPBYJ    50
