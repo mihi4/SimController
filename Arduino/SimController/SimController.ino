@@ -131,6 +131,55 @@ unsigned long gap = 0;
  #ifdef StepperX27
   #include "SC_StepperX27.h"    
  #endif
+//Steppermotor ControllerBoard settings
+#ifdef StepperVID                   
+  #include "SC_StepperVID.h"
+#endif  
+
+ //7Segment settings TM1637 tube
+#ifdef SSegTM1637                            
+  #include "SC_SSegTM1637.h"
+#endif  
+//PWM Shield for Servos settings
+#ifdef ServoPWM                       
+  #include "SC_ServoPWMShield.h"               
+#endif  
+//Steppermotor settings
+#ifdef StepperBYJ                  
+  #include "SC_Stepper28BYJ48.h"
+#endif                                
+
+//Compass setting
+#ifdef CompassX27                  
+  #include "SC_CompassX27.h"
+#endif  
+
+//Altimeter setting
+#ifdef AltimeterX27                  
+  #include "SC_AltimeterX27.h"
+  #include "AltimeterInternal.h"
+#endif  
+//motor poti settings
+#ifdef MotorPoti 
+  #include "SC_MotorPoti.h"
+#endif 
+#ifdef OLED
+  #include "SC_OLED.h"
+#endif
+#ifdef SpeedBrake                             
+  #include "SC_SBI.h"
+#endif
+#ifdef FuelFlowIndicator
+  #include "SC_FF.h"
+#endif
+
+//rotary encoders
+#ifdef RotEncoder               
+  #include "SC_Encoder.h"
+#endif  
+
+
+ 
 
 //////////////////////////////
 // function imlementations
