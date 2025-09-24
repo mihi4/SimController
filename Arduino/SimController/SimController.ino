@@ -280,30 +280,6 @@ void fastUpdate()
 
 void outputVars() {
 	
-/* 	#ifdef DED_PFL  
-  if (millis() > lastDEDUpdate + DEDUPATEINTERVALL) {
-    UpdateDED();  
-    lastDEDUpdate = millis();
-  }  
-  #endif
-
- */
-	//for (int i=0;i<varCount;i++) {
-    /*SERIALCOM.print("var ");SERIALCOM.print(i, DEC);SERIALCOM.print(" type ");SERIALCOM.print(vars[i]->type, DEC);SERIALCOM.print(" value: ");
-    switch (vars[i]->type) {  
-      case f16var::INT:  
-          SERIALCOM.println(vars[i]->value.valI);  
-          break;  
-      case f16var::CHAR:  
-          SERIALCOM.println(vars[i]->value.valC);  
-          break;  
-      case f16var::STRING:  
-          SERIALCOM.println(*vars[i]->value.valString);  
-          break;  
-			case f16var::LONG:  
-          SERIALCOM.println(vars[i]->value.valL);  
-          break;  
-    } */
   int i = lastParsedVar;  
   switch (vars[i]->module) {
     #ifdef LED_MM5451
@@ -334,9 +310,67 @@ void outputVars() {
       }  
       break;
     #endif
+    #ifdef SSegTM1637
+    case MODTM1637:   //7-Segment display TM1637
+      UpdateTM1637(i);
+      break;
+    #endif
+    #ifdef ServoPWM  
+      case MODSERVOPWM: //Servo on PWM Shield
+        UpdateServoPWM(i);
+        break;
+    #endif    
+    #ifdef StepperBYJ 
+      case MODSTEPBYJ: //Stepper Motor
+        UpdateStepperBYJ(i);
+        break;
+    #endif 
+    #ifdef HDSP253X 
+      case MODHDSP253X: //Stepper Motor
+        UpdateHDSP253X(i);
+        break;
+    #endif 
+    #ifdef StepperVID
+      case MODX27VID: //one to four Servos on a VID6606 board
+        UpdateStepperVID(i);
+        break;
+    #endif
+    #ifdef CompassX27
+      case MODCOMPASS: //compass driven by X-class stepper motor
+        UpdateCompassX27(i);
+        break;
+    #endif	  
+	  #ifdef AltimeterX27
+      case MODALTIMETER: //altimeter needle driven by X-class stepper motor
+        UpdateAltimeterX27(i);
+        break;
+    #endif
+    #ifdef MotorPoti
+      case MODMOTORPOTI: //MotorPoti
+        UpdateMotorPoti(i);
+        break;      
+    #endif
 
-    //}
-
+    #ifdef OLED
+      case MODOLED: //generic OLED
+        UpdateOLED(i);
+        break;      
+    #endif
+    
+    #ifdef SpeedBrake
+      case MODSPEEDBRK: //Speedbrake OLED
+        UpdateSBI(i);
+        break;      
+    #endif
+    
+    #ifdef FuelFlowIndicator
+      case MODFFI: //FFI OLED
+        UpdateFFI(i);
+        break;      
+    #endif
+    
+    
+    
   }
   varsChanged = false;
       
