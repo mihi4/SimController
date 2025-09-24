@@ -58,14 +58,26 @@ Byte mismatch error, bytes sent does not match var datatype
 
 // defines for the hardware modules, keep same as in BMSAIT
 #define MODNONE       255
-#define MODSERVO      40
+
 #define MODMM5451     13
+#define MODLCD        20
 #define MODMAX7219    30
-#define MODTM1637     30
-#define MODDED        79
+#define MODTM1637     31
+#define MODHSP253X    35
+#define MODSERVO      40
+#define MODSERVOPWM   41
+#define MODSTEPBYJ    50
 #define MODX27        51
 #define MODX27VID     52
-#define MODFFI        72      
+#define MODCOMPASS    53
+#define MODALTIMETER  54
+#define MODMOTORPOTI  60
+#define MODOLED       70
+#define MODSPEEDBRK   71
+#define MODFFI        72
+#define MODDED        79
+
+
 
 #define FLOATMULT    100  // amount to multiply float value with to get smoother data
 
