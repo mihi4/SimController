@@ -24,28 +24,24 @@ struct f16var {
     STRING =  3  
   } type; 
 
-	 // Union für verschiedene Datentypen  
+	 // Union for different data types
     union Value {  
       unsigned char valC;
       unsigned int valI;  
       unsigned long valL;  
       String* valString;  
 
-      /*Value() {} // Standardkonstruktor  
-      ~Value() {} // Destruktor (wichtig für String)  */
     } value;
 	
-    // Konstruktor  
+    // constructor
     f16var(unsigned char number, unsigned char module, unsigned char modIndex, unsigned char valIndex, Type type) : number(number), module(module), modIndex(modIndex), valIndex(valIndex), type(type) {  }
       
-    // Virtuelle Methode zur Ausgabe  
-    //virtual void printValue() = 0; // Reine virtuelle Methode  
+    
 }; 
 
 struct f16varC : public f16var {
 //  unsigned char value;
-  
-  //f16varC(unsigned char number, unsigned char module, unsigned char index, unsigned char type, unsigned char value) : f16var(number, module, index, type), value(value) {}
+    
   f16varC(unsigned char number, unsigned char module, unsigned char modIndex, unsigned char valIndex, unsigned char value) : f16var(number, module, modIndex, valIndex, CHAR) {
 	  this->value.valC = value;
 	}
@@ -73,9 +69,9 @@ struct f16varS : public f16var {
 	  this->value.valString = new String(value);
   }
   
-      // Destruktor  
+      // Destructor  
     ~f16varS() {  
-        delete value.valString; // Speicher freigeben  
+        delete value.valString; 
     }  
 };
 
@@ -205,6 +201,44 @@ void setupModules() {
   #ifdef DED_PFL
     SetupDED();
   #endif
+  #ifdef LCD                            //LCD setup begin
+   SetupLCD();
+  #endif                                //LCD setup end
+  #ifdef SSegTM1637                     //7-segment-display TM1637 setup begin
+   SetupTM1637();
+  #endif                                //7-segment-display TM1637 setup end
+  #ifdef ServoPWM                       //servo PWM shield setup begin
+    SetupServoPWM();          
+  #endif                                //servo PWM shield setup end 
+  #ifdef StepperBYJ                     //stepper setup begin
+   //SetupStepperBYJ();
+  #endif                                //stepper setup end
+  #ifdef StepperVID                     //stepper on controller board setup begin
+   SetupStepperVID();
+  #endif                                //stepper setup end
+  #ifdef CompassX27                     //Compass setup start
+   SetupCompassX27();
+  #endif                                //Compass setup end
+  #ifdef AltimeterX27                   //Altimeter setup start
+   SetupAltimeterX27();
+   SetupAltimeterKnob();
+  #endif                                //Altimeter setup end
+  #ifdef MotorPoti                      //MotorPoti setup begin
+    SetupMotorPoti();
+  #endif                                //MotorPoti setup end
+  #ifdef OLED                           //OLED setup begin
+    SetupOLED();
+  #endif                                //OLED setup end
+  #ifdef SpeedBrake                     //SBI setup begin
+    SetupSBI();
+  #endif                                //SBI setup end
+  #ifdef FuelFlowIndicator              //FFI setup begin
+   SetupFFI();
+  #endif                                //FFI setup end
+  #ifdef RotEncoder                     //Rotary encoder setup begin
+   SetupEncoder();
+  #endif                                //Rotary encoder setup end
+  
 }
 
 ///Call for another update of the motors to allow for fast, fluent movement
@@ -308,6 +342,19 @@ void outputVars() {
       
 }
 
+void UpdateInput(bool all)
+{
+  
+  #ifdef RotEncoder              
+   CheckEncoder();            //check encoders and initiate commands if they were moved
+  #endif
+  
+  #ifdef AltimeterX27
+	UpdateAltimeterKnob();
+  #endif
+ 
+}
+
 //////////////////////////////
 // setup and loop
 //////////////////////////////
@@ -334,7 +381,7 @@ void loop() {
   fastUpdate();
   if (varsChanged) outputVars();	
   fastUpdate();
-
+  UpdateInput(false);
   delay(5);
   
 }
