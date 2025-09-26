@@ -64,8 +64,8 @@ f16var* vars[] = {
     new f16varC(SIMSTATES, MODNONE, 0, 0, 0)
   ,  new f16varC(POWERSTATES, MODNONE, 0, 0, 0)   // First 2 should always be configured in every module    
   ,  new f16varI(ALTPOINTER, MODALTIMETER, 0, 0, 0)
-  ,  new f16varS(ALTCAL, MODMAX7219, 0, 0, "    ")
-  ,  new f16varS(ALTTHOUSANDS, MODMAX7219, 0, 0, "   ")
+  ,  new f16varS(ALTCAL, MODMAX7219, 0, 3, "    ")
+  ,  new f16varS(ALTTHOUSANDS, MODMAX7219, 0, 1, "   ")
   ,  new f16varI(INSTRUMENTBITS, MODSERVO, 0, 0, 0)
   ,  new f16varI(KIAS, MODSERVO, 1, 0, 0)  
   ,  new f16varI(MACH, MODSERVO, 2, 0, 0)
