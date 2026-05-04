@@ -1,0 +1,63 @@
+Wichtige Anpassungen und To-Dos:
+
+
+
+
+
+DCS-BIOS Control-Namen: Die oben verwendeten Strings sind Platzhalter/typische Bezeichner. Prüfe deine DCS-BIOS-Definitionen für die F-16C (Viper) und ersetze sie.
+
+
+
+Hub-Protokoll: Der Parser parseHubMessage ist minimal. Der DCS-BIOS Hub kann JSON, Zeilen im „key=value“-Stil oder ein eigenes Protokoll liefern, je nach Plugin/Version. Passe den Parser an.
+
+
+
+Skalierung: In deinem F16Data.h hast du Zielbereiche und Kommentare:
+
+
+
+
+
+fuelFWD/AFT: 0..4200
+
+
+
+hydA/B: 0..4000
+
+
+
+epuFuel/cabinPress: 0..65535 für Zeigerpositionen
+
+
+
+oilPressure/nozzlePos: 0..10000/65535; du nutzt in BMS die map(FLOATMULT) auf 0..65535 – hier entsprechend anpassen.
+
+
+
+rpm/ftit/kias/mach/vvi/aoa: skaliere analog zu BMSReader, nutze ggf. deine miUtility::TrimGauge, falls verfügbar.
+
+
+
+Blinklogik: In BMS nutzt du FlightData2::BlinkBits mit definierten Intervallen. In DCS-BIOS gibt es meist direkte Lampenbits ohne separate Blink-Bits. Ich habe die Blinkfunktion optional gelassen und exemplarisch einige Lichter blinken lassen. Falls DCS-BIOS dir Blinkinfos liefert, mappe sie auf blinkIdx.
+
+Wie du vorgehst:
+
+
+
+
+
+Liste der benötigten F-16C DCS-BIOS Exporte organisieren (DED/PFL, Fuel, Hyd, Caution, InstPanel, LeftConsole, UHF/IFF/TACAN, CMDS, ADI).
+
+
+
+Control-Namen im DcsKeys struct ersetzen.
+
+
+
+Parser an Hub/Serial anpassen.
+
+
+
+Skalierung/Formatierung testen, bis deine Hardware-Ausgabe mit DCS übereinstimmt.
+
+Wenn du mir sagst, ob du den DCS-BIOS „Serial“-Weg (COM-Textprotokoll) oder den „Hub“-Weg nutzt und mir ein paar Beispielzeilen deines Datenstroms gibst, passe ich dir den Parser und die Schlüssel exakt an und ergänze dir die fehlenden Mappings.
