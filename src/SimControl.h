@@ -2,7 +2,11 @@
 
 #include <iostream>
 #include <vector>
+#include <SFML/Graphics.hpp>
+
+#define NOMINMAX    
 #include <Windows.h>
+
 
 #include "lib/miUtils.h"
 

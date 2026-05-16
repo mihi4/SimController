@@ -87,9 +87,24 @@ int main(int argc, char* argv[])
     
     bool simConnected = false;
 
+    sf::RenderWindow appW(sf::VideoMode(800, 600), "SimController");
+    sf::RenderWindow hsiW(sf::VideoMode(300, 300), "eHSI", sf::Style::None);    
+    sf::Font font;
+    if (!font.loadFromFile("fonts/FalconDED.ttf")) std::cout << "error loading font\n";
+    if (appW.isOpen()) {
+        appW.clear(sf::Color::Red);
+        appW.setPosition(sf::Vector2i(2500, 1200));
+        appW.display();
+    }
+    if (hsiW.isOpen()) {
+        hsiW.clear(sf::Color::Yellow);
+        hsiW.setPosition(sf::Vector2i(2500, 200));
+        hsiW.display();
+    }
+
     std::cout << "------ Setting up Controllers ------\n";    
     
-    ControllerHandler cHandler(CONFIGFILE);  // later read config from file, maybe
+    ControllerHandler cHandler(CONFIGFILE);  
 
     cHandler.setupControllers();
        
@@ -103,7 +118,9 @@ int main(int argc, char* argv[])
                connecting and init
     
     *****************************************/    
+    
     while(true) {
+        break; // FIXXXME remove after sfml testing
         if (!simConnected) {
             std::cout << "connecting to sim...\r";
             if (reader->connectToSim()) {
@@ -116,11 +133,35 @@ int main(int argc, char* argv[])
         }
         if ((GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)) { break; }
     }   
+
+    std::cout << "running mainloop window\n";
     /****************************************
      
                     main loop
     
     *****************************************/        
+    
+    
+    while (appW.isOpen())
+    {
+        sf::Event event;
+        while (appW.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)  
+                //if (hsiW.isOpen()) hsiW.close();
+                appW.close();
+        }
+        
+        hsiW.clear(sf::Color::Black);
+        appW.clear(sf::Color::Black);
+        appW.display();
+        hsiW.display();
+    }
+
+    return 0;
+    
+    
+    
     char buf[100];
     while (true) {           
         if (reader->connectToSim()) {                        
