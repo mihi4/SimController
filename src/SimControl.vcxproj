@@ -157,7 +157,7 @@
     <ClInclude Include="SimControl.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="simcontrol.conf" />
+    <None Include="controller.conf" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="images\ehsi.png" />

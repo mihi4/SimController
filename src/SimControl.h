@@ -20,7 +20,7 @@
 #define DCS 2 // reader not implemented yet
 #define MSFS 3 // reader not implemented yet
 
-#define CONFIGFILE "simcontrol.conf"
+#define CTRLCONFIGFILE "controller.conf"
 
 bool checkParameter(int argNum);
 char parseSimParameter(char* argv[]);

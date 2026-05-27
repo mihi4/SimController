@@ -28,6 +28,7 @@ char parseSimParameter(char* argv[]) {
     }
 
 }
+
  
 std::unique_ptr<DataReader> createDataReader(short selectedSim) {
     switch (selectedSim) {
@@ -87,24 +88,86 @@ int main(int argc, char* argv[])
     
     bool simConnected = false;
 
-    sf::RenderWindow appW(sf::VideoMode(800, 600), "SimController");
-    sf::RenderWindow hsiW(sf::VideoMode(300, 300), "eHSI", sf::Style::None);    
+    /**********************************
+        create SFML data
+    **********************************/
+
+    sf::RenderWindow appW(sf::VideoMode(250, 30), "SimController");
+    sf::RenderWindow hsiW(sf::VideoMode(600, 600), "eHSI", sf::Style::None);    
+    hsiW.setFramerateLimit(60);
     sf::Font font;
+    sf::Texture texture;
+
+    int hsiWinSize = 600;
+    float hsiWinFactor = (float)hsiWinSize / 1024.0;
+
+    std::cout << "factor is " << hsiWinFactor << "\n";
     if (!font.loadFromFile("fonts/FalconDED.ttf")) std::cout << "error loading font\n";
+    if (!texture.loadFromFile("images/ehsi.png")) std::cout << "error loading image\n";
+
+    sf::Sprite sprBackground;  // 0,0, 1024x1024
+    sprBackground.setTexture(texture);
+    sprBackground.setTextureRect(sf::IntRect(0, 0, 1024, 1024));
+    sprBackground.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
+    sprBackground.setPosition(sf::Vector2f(0.0, 0.0));
+
+    sf::Sprite sprCompass; //0,1024, 1024x1024
+    sprCompass.setTexture(texture);
+    sprCompass.setTextureRect(sf::IntRect(0, 1024, 1024, 1024));
+    sprCompass.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
+    sprCompass.setPosition(sf::Vector2f(300.0, 300.0));
+    sprCompass.setOrigin(512.0, 512.0);
+    
+    sf::Sprite sprNeedle; // 1024,0,1024,1024
+    sprNeedle.setTexture(texture);
+    sprNeedle.setTextureRect(sf::IntRect(1024, 0, 1024, 1024));
+    sprNeedle.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
+    sprNeedle.setPosition(sf::Vector2f(300.0, 300.0));
+    sprNeedle.setOrigin(512.0, 512.0);
+
+    sf::Text quitText;
+    quitText.setFont(font);
+    quitText.setString("CLOSE ME TO QUIT");
+    quitText.setCharacterSize(20); // in pixels, not points!
+    quitText.setFillColor(sf::Color::White);
+
+    sf::Text hsiModeTextRight;
+    hsiModeTextRight.setFont(font);
+    hsiModeTextRight.setCharacterSize(35); // in pixels, not points!
+    hsiModeTextRight.setString("TCN");  
+    hsiModeTextRight.setFillColor(sf::Color::White);
+    hsiModeTextRight.setPosition(sf::Vector2f(400.0, 550.0));
+
+    sf::Text hsiModeTextLeft;
+    hsiModeTextLeft.setFont(font);
+    hsiModeTextLeft.setCharacterSize(35); // in pixels, not points!
+    hsiModeTextLeft.setString("POS");
+    hsiModeTextLeft.setFillColor(sf::Color::White);
+    hsiModeTextLeft.setPosition(sf::Vector2f(125.0, 550.0));
+
+
     if (appW.isOpen()) {
-        appW.clear(sf::Color::Red);
-        appW.setPosition(sf::Vector2i(2500, 1200));
+        appW.clear(sf::Color::Black);
+        appW.setPosition(sf::Vector2i(1500, 1000));
+        appW.draw(quitText);
         appW.display();
     }
     if (hsiW.isOpen()) {
-        hsiW.clear(sf::Color::Yellow);
-        hsiW.setPosition(sf::Vector2i(2500, 200));
+        hsiW.clear(sf::Color::Black);
+        hsiW.setPosition(sf::Vector2i(1500, 400));
         hsiW.display();
     }
+    /****************************************
+
+             Controller Handling
+
+    *****************************************/
+
+
 
     std::cout << "------ Setting up Controllers ------\n";    
     
-    ControllerHandler cHandler(CONFIGFILE);  
+    ControllerHandler cHandler(CTRLCONFIGFILE);  
 
     cHandler.setupControllers();
        
@@ -141,7 +204,7 @@ int main(int argc, char* argv[])
     
     *****************************************/        
     
-    
+    /*
     while (appW.isOpen())
     {
         sf::Event event;
@@ -159,11 +222,32 @@ int main(int argc, char* argv[])
     }
 
     return 0;
-    
+    */
     
     
     char buf[100];
-    while (true) {           
+    float rotation = 0.0;
+    float needleRotation = 0.0;
+    int rotFactor = 1;
+    // while (true) {           
+    while (appW.isOpen()) {
+
+        sf::Event event;
+        while (appW.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)                
+                appW.close();
+
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.scancode == sf::Keyboard::Scan::A) { rotation++; needleRotation++; }
+                if (event.key.scancode == sf::Keyboard::Scan::S) { rotation--; needleRotation--; }
+                if (event.key.scancode == sf::Keyboard::Scan::Q) { needleRotation++; }
+                if (event.key.scancode == sf::Keyboard::Scan::W) { needleRotation--; }
+            }
+        }
+
+        
+
         if (reader->connectToSim()) {                        
             reader->readF16Data(&data);                              
             //std::bitset<32> y(data.cautionPanelLights);
@@ -188,10 +272,24 @@ int main(int argc, char* argv[])
         // check for quit keycommand LCTRL+LSHIFT+LALT+BACKSPACE
         if ((GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)) { break; }
         
+        
+        hsiW.clear(sf::Color::Black);        
+        hsiW.draw(sprBackground);                
+        sprCompass.setRotation(rotation);
+        hsiW.draw(sprCompass);  
+        sprNeedle.setRotation(needleRotation);
+        hsiW.draw(sprNeedle);
+        hsiW.draw(hsiModeTextLeft);
+        hsiW.draw(hsiModeTextRight);
+        
+        hsiW.display();
+        
+
         Sleep(50);        
     }
 
     std::cout << "\n\nquitting!\n";   
+    //if (hsiW.isOpen()) { hsiW.close(); }
 
     return 0;
 }

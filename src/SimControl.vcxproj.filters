@@ -76,7 +76,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="simcontrol.conf">
+    <None Include="controller.conf">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

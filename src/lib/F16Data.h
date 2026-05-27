@@ -142,7 +142,7 @@ public:
 	short vvi = 0; // original zDot is float value, ft/sec -6000 to 6000
 	short aoa = 0;	// original alpha is float value degrees, multiply with 100(?)
 
-	// all hsi values are floats, multiply at least by 100
+	// all hsi values are floats, multiply / divide by FLOATMULT
 	short hsiCourseDeviation = 0;
 	short hsiDesiredCourse = 0;
 	short hsiDistanceToBeacon = 0;
