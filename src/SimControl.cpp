@@ -93,37 +93,8 @@ int main(int argc, char* argv[])
     **********************************/
 
     sf::RenderWindow appW(sf::VideoMode(250, 30), "SimController");
-    sf::RenderWindow hsiW(sf::VideoMode(600, 600), "eHSI", sf::Style::None);    
-    hsiW.setFramerateLimit(60);
     sf::Font font;
-    sf::Texture texture;
-
-    int hsiWinSize = 600;
-    float hsiWinFactor = (float)hsiWinSize / 1024.0;
-
-    std::cout << "factor is " << hsiWinFactor << "\n";
     if (!font.loadFromFile("fonts/FalconDED.ttf")) std::cout << "error loading font\n";
-    if (!texture.loadFromFile("images/ehsi.png")) std::cout << "error loading image\n";
-
-    sf::Sprite sprBackground;  // 0,0, 1024x1024
-    sprBackground.setTexture(texture);
-    sprBackground.setTextureRect(sf::IntRect(0, 0, 1024, 1024));
-    sprBackground.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
-    sprBackground.setPosition(sf::Vector2f(0.0, 0.0));
-
-    sf::Sprite sprCompass; //0,1024, 1024x1024
-    sprCompass.setTexture(texture);
-    sprCompass.setTextureRect(sf::IntRect(0, 1024, 1024, 1024));
-    sprCompass.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
-    sprCompass.setPosition(sf::Vector2f(300.0, 300.0));
-    sprCompass.setOrigin(512.0, 512.0);
-    
-    sf::Sprite sprNeedle; // 1024,0,1024,1024
-    sprNeedle.setTexture(texture);
-    sprNeedle.setTextureRect(sf::IntRect(1024, 0, 1024, 1024));
-    sprNeedle.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
-    sprNeedle.setPosition(sf::Vector2f(300.0, 300.0));
-    sprNeedle.setOrigin(512.0, 512.0);
 
     sf::Text quitText;
     quitText.setFont(font);
@@ -131,32 +102,15 @@ int main(int argc, char* argv[])
     quitText.setCharacterSize(20); // in pixels, not points!
     quitText.setFillColor(sf::Color::White);
 
-    sf::Text hsiModeTextRight;
-    hsiModeTextRight.setFont(font);
-    hsiModeTextRight.setCharacterSize(35); // in pixels, not points!
-    hsiModeTextRight.setString("TCN");  
-    hsiModeTextRight.setFillColor(sf::Color::White);
-    hsiModeTextRight.setPosition(sf::Vector2f(400.0, 550.0));
-
-    sf::Text hsiModeTextLeft;
-    hsiModeTextLeft.setFont(font);
-    hsiModeTextLeft.setCharacterSize(35); // in pixels, not points!
-    hsiModeTextLeft.setString("POS");
-    hsiModeTextLeft.setFillColor(sf::Color::White);
-    hsiModeTextLeft.setPosition(sf::Vector2f(125.0, 550.0));
-
-
     if (appW.isOpen()) {
         appW.clear(sf::Color::Black);
         appW.setPosition(sf::Vector2i(1500, 1000));
         appW.draw(quitText);
         appW.display();
     }
-    if (hsiW.isOpen()) {
-        hsiW.clear(sf::Color::Black);
-        hsiW.setPosition(sf::Vector2i(1500, 400));
-        hsiW.display();
-    }
+
+    eHSI hsi(600, 1400, 400);      
+
     /****************************************
 
              Controller Handling
@@ -203,33 +157,14 @@ int main(int argc, char* argv[])
                     main loop
     
     *****************************************/        
-    
-    /*
-    while (appW.isOpen())
-    {
-        sf::Event event;
-        while (appW.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)  
-                //if (hsiW.isOpen()) hsiW.close();
-                appW.close();
-        }
-        
-        hsiW.clear(sf::Color::Black);
-        appW.clear(sf::Color::Black);
-        appW.display();
-        hsiW.display();
-    }
-
-    return 0;
-    */
-    
-    
+            
+    data.hsiCurrentHeading = 0;
     char buf[100];
     float rotation = 0.0;
     float needleRotation = 0.0;
     int rotFactor = 1;
     // while (true) {           
+    std::cout << "curHeading: " << data.hsiCurrentHeading << std::endl;
     while (appW.isOpen()) {
 
         sf::Event event;
@@ -239,9 +174,22 @@ int main(int argc, char* argv[])
                 appW.close();
 
             if (event.type == sf::Event::KeyPressed) {
-                if (event.key.scancode == sf::Keyboard::Scan::A) { rotation++; needleRotation++; }
-                if (event.key.scancode == sf::Keyboard::Scan::S) { rotation--; needleRotation--; }
-                if (event.key.scancode == sf::Keyboard::Scan::Q) { needleRotation++; }
+                if (event.key.scancode == sf::Keyboard::Scan::A) { 
+                    if (data.hsiCurrentHeading < 100) data.hsiCurrentHeading = 36000;
+                    data.hsiCurrentHeading -= 100;
+                    std::cout << "curHeading: " << data.hsiCurrentHeading << std::endl;
+                }
+                if (event.key.scancode == sf::Keyboard::Scan::S) { data.hsiCurrentHeading+=100; std::cout << "curHeading: " << data.hsiCurrentHeading << std::endl;
+                }
+                if (event.key.scancode == sf::Keyboard::Scan::Q) { 
+                    if (hsi.isRunning()) {
+                        hsi.quit();
+                    }
+                    else {
+                        std::cout << "eHSI already closed!\n";
+                    }
+                    
+                }
                 if (event.key.scancode == sf::Keyboard::Scan::W) { needleRotation--; }
             }
         }
@@ -272,24 +220,12 @@ int main(int argc, char* argv[])
         // check for quit keycommand LCTRL+LSHIFT+LALT+BACKSPACE
         if ((GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)) { break; }
         
-        
-        hsiW.clear(sf::Color::Black);        
-        hsiW.draw(sprBackground);                
-        sprCompass.setRotation(rotation);
-        hsiW.draw(sprCompass);  
-        sprNeedle.setRotation(needleRotation);
-        hsiW.draw(sprNeedle);
-        hsiW.draw(hsiModeTextLeft);
-        hsiW.draw(hsiModeTextRight);
-        
-        hsiW.display();
-        
+        if (hsi.isRunning()) hsi.update(&data);
 
         Sleep(50);        
     }
 
     std::cout << "\n\nquitting!\n";   
-    //if (hsiW.isOpen()) { hsiW.close(); }
 
     return 0;
 }

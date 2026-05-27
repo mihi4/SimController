@@ -138,6 +138,7 @@
     <ClCompile Include="classes\CommsHandler.cpp" />
     <ClCompile Include="classes\Controller.cpp" />
     <ClCompile Include="classes\ControllerHandler.cpp" />
+    <ClCompile Include="classes\eHSI.cpp" />
     <ClCompile Include="lib\ArduSerial.cpp" />
     <ClCompile Include="SimControl.cpp" />
   </ItemGroup>
@@ -149,6 +150,7 @@
     <ClInclude Include="classes\ControllerHandler.h" />
     <ClInclude Include="classes\DataReader.h" />
     <ClInclude Include="classes\DCSReader.h" />
+    <ClInclude Include="classes\eHSI.h" />
     <ClInclude Include="classes\MSFSReader.h" />
     <ClInclude Include="lib\ArduSerial.h" />
     <ClInclude Include="lib\F16Data.h" />

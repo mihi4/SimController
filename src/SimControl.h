@@ -13,7 +13,7 @@
 #include "classes/BMSReader.h"
 #include "classes/DCSReader.h"
 #include "classes/MSFSReader.h"
-
+#include "classes/eHSI.h"
 #include "classes/ControllerHandler.h"
 
 #define BMS 1
