@@ -344,6 +344,19 @@ void BMSReader::readF16Data(F16Data* data) {
     data->adiIlsVerPos = flightData->AdiIlsVerPos * FLOATMULT;
     data->adiSideslip = flightData2->sideSlipdeg * FLOATMULT;
 
+    // HSI values
+    data->hsiAirbaseX = flightData->airbaseX * FLOATMULT;
+    data->hsiAirbaseY = flightData->airbaseY * FLOATMULT;
+    data->hsiBearingToBeacon = flightData->bearingToBeacon * FLOATMULT;
+    data->hsiCourseDeviation = flightData->courseDeviation * FLOATMULT;
+    data->hsiCurrentHeading = flightData->currentHeading * FLOATMULT;
+    data->hsiDesiredCourse = flightData->desiredCourse * FLOATMULT;
+    data->hsiDesiredHeading = flightData->desiredHeading * FLOATMULT;
+    data->hsiDeviationLimit = flightData->deviationLimit * FLOATMULT;
+    data->hsiDistanceToBeacon = flightData->distanceToBeacon * FLOATMULT;
+    data->hsiLocalizerCourse = flightData->localizerCourse * FLOATMULT;
+    
+
     // instrument bits
     if (flightData2->IsSetAlt(flightData2->PneuFlag)) setDatabit(data->instrumentBits, INSTPNEU); else clearDatabit(data->instrumentBits, INSTPNEU);
     if (flightData->IsSetHsi(flightData->VVI)) setDatabit(data->instrumentBits, INSTVVIFLAG); else clearDatabit(data->instrumentBits, INSTVVIFLAG);

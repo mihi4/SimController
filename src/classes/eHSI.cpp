@@ -61,16 +61,15 @@ eHSI::eHSI(int size, int xPos, int yPos)
     sprToFrom.setOrigin(512.0, 512.0);
 
     sprCDI.setTexture(texture);
-    sprCDI.setTextureRect(sf::IntRect(1024, 0, 1024, 1024));
+    sprCDI.setTextureRect(sf::IntRect(1073, 1324, 16, 400));
     sprCDI.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
     sprCDI.setPosition(sf::Vector2f((size / 2), (size / 2)));
-    sprCDI.setOrigin(512.0, 512.0);
+    sprCDI.setOrigin(8.0, 200.0);
 
     dmeText.setFont(font);
     dmeText.setCharacterSize(45); // in pixels, not points!
     dmeText.setString("124");
-    dmeText.setFillColor(sf::Color::White);
-    
+    dmeText.setFillColor(sf::Color::White);    
     dmeText.setPosition(sf::Vector2f(10.0, -10.0));
     
     crsText.setFont(font);
@@ -130,11 +129,14 @@ void eHSI::update(F16Data* data)
     sprHeadingTape.setRotation(currentHeadingRotation);
     hsiW.draw(sprHeadingTape);
     sprCourseArrow.setRotation(desiredCrsRotation);
+    sprCDI.setRotation(desiredCrsRotation);
     hsiW.draw(sprCourseArrow);
+    hsiW.draw(sprCDI);
     sprHeadingBug.setRotation(desiredHeadingRotation);
     hsiW.draw(sprHeadingBug);
     sprBearingPointer.setRotation(bearingPointerRotation);
     hsiW.draw(sprBearingPointer);
+    
 
     hsiW.draw(sprOwnShip);
     hsiW.draw(hsiModeTextLeft);
