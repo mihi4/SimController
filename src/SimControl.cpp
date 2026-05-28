@@ -163,8 +163,7 @@ int main(int argc, char* argv[])
     float rotation = 0.0;
     float needleRotation = 0.0;
     int rotFactor = 1;
-    // while (true) {           
-    std::cout << "curHeading: " << data.hsiCurrentHeading << std::endl;
+    // while (true) {               
     while (appW.isOpen()) {
 
         sf::Event event;
@@ -191,8 +190,6 @@ int main(int argc, char* argv[])
                     data.hsiDesiredHeading += 100;
                     if (data.hsiDesiredHeading == 36000) data.hsiDesiredHeading = 0;
                 }
-
-
                 if (event.key.scancode == sf::Keyboard::Scan::Z) {
                     if (data.hsiDesiredCourse == 0) data.hsiDesiredCourse = 36000;
                     data.hsiDesiredCourse -= 100;                    
@@ -201,6 +198,11 @@ int main(int argc, char* argv[])
                     data.hsiDesiredCourse += 100;
                     if (data.hsiDesiredCourse == 36000) data.hsiDesiredCourse = 0;
                 }
+
+                if (event.key.scancode == sf::Keyboard::Scan::C) data.hsiCourseDeviation -= 5;
+                if (event.key.scancode == sf::Keyboard::Scan::V) data.hsiCourseDeviation += 5;
+
+                std::cout << "deviation: " << data.hsiCourseDeviation << " *** ";
                 std::cout << "current: " << data.hsiCurrentHeading << " *** ";
                 std::cout << "crs: " << data.hsiDesiredCourse << " *** ";
                 std::cout << "heading: " << data.hsiDesiredHeading << std::endl;

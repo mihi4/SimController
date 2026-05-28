@@ -5,6 +5,8 @@ eHSI::eHSI(int size, int xPos, int yPos)
 	hsiW.create(sf::VideoMode(size, size), "eHSI", sf::Style::None);   
     hsiW.setFramerateLimit(60);
 
+    winSize = size;
+
     if (!font.loadFromFile("fonts/FalconDED.ttf")) {
         std::cout << "error loading font\n"; 
         running = false;
@@ -119,16 +121,28 @@ bool eHSI::isRunning()
 
 void eHSI::update(F16Data* data)
 {
-    int currentHeadingRotation = (36000 - (data->hsiCurrentHeading)) / FLOATMULT;
-    int desiredCrsRotation = (36000 - (data->hsiCurrentHeading - data->hsiDesiredCourse)) / FLOATMULT;
-    int desiredHeadingRotation = (36000 - (data->hsiCurrentHeading - data->hsiDesiredHeading)) / FLOATMULT;  
-    int bearingPointerRotation = (36000 - (data->hsiCurrentHeading - data->hsiBearingToBeacon)) / FLOATMULT;
+    float currentHeadingRotation = 360.0 - (data->hsiCurrentHeading / FLOATMULT);
+    float desiredCrsRotation = (36000 - (data->hsiCurrentHeading - data->hsiDesiredCourse)) / FLOATMULT;
+    float desiredHeadingRotation = (36000 - (data->hsiCurrentHeading - data->hsiDesiredHeading)) / FLOATMULT;  
+    float bearingPointerRotation = (36000 - (data->hsiCurrentHeading - data->hsiBearingToBeacon)) / FLOATMULT;
+
+    float deviationXPos = winSize/2;  // sin! (winSize/2.0) + data->hsiCourseDeviation; // FIXXXME, calculate from real values
+    float deviationYPos = winSize/ 2;  // cos
+
+    hsiModeTextLeft.setString(std::to_string(currentHeadingRotation));
+    if (desiredCrsRotation < 90) {
+        deviationXPos = (winSize / 2.0) + (data->hsiCourseDeviation * sin(desiredCrsRotation));
+       
+        deviationXPos = (winSize / 2.0) + (data->hsiCourseDeviation * cos(desiredCrsRotation));
+    }
 
     hsiW.clear(sf::Color::Black);
     hsiW.draw(sprBackground);
     sprHeadingTape.setRotation(currentHeadingRotation);
     hsiW.draw(sprHeadingTape);
     sprCourseArrow.setRotation(desiredCrsRotation);
+        
+    sprCDI.setPosition(sf::Vector2f(deviationXPos, deviationYPos));
     sprCDI.setRotation(desiredCrsRotation);
     hsiW.draw(sprCourseArrow);
     hsiW.draw(sprCDI);

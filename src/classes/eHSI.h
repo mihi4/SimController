@@ -33,7 +33,8 @@ private:
 	sf::Text hsiModeTextLeft;
 	sf::Text dmeText;
 	sf::Text crsText;
-
+	
+	int winSize;
 
 	bool running = true;
 

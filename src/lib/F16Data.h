@@ -146,7 +146,7 @@ public:
 	short hsiCourseDeviation = 0;
 	unsigned short hsiDesiredCourse = 0;
 	short hsiDistanceToBeacon = 0;
-	short hsiBearingToBeacon = 0;
+	unsigned short hsiBearingToBeacon = 0;
 	unsigned short hsiCurrentHeading = 0;
 	unsigned short hsiDesiredHeading = 0;
 	short hsiDeviationLimit = 0;
