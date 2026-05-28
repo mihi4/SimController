@@ -35,34 +35,36 @@ eHSI::eHSI(int size, int xPos, int yPos)
     sprCourseArrow.setOrigin(512.0, 512.0);
     
     sprBearingPointer.setTexture(texture);
-    sprBearingPointer.setTextureRect(sf::IntRect(1024, 1024, 49, 1004));
+    sprBearingPointer.setTextureRect(sf::IntRect(1024, 1024, 49, 1024));
     sprBearingPointer.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
-    sprBearingPointer.setOrigin(25.0, 502.0);
+    sprBearingPointer.setOrigin(25.0, 512.0);
     sprBearingPointer.setPosition(sf::Vector2f((size / 2), (size / 2)));
-    
+
+    sprHeadingBug.setTexture(texture);
+    sprHeadingBug.setTextureRect(sf::IntRect(1196, 1024, 109, 950));
+    sprHeadingBug.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
+    sprHeadingBug.setPosition(sf::Vector2f((size / 2), (size / 2)));
+    sprHeadingBug.setOrigin(109 / 2.0, 475);
+
+
     sprOwnShip.setTexture(texture);
     sprOwnShip.setTextureRect(sf::IntRect(1105, 1024, 91, 91));
     sprOwnShip.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
     sprOwnShip.setOrigin(91 / 2.0, 91 / 2.0);
     sprOwnShip.setPosition(sf::Vector2f((size / 2), (size / 2)));
 
-    sprCDI.setTexture(texture);
-    sprCDI.setTextureRect(sf::IntRect(1024, 0, 1024, 1024));
-    sprCDI.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
-    sprCDI.setPosition(sf::Vector2f((size / 2), (size / 2)));
-    sprCDI.setOrigin(512.0, 512.0);
-
-    sprHeadingBug.setTexture(texture);
-    sprHeadingBug.setTextureRect(sf::IntRect(1024, 0, 1024, 1024));
-    sprHeadingBug.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
-    sprHeadingBug.setPosition(sf::Vector2f((size / 2), (size / 2)));
-    sprHeadingBug.setOrigin(512.0, 512.0);
-
+    
     sprToFrom.setTexture(texture);
     sprToFrom.setTextureRect(sf::IntRect(1024, 0, 1024, 1024));
     sprToFrom.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
     sprToFrom.setPosition(sf::Vector2f((size / 2), (size / 2)));
     sprToFrom.setOrigin(512.0, 512.0);
+
+    sprCDI.setTexture(texture);
+    sprCDI.setTextureRect(sf::IntRect(1024, 0, 1024, 1024));
+    sprCDI.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
+    sprCDI.setPosition(sf::Vector2f((size / 2), (size / 2)));
+    sprCDI.setOrigin(512.0, 512.0);
 
     dmeText.setFont(font);
     dmeText.setCharacterSize(45); // in pixels, not points!
@@ -118,11 +120,20 @@ bool eHSI::isRunning()
 
 void eHSI::update(F16Data* data)
 {
+    int currentHeadingRotation = (36000 - (data->hsiCurrentHeading)) / FLOATMULT;
+    int desiredCrsRotation = (36000 - (data->hsiCurrentHeading - data->hsiDesiredCourse)) / FLOATMULT;
+    int desiredHeadingRotation = (36000 - (data->hsiCurrentHeading - data->hsiDesiredHeading)) / FLOATMULT;  
+    int bearingPointerRotation = (36000 - (data->hsiCurrentHeading - data->hsiBearingToBeacon)) / FLOATMULT;
+
     hsiW.clear(sf::Color::Black);
     hsiW.draw(sprBackground);
-    sprHeadingTape.setRotation((data->hsiCurrentHeading) / FLOATMULT );
+    sprHeadingTape.setRotation(currentHeadingRotation);
     hsiW.draw(sprHeadingTape);
+    sprCourseArrow.setRotation(desiredCrsRotation);
     hsiW.draw(sprCourseArrow);
+    sprHeadingBug.setRotation(desiredHeadingRotation);
+    hsiW.draw(sprHeadingBug);
+    sprBearingPointer.setRotation(bearingPointerRotation);
     hsiW.draw(sprBearingPointer);
 
     hsiW.draw(sprOwnShip);

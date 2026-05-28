@@ -175,11 +175,36 @@ int main(int argc, char* argv[])
 
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.scancode == sf::Keyboard::Scan::A) { 
-                    if (data.hsiCurrentHeading < 100) data.hsiCurrentHeading = 36000;
-                    data.hsiCurrentHeading -= 100;
-                    std::cout << "curHeading: " << data.hsiCurrentHeading << std::endl;
+                    if (data.hsiCurrentHeading == 0) data.hsiCurrentHeading = 36000;
+                    data.hsiCurrentHeading -= 100;                    
                 }
-                if (event.key.scancode == sf::Keyboard::Scan::S)  data.hsiCurrentHeading+=100; 
+                if (event.key.scancode == sf::Keyboard::Scan::S) {
+                    data.hsiCurrentHeading += 100;
+                    if (data.hsiCurrentHeading == 36000) data.hsiCurrentHeading = 0;
+                }
+                
+                if (event.key.scancode == sf::Keyboard::Scan::D) {
+                    if (data.hsiDesiredHeading == 0) data.hsiDesiredHeading = 36000;
+                    data.hsiDesiredHeading -= 100;                    
+                }
+                if (event.key.scancode == sf::Keyboard::Scan::F) {                    
+                    data.hsiDesiredHeading += 100;
+                    if (data.hsiDesiredHeading == 36000) data.hsiDesiredHeading = 0;
+                }
+
+
+                if (event.key.scancode == sf::Keyboard::Scan::Z) {
+                    if (data.hsiDesiredCourse == 0) data.hsiDesiredCourse = 36000;
+                    data.hsiDesiredCourse -= 100;                    
+                }
+                if (event.key.scancode == sf::Keyboard::Scan::X) {                    
+                    data.hsiDesiredCourse += 100;
+                    if (data.hsiDesiredCourse == 36000) data.hsiDesiredCourse = 0;
+                }
+                std::cout << "current: " << data.hsiCurrentHeading << " *** ";
+                std::cout << "crs: " << data.hsiDesiredCourse << " *** ";
+                std::cout << "heading: " << data.hsiDesiredHeading << std::endl;
+                
                 if (event.key.scancode == sf::Keyboard::Scan::Q) { 
                     if (hsi.isRunning()) {
                         hsi.quit();
@@ -189,7 +214,7 @@ int main(int argc, char* argv[])
                     }
                     
                 }
-                if (event.key.scancode == sf::Keyboard::Scan::W) { needleRotation--; }
+                
             }
         }
 

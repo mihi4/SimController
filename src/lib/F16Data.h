@@ -144,7 +144,7 @@ public:
 
 	// all hsi values are floats, multiply / divide by FLOATMULT
 	short hsiCourseDeviation = 0;
-	short hsiDesiredCourse = 0;
+	unsigned short hsiDesiredCourse = 0;
 	short hsiDistanceToBeacon = 0;
 	short hsiBearingToBeacon = 0;
 	unsigned short hsiCurrentHeading = 0;
