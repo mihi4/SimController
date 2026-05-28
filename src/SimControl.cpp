@@ -179,8 +179,7 @@ int main(int argc, char* argv[])
                     data.hsiCurrentHeading -= 100;
                     std::cout << "curHeading: " << data.hsiCurrentHeading << std::endl;
                 }
-                if (event.key.scancode == sf::Keyboard::Scan::S) { data.hsiCurrentHeading+=100; std::cout << "curHeading: " << data.hsiCurrentHeading << std::endl;
-                }
+                if (event.key.scancode == sf::Keyboard::Scan::S)  data.hsiCurrentHeading+=100; 
                 if (event.key.scancode == sf::Keyboard::Scan::Q) { 
                     if (hsi.isRunning()) {
                         hsi.quit();
@@ -222,7 +221,7 @@ int main(int argc, char* argv[])
         
         if (hsi.isRunning()) hsi.update(&data);
 
-        Sleep(50);        
+        Sleep(10);        
     }
 
     std::cout << "\n\nquitting!\n";   

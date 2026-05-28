@@ -23,6 +23,12 @@ private:
 	sf::Sprite sprBackground;
 	sf::Sprite sprHeadingTape; //0,1024, 1024x1024
 	sf::Sprite sprCourseArrow; // 1024,0,1024,1024
+	sf::Sprite sprBearingPointer;
+	sf::Sprite sprCDI;
+	sf::Sprite sprHeadingBug;
+	sf::Sprite sprOwnShip;
+	sf::Sprite sprToFrom;
+	
 	sf::Text hsiModeTextRight;
 	sf::Text hsiModeTextLeft;
 	sf::Text dmeText;
