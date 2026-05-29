@@ -172,7 +172,7 @@ int main(int argc, char* argv[])
             if (event.type == sf::Event::Closed)                
                 appW.close();
 
-            if (event.type == sf::Event::KeyPressed) {
+            /*if (event.type == sf::Event::KeyPressed) {
                 if (event.key.scancode == sf::Keyboard::Scan::A) { 
                     if (data.hsiCurrentHeading == 0) data.hsiCurrentHeading = 36000;
                     data.hsiCurrentHeading -= 100;                    
@@ -223,7 +223,7 @@ int main(int argc, char* argv[])
                     
                 }
                 
-            }
+            } */
         }
 
         
@@ -238,6 +238,8 @@ int main(int argc, char* argv[])
                 sprintf_s(buf, "CP: 0x%8x bits: ", data.cautionPanelLights);            
                 std::cout << buf << y << std::endl;*/
                 cHandler.updateControllers(&data, &prevData);
+                if (hsi.isRunning()) hsi.update(&data);
+                
             }
             prevData = data;
             //std::cout << "mapping" << util.map(data.fuelFWD, 0, 42000, 0, 65534) << "\r";
@@ -245,15 +247,12 @@ int main(int argc, char* argv[])
             simConnected = false; // try again next run
         }        
         
-        //std::cout << "altPointer: " << data.altPointer << " slip: " << data.adiSideslip << " pitch: " << data.adiPitch << " roll: " << data.adiRoll << " ilsHor: " << data.adiIlsHorPos << " ilsVer: " << data.adiIlsVerPos << "\n";
-    
+        //std::cout << "altPointer: " << data.altPointer << " slip: " << data.adiSideslip << " pitch: " << data.adiPitch << " roll: " << data.adiRoll << " ilsHor: " << data.adiIlsHorPos << " ilsVer: " << data.adiIlsVerPos << "\n";        
         cHandler.readControllerComms();
         
         // check for quit keycommand LCTRL+LSHIFT+LALT+BACKSPACE
         if ((GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)) { break; }
         
-        if (hsi.isRunning()) hsi.update(&data);
-
         Sleep(10);        
     }
 

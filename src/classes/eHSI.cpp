@@ -144,16 +144,16 @@ bool eHSI::isRunning()
 
 void eHSI::update(F16Data* data)
 {
-    currentHeadingRotation = 360.0 - (data->hsiCurrentHeading / FLOATMULT);
+    currentHeadingRotation = 360.0 - ((float) data->hsiCurrentHeading / FLOATMULT);
     if (currentHeadingRotation == 360) currentHeadingRotation = 0;
     
-    desiredCrsRotation = 360.0 - (data->hsiCurrentHeading - data->hsiDesiredCourse) / FLOATMULT;
+    desiredCrsRotation = 360.0 - (float)(data->hsiCurrentHeading - data->hsiDesiredCourse) / FLOATMULT;
     if (desiredCrsRotation >= 360.0) desiredCrsRotation -= 360.0;    
 
-    desiredHeadingRotation = 360.0 - (data->hsiCurrentHeading - data->hsiDesiredHeading) / FLOATMULT;  
+    desiredHeadingRotation = 360.0 - (float)(data->hsiCurrentHeading - data->hsiDesiredHeading) / FLOATMULT;  
     if (desiredHeadingRotation >= 360.0) desiredHeadingRotation-= 360.0;
     
-    bearingPointerRotation = 360.0 - (data->hsiCurrentHeading - data->hsiBearingToBeacon) / FLOATMULT;
+    bearingPointerRotation = 360.0 - (float)(data->hsiCurrentHeading - data->hsiBearingToBeacon) / FLOATMULT;
     if (bearingPointerRotation >= 360.0) bearingPointerRotation -= 360.0;
     
     float deviationFactor = 1.0;
@@ -173,19 +173,12 @@ void eHSI::update(F16Data* data)
 
     deviationXPos = winSize/2 + xAdd;  
     deviationYPos = winSize/ 2 + yAdd; 
-    /*
-    hsiModeTextLeft.setString(std::to_string(desiredCrsRotation));
-    hsiModeTextRight.setString(std::to_string(deviationXPos));
-    dmeText.setString(std::to_string(xAdd));
-    */
-    
     
     hsiW.clear(sf::Color::Black);
     hsiW.draw(sprBackground);
     sprHeadingTape.setRotation(currentHeadingRotation);
     hsiW.draw(sprHeadingTape);
-
-    
+   
     sprFrom.setRotation(desiredCrsRotation);
     sprTo.setRotation(desiredCrsRotation);
     if (data->instrumentBits & INSTHSITO) hsiW.draw(sprTo);
@@ -200,12 +193,16 @@ void eHSI::update(F16Data* data)
     sprHeadingBug.setRotation(desiredHeadingRotation);
     hsiW.draw(sprHeadingBug);
     sprBearingPointer.setRotation(bearingPointerRotation);
-    hsiW.draw(sprBearingPointer);
-    
+    hsiW.draw(sprBearingPointer);    
 
-    hsiW.draw(sprOwnShip);
+    hsiW.draw(sprOwnShip);    
     
-    hsiModeTextLeft.setString(std::to_string(data->hsiDistanceToBeacon));
+    /*********************************************
+    *     Text Outputs
+    **********************************************/
+    
+    hsiModeTextRight.setString(std::to_string(data->hsiDistanceToBeacon));
+
     hsiW.draw(hsiModeTextLeft);
     hsiW.draw(hsiModeTextRight);
     
@@ -213,7 +210,7 @@ void eHSI::update(F16Data* data)
     int intPart = static_cast<int>((data->hsiDesiredCourse / FLOATMULT));        
     snprintf(buf, sizeof(buf), "%03d", intPart);
     std::string oss = buf;
-    crsText.setString(oss);   //(std::to_string(data->hsiDesiredCourse/FLOATMULT));
+    crsText.setString(oss);   
     hsiW.draw(crsText);    
 
     intPart = static_cast<int>((data->hsiDistanceToBeacon / FLOATMULT));
@@ -227,6 +224,9 @@ void eHSI::update(F16Data* data)
     rect.setPosition(75, 0);
     hsiW.draw(rect);
 
+    int dmeBackDigit = static_cast<int>((float)data->hsiDistanceToBeacon / (FLOATMULT / 10));
+    dmeBackDigit %= 10;
+    dmeBackText.setString(std::to_string(dmeBackDigit));
     hsiW.draw(dmeBackText);
 
     hsiW.display();
