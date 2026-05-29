@@ -16,6 +16,8 @@ public:
 	void update(F16Data * data);
 
 private:
+	bool running = true;	
+	
 	sf::RenderWindow hsiW;
 	sf::Texture texture;
 	sf::Font font;
@@ -35,8 +37,17 @@ private:
 	sf::Text crsText;
 	
 	int winSize;
+	float centerXPos;
+	float centerYPos;
 
-	bool running = true;
+	float currentHeadingRotation;
+	float oldHeadingRotation;
 
+	float desiredCrsRotation;
+	float desiredHeadingRotation;
+	float bearingPointerRotation;
+
+	float deviationXPos; 
+	float deviationYPos; 
 };
 

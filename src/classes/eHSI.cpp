@@ -6,6 +6,8 @@ eHSI::eHSI(int size, int xPos, int yPos)
     hsiW.setFramerateLimit(60);
 
     winSize = size;
+    centerXPos = winSize / 2.0;
+    centerYPos = winSize / 2.0;
 
     if (!font.loadFromFile("fonts/FalconDED.ttf")) {
         std::cout << "error loading font\n"; 
@@ -18,7 +20,7 @@ eHSI::eHSI(int size, int xPos, int yPos)
         exit;
     }
     float hsiWinFactor = (float)size / 1024.0;
-
+    std::cout << "centerXpos: " << centerXPos << " y: " << centerYPos << std::endl;
     sprBackground.setTexture(texture);
     sprBackground.setTextureRect(sf::IntRect(0, 0, 1024, 1024));
     sprBackground.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
@@ -33,19 +35,19 @@ eHSI::eHSI(int size, int xPos, int yPos)
     sprCourseArrow.setTexture(texture);
     sprCourseArrow.setTextureRect(sf::IntRect(1024, 0, 1024, 1024));
     sprCourseArrow.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
-    sprCourseArrow.setPosition(sf::Vector2f((size / 2), (size / 2)));
+    sprCourseArrow.setPosition(sf::Vector2f(centerXPos , centerYPos));
     sprCourseArrow.setOrigin(512.0, 512.0);
     
     sprBearingPointer.setTexture(texture);
     sprBearingPointer.setTextureRect(sf::IntRect(1024, 1024, 49, 1024));
     sprBearingPointer.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
     sprBearingPointer.setOrigin(25.0, 512.0);
-    sprBearingPointer.setPosition(sf::Vector2f((size / 2), (size / 2)));
+    sprBearingPointer.setPosition(sf::Vector2f(centerXPos , centerYPos));
 
     sprHeadingBug.setTexture(texture);
     sprHeadingBug.setTextureRect(sf::IntRect(1196, 1024, 109, 950));
     sprHeadingBug.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
-    sprHeadingBug.setPosition(sf::Vector2f((size / 2), (size / 2)));
+    sprHeadingBug.setPosition(sf::Vector2f(centerXPos , centerYPos));
     sprHeadingBug.setOrigin(109 / 2.0, 475);
 
 
@@ -53,19 +55,19 @@ eHSI::eHSI(int size, int xPos, int yPos)
     sprOwnShip.setTextureRect(sf::IntRect(1105, 1024, 91, 91));
     sprOwnShip.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
     sprOwnShip.setOrigin(91 / 2.0, 91 / 2.0);
-    sprOwnShip.setPosition(sf::Vector2f((size / 2), (size / 2)));
+    sprOwnShip.setPosition(sf::Vector2f(centerXPos , centerYPos));
 
     
     sprToFrom.setTexture(texture);
     sprToFrom.setTextureRect(sf::IntRect(1024, 0, 1024, 1024));
     sprToFrom.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
-    sprToFrom.setPosition(sf::Vector2f((size / 2), (size / 2)));
+    sprToFrom.setPosition(sf::Vector2f(centerXPos , centerYPos));
     sprToFrom.setOrigin(512.0, 512.0);
 
     sprCDI.setTexture(texture);
     sprCDI.setTextureRect(sf::IntRect(1073, 1324, 16, 400));
     sprCDI.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
-    sprCDI.setPosition(sf::Vector2f((size / 2), (size / 2)));
+    sprCDI.setPosition(sf::Vector2f(centerXPos , centerYPos));
     sprCDI.setOrigin(8.0, 200.0);
 
     dmeText.setFont(font);
@@ -121,20 +123,28 @@ bool eHSI::isRunning()
 
 void eHSI::update(F16Data* data)
 {
-    float currentHeadingRotation = 360.0 - (data->hsiCurrentHeading / FLOATMULT);
-    float desiredCrsRotation = (36000 - (data->hsiCurrentHeading - data->hsiDesiredCourse)) / FLOATMULT;
-    float desiredHeadingRotation = (36000 - (data->hsiCurrentHeading - data->hsiDesiredHeading)) / FLOATMULT;  
-    float bearingPointerRotation = (36000 - (data->hsiCurrentHeading - data->hsiBearingToBeacon)) / FLOATMULT;
+    currentHeadingRotation = 360.0 - (data->hsiCurrentHeading / FLOATMULT);
+    if (currentHeadingRotation == 360) currentHeadingRotation = 0;
+    
+    desiredCrsRotation = 360.0 - (data->hsiCurrentHeading - data->hsiDesiredCourse) / FLOATMULT;
+    if (desiredCrsRotation >= 360.0) desiredCrsRotation -= 360.0;    
 
-    float deviationXPos = winSize/2;  // sin! (winSize/2.0) + data->hsiCourseDeviation; // FIXXXME, calculate from real values
-    float deviationYPos = winSize/ 2;  // cos
+    desiredHeadingRotation = 360.0 - (data->hsiCurrentHeading - data->hsiDesiredHeading) / FLOATMULT;  
+    if (desiredHeadingRotation >= 360.0) desiredHeadingRotation-= 360.0;
+    
+    bearingPointerRotation = 360.0 - (data->hsiCurrentHeading - data->hsiBearingToBeacon) / FLOATMULT;
+    if (bearingPointerRotation >= 360.0) bearingPointerRotation -= 360.0;
 
-    hsiModeTextLeft.setString(std::to_string(currentHeadingRotation));
-    if (desiredCrsRotation < 90) {
-        deviationXPos = (winSize / 2.0) + (data->hsiCourseDeviation * sin(desiredCrsRotation));
-       
+    deviationXPos = winSize/2;  // sin! (winSize/2.0) + data->hsiCourseDeviation; // FIXXXME, calculate from real values
+    deviationYPos = winSize/ 2;  // cos
+
+    hsiModeTextLeft.setString(std::to_string(desiredHeadingRotation));
+    hsiModeTextRight.setString(std::to_string(bearingPointerRotation));
+
+    /*if (desiredCrsRotation < 90) {
+        deviationXPos = (winSize / 2.0) + (data->hsiCourseDeviation * sin(desiredCrsRotation));       
         deviationXPos = (winSize / 2.0) + (data->hsiCourseDeviation * cos(desiredCrsRotation));
-    }
+    }*/
 
     hsiW.clear(sf::Color::Black);
     hsiW.draw(sprBackground);
@@ -159,6 +169,7 @@ void eHSI::update(F16Data* data)
     hsiW.draw(crsText);
 
     hsiW.display();
+    oldHeadingRotation = currentHeadingRotation;
 }
 
 /*
