@@ -16,6 +16,8 @@ public:
 	void update(F16Data * data);
 
 private:
+	double pi = 2 * acos(0.0);
+
 	bool running = true;	
 	
 	sf::RenderWindow hsiW;

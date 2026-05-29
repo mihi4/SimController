@@ -134,13 +134,27 @@ void eHSI::update(F16Data* data)
     
     bearingPointerRotation = 360.0 - (data->hsiCurrentHeading - data->hsiBearingToBeacon) / FLOATMULT;
     if (bearingPointerRotation >= 360.0) bearingPointerRotation -= 360.0;
+    
+    float deviationFactor = 1.0;
+    float xAdd = cos(desiredCrsRotation * pi / 180) * data->hsiCourseDeviation;
+    float yAdd = sin(desiredCrsRotation * pi / 180) * data->hsiCourseDeviation;
+    
+    if ((desiredCrsRotation == 0) || (desiredCrsRotation == 180)) {
+        yAdd = 0;
+        xAdd = data->hsiCourseDeviation * deviationFactor;
+    }
+    else if ((desiredCrsRotation == 90) || (desiredCrsRotation == 270)) {
+        xAdd = 0;
+        yAdd = data->hsiCourseDeviation * deviationFactor;
+    }
 
-    deviationXPos = winSize/2;  // sin! (winSize/2.0) + data->hsiCourseDeviation; // FIXXXME, calculate from real values
-    deviationYPos = winSize/ 2;  // cos
+    deviationXPos = winSize/2 + xAdd;  // sin! (winSize/2.0) + data->hsiCourseDeviation; // FIXXXME, calculate from real values
+    deviationYPos = winSize/ 2 + yAdd;  // cos
 
-    hsiModeTextLeft.setString(std::to_string(desiredHeadingRotation));
-    hsiModeTextRight.setString(std::to_string(bearingPointerRotation));
-
+    hsiModeTextLeft.setString(std::to_string(desiredCrsRotation));
+    hsiModeTextRight.setString(std::to_string(deviationXPos));
+    dmeText.setString(std::to_string(xAdd));
+    crsText.setString(std::to_string(yAdd));
     /*if (desiredCrsRotation < 90) {
         deviationXPos = (winSize / 2.0) + (data->hsiCourseDeviation * sin(desiredCrsRotation));       
         deviationXPos = (winSize / 2.0) + (data->hsiCourseDeviation * cos(desiredCrsRotation));
