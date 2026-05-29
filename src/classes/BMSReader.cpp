@@ -356,6 +356,7 @@ void BMSReader::readF16Data(F16Data* data) {
     data->hsiDistanceToBeacon = flightData->distanceToBeacon * FLOATMULT;
     data->hsiHalfDeviationLimit = flightData->halfDeviationLimit * FLOATMULT;
     data->hsiLocalizerCourse = flightData->localizerCourse * FLOATMULT;
+    data->hsiMode = flightData2->navMode;
     
 
     // instrument bits

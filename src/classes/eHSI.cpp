@@ -179,8 +179,8 @@ void eHSI::update(F16Data* data)
     if (desiredCrsRotation == 270) yAdd *= -1;
     if (desiredCrsRotation == 180) xAdd *= -1;
 
-    deviationXPos = winSize/2 + xAdd;  
-    deviationYPos = winSize/ 2 + yAdd; 
+    deviationXPos = winSize/ 2.0 + xAdd;  
+    deviationYPos = winSize/ 2.0 + yAdd; 
     
     hsiW.clear(sf::Color::Black);
     hsiW.draw(sprBackground);
@@ -209,8 +209,28 @@ void eHSI::update(F16Data* data)
     *     Text Outputs
     **********************************************/
     
+    switch (data->hsiMode) {
+    case MODE_ILS_NAV:
+        hsiModeTextLeft.setString("PLS");
+        hsiModeTextRight.setString("NAV");
+        break;
+    case MODE_ILS_TACAN:
+        hsiModeTextLeft.setString("PLS");
+        hsiModeTextRight.setString("TCN");
+        break;
+    case MODE_NAV:
+        hsiModeTextLeft.setString("");
+        hsiModeTextRight.setString("NAV");
+        break;
+    case MODE_TACAN:
+        hsiModeTextLeft.setString("");
+        hsiModeTextRight.setString("TCN");
+        break;
+    }
+    /*
     hsiModeTextRight.setString(std::to_string(data->hsiDistanceToBeacon));
-
+    hsiModeTextLeft.setString(std::to_string(data->hsiMode));
+    */
     hsiW.draw(hsiModeTextLeft);
     hsiW.draw(hsiModeTextRight);
     
