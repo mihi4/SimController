@@ -39,6 +39,7 @@ private:
 	sf::Text hsiModeTextRight;
 	sf::Text hsiModeTextLeft;
 	sf::Text dmeText;
+	sf::Text dmeBackText;
 	sf::Text crsText;
 	
 	int winSize;
@@ -46,7 +47,6 @@ private:
 	float centerYPos;
 
 	float currentHeadingRotation;
-	float oldHeadingRotation;
 
 	float desiredCrsRotation;
 	float desiredHeadingRotation;

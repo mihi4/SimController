@@ -75,38 +75,45 @@ eHSI::eHSI(int size, int xPos, int yPos)
     sprFrom.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor*-1.0));
     sprFrom.setOrigin(210.0, 125.0);
     sprFrom.setPosition(sf::Vector2f(centerXPos, centerYPos));
-    
-    
-
+        
     sprCDI.setTexture(texture);
     sprCDI.setTextureRect(sf::IntRect(1073, 1324, 16, 400));
     sprCDI.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
     sprCDI.setPosition(sf::Vector2f(centerXPos , centerYPos));
     sprCDI.setOrigin(8.0, 200.0);
 
+
+    unsigned short dmeCrsSize = 35;
     dmeText.setFont(numFont);
-    dmeText.setCharacterSize(45); // in pixels, not points!
+    dmeText.setCharacterSize(dmeCrsSize); // in pixels, not points!
     dmeText.setString("124");
     dmeText.setFillColor(sf::Color::White);    
-    dmeText.setPosition(sf::Vector2f(10.0, -10.0));
+    dmeText.setPosition(sf::Vector2f(10.0, 0.0));
+
+    dmeBackText.setFont(numFont);
+    dmeBackText.setCharacterSize(dmeCrsSize); // in pixels, not points!
+    dmeBackText.setString("4");
+    dmeBackText.setFillColor(sf::Color::Black);
+    dmeBackText.setPosition(sf::Vector2f(80.0, 0.0));
     
     crsText.setFont(numFont);
-    crsText.setCharacterSize(45); // in pixels, not points!
+    crsText.setCharacterSize(dmeCrsSize); // in pixels, not points!
     crsText.setString("079");
     crsText.setFillColor(sf::Color::White);
-    crsText.setPosition(sf::Vector2f(505.0, -10.0));
+    crsText.setPosition(sf::Vector2f(525.0, 0.0));
 
+    unsigned short modeSize = 40;
     hsiModeTextRight.setFont(font);
-    hsiModeTextRight.setCharacterSize(35); // in pixels, not points!
+    hsiModeTextRight.setCharacterSize(modeSize); // in pixels, not points!
     hsiModeTextRight.setString("TCN");
     hsiModeTextRight.setFillColor(sf::Color::White);
-    hsiModeTextRight.setPosition(sf::Vector2f((size/3.0*2.0), (size-40)));
+    hsiModeTextRight.setPosition(sf::Vector2f((size/3.0*2.0), (size-45)));
 
     hsiModeTextLeft.setFont(font);
-    hsiModeTextLeft.setCharacterSize(35); // in pixels, not points!
+    hsiModeTextLeft.setCharacterSize(modeSize); // in pixels, not points!
     hsiModeTextLeft.setString("PLS");
     hsiModeTextLeft.setFillColor(sf::Color::White);
-    hsiModeTextLeft.setPosition(sf::Vector2f((size*0.208), (size-40)));
+    hsiModeTextLeft.setPosition(sf::Vector2f((size*0.208), (size-45)));
 
     if (hsiW.isOpen()) {
         hsiW.clear(sf::Color::Black);
@@ -197,10 +204,11 @@ void eHSI::update(F16Data* data)
     
 
     hsiW.draw(sprOwnShip);
+    
+    hsiModeTextLeft.setString(std::to_string(data->hsiDistanceToBeacon));
     hsiW.draw(hsiModeTextLeft);
     hsiW.draw(hsiModeTextRight);
     
-
     char buf[4];
     int intPart = static_cast<int>((data->hsiDesiredCourse / FLOATMULT));        
     snprintf(buf, sizeof(buf), "%03d", intPart);
@@ -214,41 +222,12 @@ void eHSI::update(F16Data* data)
     dmeText.setString(oss);
     hsiW.draw(dmeText);
 
+    sf::RectangleShape rect(sf::Vector2f(30, 43));
+    rect.setFillColor(sf::Color::White);
+    rect.setPosition(75, 0);
+    hsiW.draw(rect);
+
+    hsiW.draw(dmeBackText);
+
     hsiW.display();
-    oldHeadingRotation = currentHeadingRotation;
 }
-
-/*
-
-        hsiW.clear(sf::Color::Black);
-        hsiW.draw(sprBackground);
-        sprHeadingTape.setRotation(rotation);
-        hsiW.draw(sprHeadingTape);
-        sprCourseArrow.setRotation(needleRotation);
-        hsiW.draw(sprCourseArrow);
-        hsiW.draw(hsiModeTextLeft);
-        hsiW.draw(DmeText);
-
-        hsiW.display();
-
-*/
-/*
-    sf::RenderWindow hsiW(sf::VideoMode(600, 600), "eHSI", sf::Style::None);
-    
-
-
-    sf::Sprite sprHeadingTape; //0,1024, 1024x1024
-
-
-    sf::Sprite sprCourseArrow; // 1024,0,1024,1024
-
-
-
-
-*/
-
-/*    if (hsiW.isOpen()) {
-        hsiW.clear(sf::Color::Black);
-        hsiW.setPosition(sf::Vector2i(1500, 400));
-        hsiW.display();
-    } */
