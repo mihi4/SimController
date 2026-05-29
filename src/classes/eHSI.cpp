@@ -196,7 +196,10 @@ void eHSI::update(F16Data* data)
     hsiW.draw(hsiModeTextRight);
     hsiW.draw(dmeText);
 
-    crsText.setString(std::to_string(data->hsiDesiredCourse/FLOATMULT));
+    int crsInt = static_cast<int>((data->hsiDesiredCourse / FLOATMULT));
+    std::ostringstream oss;
+    oss << std::setw(3) << std::setfill('0') << crsInt;
+    crsText.setString(oss.str());   //(std::to_string(data->hsiDesiredCourse/FLOATMULT));
     hsiW.draw(crsText);    
 
 
