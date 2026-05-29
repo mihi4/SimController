@@ -9,8 +9,13 @@ eHSI::eHSI(int size, int xPos, int yPos)
     centerXPos = winSize / 2.0;
     centerYPos = winSize / 2.0;
 
-    if (!font.loadFromFile("fonts/FalconDED.ttf")) {
+    if (!font.loadFromFile("fonts/techbold.ttf")) {
         std::cout << "error loading font\n"; 
+        running = false;
+        exit;
+    }
+    if (!numFont.loadFromFile("fonts/lucon.ttf")) {
+        std::cout << "error loading numFont\n";
         running = false;
         exit;
     }
@@ -79,13 +84,13 @@ eHSI::eHSI(int size, int xPos, int yPos)
     sprCDI.setPosition(sf::Vector2f(centerXPos , centerYPos));
     sprCDI.setOrigin(8.0, 200.0);
 
-    dmeText.setFont(font);
+    dmeText.setFont(numFont);
     dmeText.setCharacterSize(45); // in pixels, not points!
     dmeText.setString("124");
     dmeText.setFillColor(sf::Color::White);    
     dmeText.setPosition(sf::Vector2f(10.0, -10.0));
     
-    crsText.setFont(font);
+    crsText.setFont(numFont);
     crsText.setCharacterSize(45); // in pixels, not points!
     crsText.setString("079");
     crsText.setFillColor(sf::Color::White);
@@ -161,11 +166,11 @@ void eHSI::update(F16Data* data)
 
     deviationXPos = winSize/2 + xAdd;  
     deviationYPos = winSize/ 2 + yAdd; 
-
+    /*
     hsiModeTextLeft.setString(std::to_string(desiredCrsRotation));
     hsiModeTextRight.setString(std::to_string(deviationXPos));
     dmeText.setString(std::to_string(xAdd));
-    
+    */
     
     
     hsiW.clear(sf::Color::Black);

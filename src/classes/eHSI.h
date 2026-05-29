@@ -24,6 +24,7 @@ private:
 	sf::RenderWindow hsiW;
 	sf::Texture texture;
 	sf::Font font;
+	sf::Font numFont;
 
 	sf::Sprite sprBackground;
 	sf::Sprite sprHeadingTape; //0,1024, 1024x1024
