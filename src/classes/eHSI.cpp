@@ -194,14 +194,20 @@ void eHSI::update(F16Data* data)
     hsiW.draw(sprOwnShip);
     hsiW.draw(hsiModeTextLeft);
     hsiW.draw(hsiModeTextRight);
-    hsiW.draw(dmeText);
+    
 
-    int crsInt = static_cast<int>((data->hsiDesiredCourse / FLOATMULT));
-    std::ostringstream oss;
-    oss << std::setw(3) << std::setfill('0') << crsInt;
-    crsText.setString(oss.str());   //(std::to_string(data->hsiDesiredCourse/FLOATMULT));
+    char buf[4];
+    int intPart = static_cast<int>((data->hsiDesiredCourse / FLOATMULT));        
+    snprintf(buf, sizeof(buf), "%03d", intPart);
+    std::string oss = buf;
+    crsText.setString(oss);   //(std::to_string(data->hsiDesiredCourse/FLOATMULT));
     hsiW.draw(crsText);    
 
+    intPart = static_cast<int>((data->hsiDistanceToBeacon / FLOATMULT));
+    snprintf(buf, sizeof(buf), "%03d", intPart);
+    oss = buf;
+    dmeText.setString(oss);
+    hsiW.draw(dmeText);
 
     hsiW.display();
     oldHeadingRotation = currentHeadingRotation;

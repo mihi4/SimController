@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
-#include <iomanip>
-#include <sstream>
+
 #include <SFML/Graphics.hpp>
 #include "../lib/F16Data.h"
 
