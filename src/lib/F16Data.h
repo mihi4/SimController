@@ -154,6 +154,7 @@ public:
 	unsigned short hsiLocalizerCourse = 0;
 	int hsiAirbaseX = 0;
 	int hsiAirbaseY = 0;
+	unsigned char hsiMode;
 
 	unsigned short instrumentBits = 0;  // bits start with INST
 

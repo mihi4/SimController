@@ -211,27 +211,36 @@ Byte mismatch error, bytes sent does not match var datatype
 // Main Instrument Panel 
 // **********************
 
-#define KIAS                38
-#define MACH                39
-#define ALTTHOUSANDS        40
-#define ALTPOINTER          41   
-#define ALTITUDE            42
-#define ALTCAL              43
-#define VVIVAL              44
-#define AOAVAL              45
+#define KIAS                35
+#define MACH                36
+#define ALTTHOUSANDS        37
+#define ALTPOINTER          38   
+#define ALTITUDE            39
+#define ALTCAL              40
+#define VVIVAL              41
+#define AOAVAL              42
 
 // HSI - not sure, if I will ever use those :-D
-#define HSICOURSEDEVIATION     46 // HSI_VAL_CRS_DEVIATION
-#define HSIDESIREDCOURSE       47 // HSI_VAL_DESIRED_CRS
-#define HSIDISTANCETOBEACON    48 // HSI_VAL_DISTANCE_TO_BEACON
-#define HSIBEARINGTOBEACON     49 // HSI_VAL_BEARING_TO_BEACON
-#define HSICURRENTHEADING      50 // HSI_VAL_CURRENT_HEADING
-#define HSIDESIREDHEADING      51 // HSI_VAL_DESIRED_HEADING
-#define HSIDEVIATIONLIMIT      52 // HSI_VAL_DEV_LIMIT
-#define HSIHALFDEVIATIONLIMIT  53 // HSI_VAL_HALF_DEV_LIMIT
-#define HSILOCALIZERCOURSE     54 // HSI_VAL_LOCALIZER_CRS
-#define HSIAIRBASEX            55 // HSI_VAL_AIRBASE_X
-#define HSIAIRBASEY            56 // HSI_VAL_AIRBASE_Y
+#define HSICOURSEDEVIATION     43 // HSI_VAL_CRS_DEVIATION
+#define HSIDESIREDCOURSE       44 // HSI_VAL_DESIRED_CRS
+#define HSIDISTANCETOBEACON    45 // HSI_VAL_DISTANCE_TO_BEACON
+#define HSIBEARINGTOBEACON     46 // HSI_VAL_BEARING_TO_BEACON
+#define HSICURRENTHEADING      47 // HSI_VAL_CURRENT_HEADING
+#define HSIDESIREDHEADING      48 // HSI_VAL_DESIRED_HEADING
+#define HSIDEVIATIONLIMIT      49 // HSI_VAL_DEV_LIMIT
+#define HSIHALFDEVIATIONLIMIT  50 // HSI_VAL_HALF_DEV_LIMIT
+#define HSILOCALIZERCOURSE     51 // HSI_VAL_LOCALIZER_CRS
+#define HSIAIRBASEX            52 // HSI_VAL_AIRBASE_X
+#define HSIAIRBASEY            53 // HSI_VAL_AIRBASE_Y
+#define HSIMODE                54 
+
+// HSIMODES
+#define MODE_ILS_TACAN               0
+#define MODE_TACAN                   1
+#define MODE_NAV                     2
+#define MODE_ILS_NAV                 3
+
+
 
 #define INSTRUMENTBITS         57
 // bits in INSTBITS
