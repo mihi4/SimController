@@ -147,9 +147,11 @@ void eHSI::update(F16Data* data)
         xAdd = 0;
         yAdd = data->hsiCourseDeviation * deviationFactor;
     }
+    if (desiredCrsRotation == 270) yAdd *= -1;
+    if (desiredCrsRotation == 180) xAdd *= -1;
 
-    deviationXPos = winSize/2 + xAdd;  // sin! (winSize/2.0) + data->hsiCourseDeviation; // FIXXXME, calculate from real values
-    deviationYPos = winSize/ 2 + yAdd;  // cos
+    deviationXPos = winSize/2 + xAdd;  
+    deviationYPos = winSize/ 2 + yAdd; 
 
     hsiModeTextLeft.setString(std::to_string(desiredCrsRotation));
     hsiModeTextRight.setString(std::to_string(deviationXPos));
