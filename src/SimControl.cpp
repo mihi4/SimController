@@ -202,6 +202,12 @@ int main(int argc, char* argv[])
                 if (event.key.scancode == sf::Keyboard::Scan::C) data.hsiCourseDeviation -= 5;
                 if (event.key.scancode == sf::Keyboard::Scan::V) data.hsiCourseDeviation += 5;
 
+                if (event.key.scancode == sf::Keyboard::Scan::T) data.instrumentBits = INSTHSITO;
+                if (event.key.scancode == sf::Keyboard::Scan::Y) data.instrumentBits = INSTHSIFROM;
+                
+
+
+
                 std::cout << "deviation: " << data.hsiCourseDeviation << " *** ";
                 std::cout << "current: " << data.hsiCurrentHeading << " *** ";
                 std::cout << "crs: " << data.hsiDesiredCourse << " *** ";

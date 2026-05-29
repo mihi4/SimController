@@ -31,7 +31,8 @@ private:
 	sf::Sprite sprCDI;
 	sf::Sprite sprHeadingBug;
 	sf::Sprite sprOwnShip;
-	sf::Sprite sprToFrom;
+	sf::Sprite sprTo;
+	sf::Sprite sprFrom;
 	
 	sf::Text hsiModeTextRight;
 	sf::Text hsiModeTextLeft;

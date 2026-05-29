@@ -19,6 +19,8 @@ eHSI::eHSI(int size, int xPos, int yPos)
         running = false;
         exit;
     }
+    texture.setRepeated(false);
+
     float hsiWinFactor = (float)size / 1024.0;
     std::cout << "centerXpos: " << centerXPos << " y: " << centerYPos << std::endl;
     sprBackground.setTexture(texture);
@@ -50,19 +52,26 @@ eHSI::eHSI(int size, int xPos, int yPos)
     sprHeadingBug.setPosition(sf::Vector2f(centerXPos , centerYPos));
     sprHeadingBug.setOrigin(109 / 2.0, 475);
 
-
     sprOwnShip.setTexture(texture);
     sprOwnShip.setTextureRect(sf::IntRect(1105, 1024, 91, 91));
     sprOwnShip.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
     sprOwnShip.setOrigin(91 / 2.0, 91 / 2.0);
     sprOwnShip.setPosition(sf::Vector2f(centerXPos , centerYPos));
-
     
-    sprToFrom.setTexture(texture);
-    sprToFrom.setTextureRect(sf::IntRect(1024, 0, 1024, 1024));
-    sprToFrom.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
-    sprToFrom.setPosition(sf::Vector2f(centerXPos , centerYPos));
-    sprToFrom.setOrigin(512.0, 512.0);
+    sprTo.setTexture(texture);
+    sprTo.setTextureRect(sf::IntRect(1325, 1024, 420, 250));
+    sprTo.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
+    sprTo.setOrigin(210.0, 125.0);
+    sprTo.setPosition(sf::Vector2f(centerXPos , centerYPos));    
+    
+    
+    sprFrom.setTexture(texture);
+    sprFrom.setTextureRect(sf::IntRect(1325, 1024, 420, 250));
+    sprFrom.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor*-1.0));
+    sprFrom.setOrigin(210.0, 125.0);
+    sprFrom.setPosition(sf::Vector2f(centerXPos, centerYPos));
+    
+    
 
     sprCDI.setTexture(texture);
     sprCDI.setTextureRect(sf::IntRect(1073, 1324, 16, 400));
@@ -156,16 +165,20 @@ void eHSI::update(F16Data* data)
     hsiModeTextLeft.setString(std::to_string(desiredCrsRotation));
     hsiModeTextRight.setString(std::to_string(deviationXPos));
     dmeText.setString(std::to_string(xAdd));
-    crsText.setString(std::to_string(yAdd));
-    /*if (desiredCrsRotation < 90) {
-        deviationXPos = (winSize / 2.0) + (data->hsiCourseDeviation * sin(desiredCrsRotation));       
-        deviationXPos = (winSize / 2.0) + (data->hsiCourseDeviation * cos(desiredCrsRotation));
-    }*/
-
+    
+    
+    
     hsiW.clear(sf::Color::Black);
     hsiW.draw(sprBackground);
     sprHeadingTape.setRotation(currentHeadingRotation);
     hsiW.draw(sprHeadingTape);
+
+    
+    sprFrom.setRotation(desiredCrsRotation);
+    sprTo.setRotation(desiredCrsRotation);
+    if (data->instrumentBits & INSTHSITO) hsiW.draw(sprTo);
+    if (data->instrumentBits & INSTHSIFROM) hsiW.draw(sprFrom);
+
     sprCourseArrow.setRotation(desiredCrsRotation);
         
     sprCDI.setPosition(sf::Vector2f(deviationXPos, deviationYPos));
@@ -182,7 +195,10 @@ void eHSI::update(F16Data* data)
     hsiW.draw(hsiModeTextLeft);
     hsiW.draw(hsiModeTextRight);
     hsiW.draw(dmeText);
-    hsiW.draw(crsText);
+
+    crsText.setString(std::to_string(data->hsiDesiredCourse/FLOATMULT));
+    hsiW.draw(crsText);    
+
 
     hsiW.display();
     oldHeadingRotation = currentHeadingRotation;
