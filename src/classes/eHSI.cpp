@@ -144,6 +144,11 @@ bool eHSI::isRunning()
 
 void eHSI::update(F16Data* data)
 {
+
+    /*************************************************
+    *   Rotation of display
+    **************************************************/
+
     currentHeadingRotation = 360.0 - ((float) data->hsiCurrentHeading / FLOATMULT);
     if (currentHeadingRotation == 360) currentHeadingRotation = 0;
     
@@ -156,6 +161,9 @@ void eHSI::update(F16Data* data)
     bearingPointerRotation = 360.0 - (float)(data->hsiCurrentHeading - data->hsiBearingToBeacon) / FLOATMULT;
     if (bearingPointerRotation >= 360.0) bearingPointerRotation -= 360.0;
     
+    /******************************************
+    *    Deviation Bar (FIXXXME)
+    * *****************************************/
     float deviationFactor = 1.0;
     float xAdd = cos(desiredCrsRotation * pi / 180) * data->hsiCourseDeviation;
     float yAdd = sin(desiredCrsRotation * pi / 180) * data->hsiCourseDeviation;
