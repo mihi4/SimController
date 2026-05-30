@@ -109,7 +109,7 @@ int main(int argc, char* argv[])
         appW.display();
     }
 
-    eHSI hsi(600, 1400, 400);      
+    eHSI hsi(600, 1200, 1100);      
 
     /****************************************
 
@@ -136,8 +136,7 @@ int main(int argc, char* argv[])
     
     *****************************************/    
     
-    while(true) {
-        break; // FIXXXME remove after sfml testing
+    while(true) {        
         if (!simConnected) {
             std::cout << "connecting to sim...\r";
             if (reader->connectToSim()) {
@@ -224,36 +223,36 @@ int main(int argc, char* argv[])
                 }
                 
             } */
+
         }
 
-        
-
-        if (reader->connectToSim()) {                        
-            reader->readF16Data(&data);                              
+        if (reader->connectToSim()) {
+            reader->readF16Data(&data);
             //std::bitset<32> y(data.cautionPanelLights);
             //sprintf_s(buf, "fwd: %5u aft: %5u total: %5u hydA: %6u hydB %6u CP: 0x%8x bits: ", data.fuelFWD, data.fuelAFT, data.fuelTotal, data.hydA, data.hydB, data.cautionPanelLights);            
             //std::cout << buf << y << std::endl;
             if (!prevData.isSameAs(data)) {  // only send data if anything has changed                 
                 /*std::bitset<32> y(data.cautionPanelLights);
-                sprintf_s(buf, "CP: 0x%8x bits: ", data.cautionPanelLights);            
+                sprintf_s(buf, "CP: 0x%8x bits: ", data.cautionPanelLights);
                 std::cout << buf << y << std::endl;*/
                 cHandler.updateControllers(&data, &prevData);
                 if (hsi.isRunning()) hsi.update(&data);
-                
+
             }
             prevData = data;
-            //std::cout << "mapping" << util.map(data.fuelFWD, 0, 42000, 0, 65534) << "\r";
-        } else {
+            //std::cout << "mapping" << util.map(data.fuelFWD, 0,  42000, 0, 65534) << "\r";
+        }
+        else {
             simConnected = false; // try again next run
-        }        
-        
+        }
+
         //std::cout << "altPointer: " << data.altPointer << " slip: " << data.adiSideslip << " pitch: " << data.adiPitch << " roll: " << data.adiRoll << " ilsHor: " << data.adiIlsHorPos << " ilsVer: " << data.adiIlsVerPos << "\n";        
         cHandler.readControllerComms();
-        
+
         // check for quit keycommand LCTRL+LSHIFT+LALT+BACKSPACE
         if ((GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)) { break; }
-        
-        Sleep(10);        
+
+        Sleep(10);
     }
 
     std::cout << "\n\nquitting!\n";   

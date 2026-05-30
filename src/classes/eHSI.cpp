@@ -3,7 +3,7 @@
 eHSI::eHSI(int size, int xPos, int yPos)
 {
 	hsiW.create(sf::VideoMode(size, size), "eHSI", sf::Style::None);   
-    hsiW.setFramerateLimit(60);
+    hsiW.setFramerateLimit(60);    
 
     winSize = size;
     centerXPos = winSize / 2.0;
@@ -26,7 +26,10 @@ eHSI::eHSI(int size, int xPos, int yPos)
     }
     texture.setRepeated(false);
 
-    float hsiWinFactor = (float)size / 1024.0;
+    hsiWinFactor = (float)size / 1024.0;
+
+    
+
     std::cout << "centerXpos: " << centerXPos << " y: " << centerYPos << std::endl;
     sprBackground.setTexture(texture);
     sprBackground.setTextureRect(sf::IntRect(0, 0, 1024, 1024));
@@ -81,6 +84,13 @@ eHSI::eHSI(int size, int xPos, int yPos)
     sprCDI.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
     sprCDI.setPosition(sf::Vector2f(centerXPos , centerYPos));
     sprCDI.setOrigin(8.0, 200.0);
+
+    sprILS.setTexture(texture);
+    sprILS.setTextureRect(sf::IntRect(1090, 1324, 16, 400));
+    sprILS.setScale(sf::Vector2f(hsiWinFactor, hsiWinFactor));
+    sprILS.setPosition(sf::Vector2f(centerXPos, centerYPos));
+    sprILS.setOrigin(8.0, 200.0);
+
 
 
     unsigned short dmeCrsSize = 35;
@@ -164,10 +174,19 @@ void eHSI::update(F16Data* data)
     /******************************************
     *    Deviation Bar (FIXXXME)
     * *****************************************/
-    float deviationFactor = 1.0;
-    float xAdd = cos(desiredCrsRotation * pi / 180) * data->hsiCourseDeviation;
-    float yAdd = sin(desiredCrsRotation * pi / 180) * data->hsiCourseDeviation;
+
+    float deviationLimitScaled = deviationLimitPixel * hsiWinFactor;
+    float deviationFactor = deviationLimitScaled / data->hsiDeviationLimit;
     
+
+    if ((data->hsiCourseDeviation > 0.0) && (data->hsiCourseDeviation >= data->hsiDeviationLimit)) data->hsiCourseDeviation = data->hsiDeviationLimit;
+    if ((data->hsiCourseDeviation < 0.0) && (data->hsiCourseDeviation <= ((-1) * data->hsiDeviationLimit))) data->hsiCourseDeviation = data->hsiDeviationLimit * (-1);
+
+    float crsDeviationPixel = data->hsiCourseDeviation * deviationFactor;
+
+    float xAdd = (-1)* ((cos(desiredCrsRotation * pi / 180) * data->hsiCourseDeviation)) * deviationFactor;
+    float yAdd = (-1)* ((sin(desiredCrsRotation * pi / 180) * data->hsiCourseDeviation)) * deviationFactor;
+
     if ((desiredCrsRotation == 0) || (desiredCrsRotation == 180)) {
         yAdd = 0;
         xAdd = data->hsiCourseDeviation * deviationFactor;
@@ -186,7 +205,7 @@ void eHSI::update(F16Data* data)
     hsiW.draw(sprBackground);
     sprHeadingTape.setRotation(currentHeadingRotation);
     hsiW.draw(sprHeadingTape);
-   
+
     sprFrom.setRotation(desiredCrsRotation);
     sprTo.setRotation(desiredCrsRotation);
     if (data->instrumentBits & INSTHSITO) hsiW.draw(sprTo);
@@ -194,10 +213,20 @@ void eHSI::update(F16Data* data)
 
     sprCourseArrow.setRotation(desiredCrsRotation);
         
-    sprCDI.setPosition(sf::Vector2f(deviationXPos, deviationYPos));
-    sprCDI.setRotation(desiredCrsRotation);
+    
     hsiW.draw(sprCourseArrow);
-    hsiW.draw(sprCDI);
+
+    if (data->hsiMode == MODE_NAV) {
+        sprCDI.setPosition(sf::Vector2f(deviationXPos, deviationYPos));
+        sprCDI.setRotation(desiredCrsRotation);
+        hsiW.draw(sprCDI);        
+    }
+    else {
+        sprILS.setPosition(sf::Vector2f(deviationXPos, deviationYPos));  // FIXXXME implement function to calculate position for ILS and CDI position (same routine))
+        sprILS.setRotation(desiredCrsRotation);
+        hsiW.draw(sprILS);
+    }
+    
     sprHeadingBug.setRotation(desiredHeadingRotation);
     hsiW.draw(sprHeadingBug);
     sprBearingPointer.setRotation(bearingPointerRotation);
@@ -227,25 +256,17 @@ void eHSI::update(F16Data* data)
         hsiModeTextRight.setString("TCN");
         break;
     }
-    /*
-    hsiModeTextRight.setString(std::to_string(data->hsiDistanceToBeacon));
-    hsiModeTextLeft.setString(std::to_string(data->hsiMode));
-    */
-    hsiW.draw(hsiModeTextLeft);
-    hsiW.draw(hsiModeTextRight);
-    
+ 
     char buf[4];
     int intPart = static_cast<int>((data->hsiDesiredCourse / FLOATMULT));        
     snprintf(buf, sizeof(buf), "%03d", intPart);
     std::string oss = buf;
     crsText.setString(oss);   
-    hsiW.draw(crsText);    
-
+ 
     intPart = static_cast<int>((data->hsiDistanceToBeacon / FLOATMULT));
     snprintf(buf, sizeof(buf), "%03d", intPart);
     oss = buf;
     dmeText.setString(oss);
-    hsiW.draw(dmeText);
 
     sf::RectangleShape rect(sf::Vector2f(30, 43));
     rect.setFillColor(sf::Color::White);
@@ -255,6 +276,11 @@ void eHSI::update(F16Data* data)
     int dmeBackDigit = static_cast<int>((float)data->hsiDistanceToBeacon / (FLOATMULT / 10));
     dmeBackDigit %= 10;
     dmeBackText.setString(std::to_string(dmeBackDigit));
+
+    hsiW.draw(hsiModeTextLeft);
+    hsiW.draw(hsiModeTextRight);
+    hsiW.draw(crsText);
+    hsiW.draw(dmeText);
     hsiW.draw(dmeBackText);
 
     hsiW.display();

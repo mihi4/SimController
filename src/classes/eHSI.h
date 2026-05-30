@@ -18,6 +18,8 @@ public:
 
 private:
 	double pi = 2 * acos(0.0);
+	float hsiWinFactor = 0.0;
+	float deviationLimitPixel = 300.0; // max pixel movement from eHSI.png
 
 	bool running = true;	
 	
@@ -31,6 +33,7 @@ private:
 	sf::Sprite sprCourseArrow; // 1024,0,1024,1024
 	sf::Sprite sprBearingPointer;
 	sf::Sprite sprCDI;
+	sf::Sprite sprILS;
 	sf::Sprite sprHeadingBug;
 	sf::Sprite sprOwnShip;
 	sf::Sprite sprTo;
