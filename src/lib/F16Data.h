@@ -151,10 +151,10 @@ public:
 	unsigned short hsiDesiredHeading = 0;
 	short hsiDeviationLimit = 0;
 	short hsiHalfDeviationLimit = 0;
-	unsigned short hsiLocalizerCourse = 0;
+	short hsiLocalizerCourse = 0;
 	int hsiAirbaseX = 0;
 	int hsiAirbaseY = 0;
-	unsigned char hsiMode;
+	unsigned short hsiMode;
 
 	unsigned short instrumentBits = 0;  // bits start with INST
 

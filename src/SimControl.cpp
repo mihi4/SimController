@@ -136,7 +136,8 @@ int main(int argc, char* argv[])
     
     *****************************************/    
     
-    while(true) {        
+    while(true) {    
+        //break;  // only used in offline testing
         if (!simConnected) {
             std::cout << "connecting to sim...\r";
             if (reader->connectToSim()) {
@@ -157,7 +158,9 @@ int main(int argc, char* argv[])
     
     *****************************************/        
             
-    data.hsiCurrentHeading = 0;
+    data.hsiCurrentHeading = 0;    
+    data.hsiMode = MODE_NAV;    
+
     char buf[100];
     float rotation = 0.0;
     float needleRotation = 0.0;
@@ -170,8 +173,8 @@ int main(int argc, char* argv[])
         {
             if (event.type == sf::Event::Closed)                
                 appW.close();
-
-            /*if (event.type == sf::Event::KeyPressed) {
+            /*  // only used in offline testing
+            if (event.type == sf::Event::KeyPressed) {
                 if (event.key.scancode == sf::Keyboard::Scan::A) { 
                     if (data.hsiCurrentHeading == 0) data.hsiCurrentHeading = 36000;
                     data.hsiCurrentHeading -= 100;                    
@@ -181,14 +184,13 @@ int main(int argc, char* argv[])
                     if (data.hsiCurrentHeading == 36000) data.hsiCurrentHeading = 0;
                 }
                 
-                if (event.key.scancode == sf::Keyboard::Scan::D) {
-                    if (data.hsiDesiredHeading == 0) data.hsiDesiredHeading = 36000;
-                    data.hsiDesiredHeading -= 100;                    
+                if (event.key.scancode == sf::Keyboard::Scan::D) {                    
+                    data.hsiLocalizerCourse -= 5;                    
                 }
                 if (event.key.scancode == sf::Keyboard::Scan::F) {                    
-                    data.hsiDesiredHeading += 100;
-                    if (data.hsiDesiredHeading == 36000) data.hsiDesiredHeading = 0;
+                    data.hsiLocalizerCourse += 5;                    
                 }
+
                 if (event.key.scancode == sf::Keyboard::Scan::Z) {
                     if (data.hsiDesiredCourse == 0) data.hsiDesiredCourse = 36000;
                     data.hsiDesiredCourse -= 100;                    
@@ -204,10 +206,15 @@ int main(int argc, char* argv[])
                 if (event.key.scancode == sf::Keyboard::Scan::T) data.instrumentBits = INSTHSITO;
                 if (event.key.scancode == sf::Keyboard::Scan::Y) data.instrumentBits = INSTHSIFROM;
                 
+                if (event.key.scancode == sf::Keyboard::Scan::G) {
+                    data.hsiMode++;
+                    if (data.hsiMode == 4) data.hsiMode = 0;
+                }
 
 
-
+                std::cout << "mode: " << data.hsiMode << " *** ";
                 std::cout << "deviation: " << data.hsiCourseDeviation << " *** ";
+                std::cout << "localizer: " << data.hsiLocalizerCourse << " *** ";
                 std::cout << "current: " << data.hsiCurrentHeading << " *** ";
                 std::cout << "crs: " << data.hsiDesiredCourse << " *** ";
                 std::cout << "heading: " << data.hsiDesiredHeading << std::endl;
@@ -222,8 +229,8 @@ int main(int argc, char* argv[])
                     
                 }
                 
-            } */
-
+            } 
+            */
         }
 
         if (reader->connectToSim()) {
@@ -236,7 +243,7 @@ int main(int argc, char* argv[])
                 sprintf_s(buf, "CP: 0x%8x bits: ", data.cautionPanelLights);
                 std::cout << buf << y << std::endl;*/
                 cHandler.updateControllers(&data, &prevData);
-                if (hsi.isRunning()) hsi.update(&data);
+
 
             }
             prevData = data;
@@ -248,7 +255,7 @@ int main(int argc, char* argv[])
 
         //std::cout << "altPointer: " << data.altPointer << " slip: " << data.adiSideslip << " pitch: " << data.adiPitch << " roll: " << data.adiRoll << " ilsHor: " << data.adiIlsHorPos << " ilsVer: " << data.adiIlsVerPos << "\n";        
         cHandler.readControllerComms();
-
+        if (hsi.isRunning()) hsi.update(&data);
         // check for quit keycommand LCTRL+LSHIFT+LALT+BACKSPACE
         if ((GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)) { break; }
 

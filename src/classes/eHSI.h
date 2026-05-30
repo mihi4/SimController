@@ -17,6 +17,10 @@ public:
 	void update(F16Data * data);
 
 private:
+	float getXPosition();
+	float getYPosition();
+
+
 	double pi = 2 * acos(0.0);
 	float hsiWinFactor = 0.0;
 	float deviationLimitPixel = 300.0; // max pixel movement from eHSI.png
@@ -38,6 +42,7 @@ private:
 	sf::Sprite sprOwnShip;
 	sf::Sprite sprTo;
 	sf::Sprite sprFrom;
+	sf::Sprite sprFaultILS;
 	
 	sf::Text hsiModeTextRight;
 	sf::Text hsiModeTextLeft;
