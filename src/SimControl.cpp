@@ -109,7 +109,7 @@ int main(int argc, char* argv[])
         appW.display();
     }
 
-    eHSI hsi(600, 1200, 1100);      
+    eHSI hsi(610, 1200, 1100);      
 
     /****************************************
 
@@ -136,8 +136,14 @@ int main(int argc, char* argv[])
     
     *****************************************/    
     
-    while(true) {    
-        //break;  // only used in offline testing
+    while(appW.isOpen()) {    
+        // break;  // only used in offline testing
+        sf::Event event;
+        while (appW.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                appW.close();
+        }
         if (!simConnected) {
             std::cout << "connecting to sim...\r";
             if (reader->connectToSim()) {

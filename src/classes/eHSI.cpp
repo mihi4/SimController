@@ -115,7 +115,7 @@ eHSI::eHSI(int size, int xPos, int yPos)
     crsText.setCharacterSize(dmeCrsSize); // in pixels, not points!
     crsText.setString("079");
     crsText.setFillColor(sf::Color::White);
-    crsText.setPosition(sf::Vector2f(525.0, 0.0));
+    crsText.setPosition(sf::Vector2f(535.0, 0.0));
 
     unsigned short modeSize = 40;
     hsiModeTextRight.setFont(font);
