@@ -137,7 +137,7 @@ int main(int argc, char* argv[])
     *****************************************/    
     
     while(appW.isOpen()) {    
-        // break;  // only used in offline testing
+        break;  // only used in offline testing
         sf::Event event;
         while (appW.pollEvent(event))
         {

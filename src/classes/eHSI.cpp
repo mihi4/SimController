@@ -268,14 +268,14 @@ void eHSI::update(F16Data* data)
     dmeText.setString(std::to_string(localHsiCourseDeviation));
     crsText.setString(std::to_string(data->hsiLocalizerCourse));
     hsiModeTextLeft.setString(std::to_string(data->hsiDeviationLimit));
-    //hsiModeTextRight.setString(std::to_string(deviationYPos));
+    hsiModeTextRight.setString(std::to_string(data->hsiHalfDeviationLimit));
 
   
     /*********************************************
     *     Text Outputs
     **********************************************/
 
-    switch (data->hsiMode) {
+ /*   switch (data->hsiMode) {
     case MODE_ILS_NAV:
         hsiModeTextLeft.setString("PLS");
         hsiModeTextRight.setString("NAV");
@@ -313,7 +313,7 @@ void eHSI::update(F16Data* data)
     int dmeBackDigit = static_cast<int>((float)data->hsiDistanceToBeacon / (FLOATMULT / 10));
     dmeBackDigit %= 10;
     dmeBackText.setString(std::to_string(dmeBackDigit));
-
+*/
 
     hsiW.draw(hsiModeTextLeft);
     hsiW.draw(hsiModeTextRight);
