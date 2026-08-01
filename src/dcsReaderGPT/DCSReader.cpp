@@ -564,6 +564,35 @@ void DCSReader::mapHSI(F16Data* data)
 void DCSReader::mapInstrumentBits(F16Data* data)
 {
     data->instrumentBits = 0;
+
+    // ADI OFF Flag
+    // DCSDataReceiver.Gauges.ADI_OFF_Flag():
+    //   F-16C: ReadMemoryBool(0x44BE, 2, 0x0001)
+    if (readBool(0x44BE, 0x0001)) {
+        setDatabit(data->instrumentBits, ADIADI);
+    }
+
+    // ADI LOC Flag
+    // DCSDataReceiver.Gauges.ADI_LOC_Flag():
+    //   F-16C: ReadMemoryBool(0x44C0, 2, 0x0001)
+    if (readBool(0x44C0, 0x0001)) {
+        // In f16common.h gibt es nur ein gemeinsames ILS-Bit (ADIILS)
+        // für LOC/GS, daher setzen wir ADIILS, wenn LOC oder GS an ist.
+        setDatabit(data->instrumentBits, ADIILS);
+    }
+
+    // ADI GS Flag
+    // DCSDataReceiver.Gauges.ADI_GS_Flag():
+    //   F-16C: ReadMemoryBool(0x44C4, 2, 0x0001)
+    if (readBool(0x44C4, 0x0001)) {
+        setDatabit(data->instrumentBits, ADIILS);
+    }
+
+    // HSI-/sonstige Instrument-Flags:
+    // In DCSDataReceiver.cs gibt es aktuell keine separaten Bool-Methoden
+    // für HSI_TO, HSI_FROM, HSI_ILS, HSI_INEFF etc. (nur BMS-seitig).
+    // Solange wir keine klaren DCS-Quellen dafür haben, lassen wir
+    // diese Bits vorerst 0 und ergänzen sie später gezielt.
 }
 
 // ------------------------------------------------------
