@@ -14,6 +14,8 @@
 #include <vector>
 #include <string>
 #include <chrono>
+#include <algorithm>     // für std::transform
+#include <cctype>        // für std::toupper
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -73,6 +75,7 @@ private:
     void mapEngineCluster(F16Data* data);
     void mapMainInstruments(F16Data* data);
     void mapHSI(F16Data* data);
+    unsigned short buildHSIMode();
     void mapInstrumentBits(F16Data* data);
     void mapInstPanelLights(F16Data* data);
     void mapLeftConsole(F16Data* data);

@@ -536,22 +536,82 @@ void DCSReader::mapMainInstruments(F16Data* data)
 
 void DCSReader::mapHSI(F16Data* data)
 {
+    // Kurs, Range, Heading etc. baust du dir wie gehabt aus den Floats:
+    /*
+    float crs = readFloat01(ADR_EHSI_COURSE, 0xFFFF, 0) * 360.0f;
+    if (crs < 0.0f)   crs += 360.0f;
+    if (crs >= 360.0f) crs -= 360.0f;
+    data->hsiDesiredCourse = static_cast<unsigned short>(crs);
+
+    float rng = readFloat01(ADR_EHSI_RANGE, 0xFFFF, 0) * 999.0f;
+    data->hsiDistanceToBeacon = static_cast<short>(rng);
+
+    float hdg = readFloat01(ADR_STBY_HDG, 0xFFFF, 0) * 360.0f;
+    data->hsiCurrentHeading = static_cast<unsigned short>(hdg);    
+    */
+    // Hier die Mode-Konstruktion:
+    data->hsiMode = buildHSIMode();
     // Vorläufig: nur Heading aus CommonData.heading()
     // CommonData.heading(): ReadInt16(0x0436, 2, 0x01FF)
-    uint16_t hdg_raw = readInt16(0x0436, 0x01FF);
-    data->hsiCurrentHeading = hdg_raw; // 0..511 -> 0..360° ungeklärt
-    data->hsiDesiredHeading = hdg_raw;
-
+    
+    data->hsiDesiredHeading =  0;
     data->hsiCourseDeviation   = 0;
-    data->hsiDesiredCourse     = 0;
-    data->hsiDistanceToBeacon  = 0;
+    data->hsiDesiredCourse     = 0;    
     data->hsiBearingToBeacon   = 0;
     data->hsiDeviationLimit    = 0;
     data->hsiHalfDeviationLimit= 0;
     data->hsiLocalizerCourse   = 0;
     data->hsiAirbaseX          = 0;
     data->hsiAirbaseY          = 0;
-    data->hsiMode              = 0;
+}
+
+unsigned short DCSReader::buildHSIMode()
+{
+    // Strings aus dem DCS-BIOS-State lesen
+    std::string left  = readString(ADR_EHSI_MODE_LEFT,  LEN_EHSI_MODE_LEFT);
+    std::string right = readString(ADR_EHSI_MODE_RIGHT, LEN_EHSI_MODE_RIGHT);
+
+    // Robustheit: Leading/Trailing Spaces entfernen
+    auto trim = [](std::string& s) {
+        // vorne
+        while (!s.empty() && std::isspace(static_cast<unsigned char>(s.front())))
+            s.erase(s.begin());
+        // hinten
+        while (!s.empty() && std::isspace(static_cast<unsigned char>(s.back())))
+            s.pop_back();
+    };
+    trim(left);
+    trim(right);
+
+    // Groß-/Kleinschreibung egal machen
+    auto to_upper = [](std::string& s) {
+        std::transform(s.begin(), s.end(), s.begin(),
+                       [](unsigned char c){ return static_cast<char>(std::toupper(c)); });
+    };
+    to_upper(left);
+    to_upper(right);
+
+    // Erwartete Inhalte von DCS:
+    // left:  "" oder "PLS"  -> ILS aktiv?
+    // right: "NAV" oder "TCN" (evtl. auch "" wenn aus?)
+    bool ils = (left.find("PLS") != std::string::npos);
+    bool tcn = (right.find("TCN") != std::string::npos);
+    bool nav = (right.find("NAV") != std::string::npos);
+
+    // Mapping auf BMS-Konstanten aus f16common.h:
+    // MODE_ILS_TACAN = 0
+    // MODE_TACAN     = 1
+    // MODE_NAV       = 2
+    // MODE_ILS_NAV   = 3
+
+    if (ils && tcn) return MODE_ILS_TACAN; // PLS + TCN
+    if (ils && nav) return MODE_ILS_NAV;   // PLS + NAV
+    if (!ils && tcn) return MODE_TACAN;    // nur TCN
+    if (!ils && nav) return MODE_NAV;      // nur NAV
+
+    // Fallback, falls DCS etwas Unbekanntes liefert:
+    // Sinnvollste Annahme: reines NAV
+    return MODE_NAV;
 }
 
 // ------------------------------------------------------
