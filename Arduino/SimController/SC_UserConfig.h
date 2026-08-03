@@ -51,7 +51,7 @@
 //BASIC SETTINGS
 #define BAUDRATE 115200 // 57600 //    115200       // serial connection speed
 
-static const char scName[] = "RightAux";
+static const char scName[] = "Test";
 int scNameSize = sizeof(scName)/sizeof(scName[0]);
 
 //DATA VARIABLES
@@ -75,6 +75,10 @@ f16var* vars[] = {
   ,  new f16varS(PFDLINE5, MODDED, 255, 0, "                         " )
   ,  new f16varI(EPUFUEL, MODX27, 0, 0, 0)
   ,  new f16varI(CABINPRESS, MODX27, 1, 0, 0)
+  ,  new f16varI(OILPRESS, MODX27VID, 0, 0, 0)
+  ,  new f16varI(NOZZLEPOS, MODX27VID, 1, 0, 0)
+  ,  new f16varI(RPM, MODX27VID, 2, 0, 0)
+  ,  new f16varI(FTIT, MODX27VID, 3, 0, 0)
 };
 const char varCount = sizeof(vars)/sizeof(vars[0]);
 
