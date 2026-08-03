@@ -28,7 +28,7 @@ StepperdataVID stepperdataVID[] =
     { {    18,      19   },   315*12 ,  true,     0   },  // example OILPress
     { {    16,      17   },   315*12 ,  true,     0   },  // nozzlepos
     { {    4,      3   },   315*12 ,  true,     0   },  // RPM
-    { {    9,      8   },   315*12 ,  true,     0   },  //FTIT
+    { {    9,      8   },   315*12 ,  true,     0   }  //FTIT
 };
 
 const int STEPPERZAHLVID = sizeof(stepperdataVID)/sizeof(stepperdataVID[0]);
