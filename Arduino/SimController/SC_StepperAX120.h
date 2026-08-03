@@ -25,14 +25,22 @@ unsigned long forceUpdate=0;
 StepperdataVID stepperdataVID[] =
 {
   //  {PIN Step PIN Dir}     arc    inverted   last
-    { {    6,      7   },   315*12 ,  false,     0   },  // example RPM
+    { {    18,      19   },   315*12 ,  true,     0   },  // example OILPress
+    { {    16,      17   },   315*12 ,  true,     0   },  // nozzlepos
+    { {    4,      3   },   315*12 ,  true,     0   },  // RPM
+    { {    9,      8   },   315*12 ,  true,     0   },  //FTIT
 };
 
 const int STEPPERZAHLVID = sizeof(stepperdataVID)/sizeof(stepperdataVID[0]);
 
+#define RSTPIN   6   // !!!!!!!! Set this to the correct pin on the ax1201728sg
+
 SwitecX12 stepperVID[STEPPERZAHLVID]=                //make sure that the number of calls in this table matches the number of steppers in the list above
 {
    SwitecX12(69,0,0) //dummy call
+   , SwitecX12(69,0,0) //dummy call
+   , SwitecX12(69,0,0) //dummy call
+   , SwitecX12(69,0,0) //dummy call
 };
 
 int prevVID=1;
@@ -40,6 +48,11 @@ int prevVID=1;
 
 void SetupStepperVID(void)
 {
+  pinMode(RSTPIN, OUTPUT);
+  digitalWrite(RSTPIN, LOW);
+  delay(1);
+  digitalWrite(RSTPIN, HIGH);
+
   for (byte x=0;x<STEPPERZAHLVID;x++)
   {
     stepperVID[x]=SwitecX12(stepperdataVID[x].arc, stepperdataVID[x].pIN[0], stepperdataVID[x].pIN[1]);
@@ -131,25 +144,26 @@ void UpdateStepperVID(byte pos)
 {
   uint16_t newVal=vars[pos]->value.valI; // atoi(datenfeld[pos].wert);
   uint16_t NewStepperPos=0;
-  if (newVal!=stepperdataVID[datenfeld[pos].target].last)
+  if (newVal!=stepperdataVID[vars[pos]->modIndex].last)
   {
-    NewStepperPos=map(newVal,0,65535,0,stepperdataVID[datenfeld[pos].target].arc);
-    if (stepperdataVID[datenfeld[pos].target].inverted)
-      {stepperVID[datenfeld[pos].target].setPosition(stepperdataVID[datenfeld[pos].target].arc-NewStepperPos);}
+    NewStepperPos=map(newVal,0,65535,0,stepperdataVID[vars[pos]->modIndex].arc);
+    if (stepperdataVID[vars[pos]->modIndex].inverted)
+      {stepperVID[vars[pos]->modIndex].setPosition(stepperdataVID[vars[pos]->modIndex].arc-NewStepperPos);}
     else
-      {stepperVID[datenfeld[pos].target].setPosition(NewStepperPos);}
-    stepperdataVID[datenfeld[pos].target].last=newVal;
+      {stepperVID[vars[pos]->modIndex].setPosition(NewStepperPos);}
+    stepperdataVID[vars[pos]->modIndex].last=newVal;
     lastUpdateVID=millis();
   }
 
   if (millis()-lastUpdateVID<5000)  //sleep if no new data since 5 seconds
-   {stepperVID[datenfeld[pos].target].update();}
+   {stepperVID[vars[pos]->modIndex].update();}
 
 
-  if (millis()>forceUpdate+5000)  //force update every 5 seconds for required motors (i.e. hydraulics)
+  /* if (millis()>forceUpdate+5000)  //force update every 5 seconds for required motors (i.e. hydraulics)
    {
     if (datenfeld[pos].ref2==1)
       {stepperdataVID[datenfeld[pos].target].last=0;}
     forceUpdate=millis();
    }
+  */
 }
