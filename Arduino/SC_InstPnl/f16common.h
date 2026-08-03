@@ -190,9 +190,12 @@ Byte mismatch error, bytes sent does not match var datatype
 // EngineCluster data
 // **********************
 
-#define OILPRESS            25
-#define NOZZLEPOS           26
-#define RPM                 27
+#define OILPRESS            24
+#define NOZZLEPOS           25
+#define RPM                 26
+
+// LEAVE OUT 27 since it's the ESCAPE character
+
 #define FTIT                28
 
 // **********************
