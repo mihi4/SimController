@@ -416,6 +416,6 @@ void loop() {
   if (varsChanged) outputVars();	
   fastUpdate();
   UpdateInput(false);
-  delay(5);
+  delayMicroseconds(150);
   
 }
