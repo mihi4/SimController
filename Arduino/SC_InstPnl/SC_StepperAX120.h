@@ -125,7 +125,7 @@ void StepperVID_Zeroize(bool full)
 
 void SetupStepperVID(void)
 {
-  SERIALCOM.println("setting up steppers");
+  //SERIALCOM.println("setting up steppers");
   pinMode(RSTPIN, OUTPUT);
   digitalWrite(RSTPIN, LOW);
   delay(1);
@@ -133,7 +133,7 @@ void SetupStepperVID(void)
 
   for (byte x=0;x<STEPPERZAHLVID;x++)
   {
-    SERIALCOM.print("stepper ");SERIALCOM.println(x);
+    //SERIALCOM.print("stepper ");SERIALCOM.println(x);
     stepperVID[x]=SwitecX12(stepperdataVID[x].arc, stepperdataVID[x].pIN[0], stepperdataVID[x].pIN[1]);
   }
 
@@ -151,6 +151,7 @@ void StepperVID_FastUpdate()
 void UpdateStepperVID(byte pos)
 {
   uint16_t newVal=vars[pos]->value.valI; // atoi(datenfeld[pos].wert);
+  SERIALCOM.print("incoming val: ");SERIALCOM.println(newVal);
   uint16_t NewStepperPos=0;
   if (newVal!=stepperdataVID[vars[pos]->modIndex].last)
   {
