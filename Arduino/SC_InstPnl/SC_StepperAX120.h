@@ -151,7 +151,7 @@ void StepperVID_FastUpdate()
 void UpdateStepperVID(byte pos)
 {
   uint16_t newVal=vars[pos]->value.valI; // atoi(datenfeld[pos].wert);
-  SERIALCOM.print("incoming val: ");SERIALCOM.println(newVal);
+  //SERIALCOM.print("incoming val: ");SERIALCOM.println(newVal);
   uint16_t NewStepperPos=0;
   if (newVal!=stepperdataVID[vars[pos]->modIndex].last)
   {
