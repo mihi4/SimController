@@ -27,8 +27,8 @@ StepperdataVID stepperdataVID[] =
   //  {PIN Step PIN Dir}     arc    inverted   last
     { {    18,      19   },   315*12 ,  true,     0   },  // example OILPress
     { {    16,      17   },   315*12 ,  true,     0   },  // nozzlepos
-    { {    4,      3   },   315*12 ,  true,     0   },  // RPM
-    { {    9,      8   },   315*12 ,  true,     0   }  //FTIT
+    { {    9,      8   },   315*12 ,  true,     0   },  // RPM
+    { {    4,      3   },   315*12 ,  true,     0   }  //FTIT
 };
 
 const int STEPPERZAHLVID = sizeof(stepperdataVID)/sizeof(stepperdataVID[0]);
@@ -49,7 +49,7 @@ int prevVID=1;
 
 void StepperVID_Zeroize(bool full)
 {
-    SERIALCOM.println("zeroizing");
+  //SERIALCOM.println("zeroizing");
   unsigned long now=0;
   bool busy=true;
   for (byte motor=0;motor<STEPPERZAHLVID;motor++)
@@ -151,7 +151,7 @@ void StepperVID_FastUpdate()
 void UpdateStepperVID(byte pos)
 {
   uint16_t newVal=vars[pos]->value.valI; // atoi(datenfeld[pos].wert);
-  //SERIALCOM.print("incoming val: ");SERIALCOM.println(newVal);
+  // SERIALCOM.print("pos: ");SERIALCOM.print(pos);SERIALCOM.print(" incoming val: ");SERIALCOM.println(newVal);
   uint16_t NewStepperPos=0;
   if (newVal!=stepperdataVID[vars[pos]->modIndex].last)
   {

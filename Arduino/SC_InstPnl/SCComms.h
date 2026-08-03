@@ -107,79 +107,79 @@ void parseUpateCommand() {
 	
 	char varIndex = -1;
   
-	for (char i = 0; i<varCount; i++) {    
+	for (char i = 0; i<varCount; i++) { 
 		if (vars[i]->number == varNumber) varIndex = i;
 	}
 	if (varIndex > -1) {
-    lastParsedVar = varIndex;
+        lastParsedVar = varIndex;
 		//SERIALCOM.println("Var found");
     
 		char byteCount = receivedBytes[2];
 		char typeNum = vars[varIndex]->type;
 		char typeConverted=power(2,typeNum); // use enum 0,1,2,3 from f16var as exponent, so it corresponds with VARCHAR, VARSHORT and VARLONG
     
-    // sprintf(rbMsg, "byteCount: %u, typeNum: %u, typeConverted: %u", byteCount, typeNum, typeConverted);
-    // sendReadBackString(rbMsg);
+        //sprintf(rbMsg, "byteCount: %u, typeNum: %u, typeConverted: %u", byteCount, typeNum, typeConverted);
+        //sendReadBackString(rbMsg);
 
-    if (typeNum == f16var::STRING) {
-      // sprintf(rbMsg, "String incoming, byteCount is %u", byteCount);
-      // sendReadBackString(rbMsg);      
-      String newValue = "";
-      for (int i=0; i<byteCount; i++) {
-        newValue.concat((char)receivedBytes[3+i]);
-      }
-      *vars[varIndex]->value.valString = newValue;  // String values have to be called on pointers
-      varsChanged = true;
-      return;
-    }
-
-    if (byteCount == typeConverted) {  // see if bytecount sent is what is expected from the var type
-      unsigned long dataValue = 0;
-      
-      if (byteCount == VARCHAR) {                
-          dataValue = receivedBytes[3];
-          vars[varIndex]->value.valC = (unsigned char)dataValue;
+        if (typeNum == f16var::STRING) {
+          // sprintf(rbMsg, "String incoming, byteCount is %u", byteCount);
+          // sendReadBackString(rbMsg);      
+          String newValue = "";
+          for (int i=0; i<byteCount; i++) {
+            newValue.concat((char)receivedBytes[3+i]);
+          }
+          *vars[varIndex]->value.valString = newValue;  // String values have to be called on pointers
           varsChanged = true;
-      } 
-      else if (byteCount == VARSHORT) {
-        
-        unsigned char shortBytes[VARSHORT] = {0};
-          
-        for (int i=0; i<VARSHORT; i++) {
-              shortBytes[i] = receivedBytes[3+i];  
-              /* sprintf(rbMsg, "SHORTbyte %u, value %x", i, shortBytes[i]);
-              sendReadBackString(rbMsg); */ 
+          return;
         }
-        dataValue = shortFromBytes(shortBytes);
-        /* sprintf(rbMsg, "SHORTvar %u datvalue %u", varIndex, dataValue);
-        sendReadBackString(rbMsg); */
-        vars[varIndex]->value.valI = (unsigned int)dataValue;
-        
-        varsChanged = true;
-        
-      } 
-      else if (byteCount == VARLONG) {
-         
-        unsigned char bytes[VARLONG] = {0};
-       
-        for (int i=0; i<VARLONG; i++) {
-            bytes[i] = receivedBytes[3+i];   
-           /* sprintf(rbMsg, "INTvarnum %u byte %u, value %x", varIndex, i, bytes[i]);
+
+        if (byteCount == typeConverted) {  // see if bytecount sent is what is expected from the var type
+          unsigned long dataValue = 0;
+          
+          if (byteCount == VARCHAR) {                
+              dataValue = receivedBytes[3];
+              vars[varIndex]->value.valC = (unsigned char)dataValue;
+              varsChanged = true;
+          } 
+          else if (byteCount == VARSHORT) {
+            
+            unsigned char shortBytes[VARSHORT] = {0};
+              
+            for (int i=0; i<VARSHORT; i++) {
+                  shortBytes[i] = receivedBytes[3+i];  
+                  /* sprintf(rbMsg, "SHORTbyte %u, value %x", i, shortBytes[i]);
+                  sendReadBackString(rbMsg); */ 
+            }
+            dataValue = shortFromBytes(shortBytes);
+            /*sprintf(rbMsg, "SHORTvar %u datvalue %u", varIndex, dataValue);
             sendReadBackString(rbMsg); */
-        }           
-        dataValue = longFromBytes(bytes);
-        /* sprintf(rbMsg, "INTvar %u datvalue %lu", varIndex, dataValue);
-        sendReadBackString(rbMsg); */
-        vars[varIndex]->value.valL = (unsigned long)dataValue;
-        
-        varsChanged = true;
-        
-      } 
-    }	else {      
-      sprintf(rbMsg, "ParseERR, Var %u byteCnt %u",varNumber, byteCount);
-      sendReadBackString(rbMsg);
-      SERIALCOM.println(ER_BYTEMATCH);
-    }
+            vars[varIndex]->value.valI = (unsigned int)dataValue;
+            
+            varsChanged = true;
+            
+          } 
+          else if (byteCount == VARLONG) {
+             
+            unsigned char bytes[VARLONG] = {0};
+           
+            for (int i=0; i<VARLONG; i++) {
+                bytes[i] = receivedBytes[3+i];   
+               /* sprintf(rbMsg, "INTvarnum %u byte %u, value %x", varIndex, i, bytes[i]);
+                sendReadBackString(rbMsg); */
+            }           
+            dataValue = longFromBytes(bytes);
+            /* sprintf(rbMsg, "INTvar %u datvalue %lu", varIndex, dataValue);
+            sendReadBackString(rbMsg); */
+            vars[varIndex]->value.valL = (unsigned long)dataValue;
+            
+            varsChanged = true;
+            
+          } 
+        }	else {      
+          sprintf(rbMsg, "ParseERR, Var %u byteCnt %u",varNumber, byteCount);
+          sendReadBackString(rbMsg);
+          SERIALCOM.println(ER_BYTEMATCH);
+        }
 	} else {
     sprintf(rbMsg, "ParseER, Var %u not configured",varNumber);
     sendReadBackString(rbMsg);
@@ -208,7 +208,7 @@ void parseSerialCommand() {
     for (int i=0;i<numReceived;i++) {
       SERIALCOM.print(receivedBytes[i], HEX);SERIALCOM.print("-");
     }
-    SERIALCOM.println();*/
+    SERIALCOM.println(); */
 		switch (receivedBytes[0]) {
 			case 'C':
 				//SERIALCOM.println("Connect command!");
