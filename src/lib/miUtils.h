@@ -25,7 +25,7 @@ private:
     std::vector<unsigned int> gaugeRpmVal = { 1,60 * FLOATMULT ,70 * FLOATMULT,75 * FLOATMULT,80 * FLOATMULT,85 * FLOATMULT,90 * FLOATMULT,100 * FLOATMULT,105 * FLOATMULT,107 * FLOATMULT,110 * FLOATMULT };
     std::vector<unsigned int> gaugeRpmPos = { 0,22500,26000,32250,38500,51000,55750,57250,63500,65535,65535 };
 
-    std::vector<unsigned int> gaugeFtitVal = { 200,700,1000,1200 };
+    std::vector<unsigned int> gaugeFtitVal = { 200,700,1000,1200 }; // values are multiplied by 10 (to stay within unsigned short)
     std::vector<unsigned int> gaugeFtitPos = { 0,19660,57015,65535 };
 
     std::vector<unsigned int> gaugeAsiVal = { 50,90,100,200,300,400,600,850 };
