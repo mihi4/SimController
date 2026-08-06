@@ -81,11 +81,13 @@ public:
         if ((rawVal < gauge[0].absolutwert_u) || (rawVal > gauge[gauge.size()-1].absolutwert_o)) return 0;
         
         for (int x = 0; x < gauge.size(); x++)
-        {           
-            unsigned short mapping = map(rawVal, gauge[x].absolutwert_u, gauge[x].absolutwert_o, 0, gauge[x].ticks_delta);
-            //std::cout << "gauge[x].ticks_u: " << gauge[x].ticks_u << " mapping: " << mapping << " final: " << gauge[x].ticks_u + mapping << std::endl;
+        {                       
             if ((rawVal >= gauge[x].absolutwert_u) && (rawVal < gauge[x].absolutwert_o))
-            { return (unsigned short) (gauge[x].ticks_u + mapping); }
+            { 
+                unsigned short mapping = map(rawVal, gauge[x].absolutwert_u, gauge[x].absolutwert_o, 0, gauge[x].ticks_delta);
+                //std::cout << "gauge[x].ticks_u: " << gauge[x].ticks_u << " mapping: " << mapping << " final: " << gauge[x].ticks_u + mapping << std::endl;
+                return (unsigned short) (gauge[x].ticks_u + mapping); 
+            }
         }
         
         return 65535;

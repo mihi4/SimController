@@ -323,8 +323,7 @@ void BMSReader::readF16Data(F16Data* data) {
     data->oilPressure = (unsigned short)(util.map(flightData->oilPressure * FLOATMULT, 0, 100 * FLOATMULT, 0, 65535));  // bms val is 0-100, too coarse for smooth movement
     data->nozzlePos = (unsigned short)(util.map((flightData->nozzlePos * FLOATMULT * FLOATMULT), 0, 100 * FLOATMULT, 0, 65535)); // bms val is 0-100, too coarse for smooth movement
     data->rpm = (unsigned short) (util.TrimGauge(flightData->rpm * FLOATMULT, GAUGERPM)); // (unsigned short)(flightData->rpm * FLOATMULT);    
-    data->ftit = (unsigned short) (util.TrimGauge(flightData->ftit*FLOATMULT, GAUGEFTIT));     
-    std::cout << "ftitFD: " << flightData->ftit << " data: " << data->ftit << std::endl;
+    data->ftit = (unsigned short) (util.TrimGauge(flightData->ftit*FLOATMULT, GAUGEFTIT));         
 
     data->fuelFlow = (unsigned int)(flightData->fuelFlow / 100); // only the first 3 digits change in fuelflow
 
