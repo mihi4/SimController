@@ -35,6 +35,7 @@ std::vector<std::vector<std::string>> ControllerHandler::readConfig(const std::s
 
     std::string line;
     while (std::getline(file, line)) {
+        std::cout << "Reading controller config line: " << line << std::endl;
         std::vector<std::string> row;
         std::stringstream ss(line);
         std::string cell;

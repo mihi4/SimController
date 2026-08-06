@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-
+#include "../../Arduino/SimController/f16common.h"
 // defines for the gauge conversion vector
 #define GAUGENUM    3
 // index numbers of the gauges
@@ -22,8 +22,8 @@ struct GaugeConversion
 class miUtility {
 
 private:
-    std::vector<unsigned int> gaugeRpmVal = { 60,70,75,80,85,90,100,105,107,110 };
-    std::vector<unsigned int> gaugeRpmPos = { 22500,26000,32250,38500,51000,55750,57250,63500,65535,65535 };
+    std::vector<unsigned int> gaugeRpmVal = { 1,60 * FLOATMULT ,70 * FLOATMULT,75 * FLOATMULT,80 * FLOATMULT,85 * FLOATMULT,90 * FLOATMULT,100 * FLOATMULT,105 * FLOATMULT,107 * FLOATMULT,110 * FLOATMULT };
+    std::vector<unsigned int> gaugeRpmPos = { 0,22500,26000,32250,38500,51000,55750,57250,63500,65535,65535 };
 
     std::vector<unsigned int> gaugeFtitVal = { 200,700,1000,1200 };
     std::vector<unsigned int> gaugeFtitPos = { 0,19660,57015,65535 };
@@ -77,20 +77,23 @@ public:
         std::vector<GaugeConversion> gauge = allConversions.at(gaugeNum);
         
         // if (gauge == NULL ) return 0;
+        //std::cout << "trim " << gaugeNum << ", rawVal: " << rawVal << " absolutwert_u : " << gauge[0].absolutwert_u << " abs_o " << gauge[gauge.size() - 1].absolutwert_o << std::endl;
         if ((rawVal < gauge[0].absolutwert_u) || (rawVal > gauge[gauge.size()-1].absolutwert_o)) return 0;
         
         for (int x = 0; x < gauge.size(); x++)
-        {            
+        {           
+            unsigned short mapping = map(rawVal, gauge[x].absolutwert_u, gauge[x].absolutwert_o, 0, gauge[x].ticks_delta);
+            //std::cout << "gauge[x].ticks_u: " << gauge[x].ticks_u << " mapping: " << mapping << " final: " << gauge[x].ticks_u + mapping << std::endl;
             if ((rawVal >= gauge[x].absolutwert_u) && (rawVal < gauge[x].absolutwert_o))
-            { return (unsigned int) (gauge[x].ticks_u + map(rawVal, gauge[x].absolutwert_u, gauge[x].absolutwert_o, 0, gauge[x].ticks_delta)); }
+            { return (unsigned short) (gauge[x].ticks_u + mapping); }
         }
         
         return 65535;
         
     }
 
-    unsigned short map(unsigned short x, unsigned short in_min, unsigned short in_max, unsigned short out_min, unsigned short out_max) {
-        return ((unsigned long) ((x - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min);
+    unsigned short map(unsigned short x, unsigned short in_min, unsigned short in_max, unsigned short out_min, unsigned short out_max) {        
+        return (unsigned short)( ((x - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min);
     }
 
     std::string getBinaryRep(int n) {

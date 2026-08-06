@@ -319,11 +319,12 @@ void BMSReader::readF16Data(F16Data* data) {
     data->dedLine4 = trimDED_PFD(flightData->DEDLines[3], flightData->Invert[3]);
     data->dedLine5 = trimDED_PFD(flightData->DEDLines[4], flightData->Invert[4]);
 
-    //  Engine Cluster
+    //  Engine Cluster    
     data->oilPressure = (unsigned short)(util.map(flightData->oilPressure * FLOATMULT, 0, 100 * FLOATMULT, 0, 65535));  // bms val is 0-100, too coarse for smooth movement
-    data->nozzlePos = (unsigned short)(util.map(flightData->nozzlePos * FLOATMULT, 0, 100 * FLOATMULT, 0, 65535)); // bms val is 0-100, too coarse for smooth movement
-    data->rpm = (unsigned short) (util.TrimGauge(flightData->rpm, GAUGERPM)); // (unsigned short)(flightData->rpm * FLOATMULT);
-    data->ftit = (unsigned short) (util.TrimGauge(flightData->ftit, GAUGEFTIT)); 
+    data->nozzlePos = (unsigned short)(util.map((flightData->nozzlePos * FLOATMULT * FLOATMULT), 0, 100 * FLOATMULT, 0, 65535)); // bms val is 0-100, too coarse for smooth movement
+    data->rpm = (unsigned short) (util.TrimGauge(flightData->rpm * FLOATMULT, GAUGERPM)); // (unsigned short)(flightData->rpm * FLOATMULT);
+    std::cout << "rpmFD: " << flightData->rpm  << " data: " << data->rpm << std::endl;
+    data->ftit = (unsigned short) (util.TrimGauge(flightData->ftit, GAUGEFTIT));     
 
     data->fuelFlow = (unsigned int)(flightData->fuelFlow / 100); // only the first 3 digits change in fuelflow
 

@@ -64,6 +64,9 @@ int main(int argc, char* argv[])
         std::cout << "Wrong parameter! Usage: SimControl.exe BMS|DCS|MSFS";
         return 0;
     }
+    else {
+        std::cout << "Running SimControl for BMS" << std::endl;
+    }
 
     short selectedSim = parseSimParameter(argv);
     if (!selectedSim) {
@@ -137,7 +140,7 @@ int main(int argc, char* argv[])
     *****************************************/    
     
     while(appW.isOpen()) {    
-        break;  // only used in offline testing
+        // break;  // only used in offline testing
         sf::Event event;
         while (appW.pollEvent(event))
         {
@@ -244,10 +247,11 @@ int main(int argc, char* argv[])
             //std::bitset<32> y(data.cautionPanelLights);
             //sprintf_s(buf, "fwd: %5u aft: %5u total: %5u hydA: %6u hydB %6u CP: 0x%8x bits: ", data.fuelFWD, data.fuelAFT, data.fuelTotal, data.hydA, data.hydB, data.cautionPanelLights);            
             //std::cout << buf << y << std::endl;
+            //std::cout << "oil: " << data.oilPressure << "noz: " << data.nozzlePos << "rpm: " << data.rpm << "ftit: " << data.ftit << std::endl;
             if (!prevData.isSameAs(data)) {  // only send data if anything has changed                 
                 /*std::bitset<32> y(data.cautionPanelLights);
-                sprintf_s(buf, "CP: 0x%8x bits: ", data.cautionPanelLights);
-                std::cout << buf << y << std::endl;*/
+                sprintf_s(buf, "CP: 0x%8x bits: ", data.cautionPanelLights); */
+                
                 cHandler.updateControllers(&data, &prevData);
 
 
@@ -261,11 +265,11 @@ int main(int argc, char* argv[])
 
         //std::cout << "altPointer: " << data.altPointer << " slip: " << data.adiSideslip << " pitch: " << data.adiPitch << " roll: " << data.adiRoll << " ilsHor: " << data.adiIlsHorPos << " ilsVer: " << data.adiIlsVerPos << "\n";        
         cHandler.readControllerComms();
-        if (hsi.isRunning()) hsi.update(&data);
+        // if (hsi.isRunning()) hsi.update(&data);
         // check for quit keycommand LCTRL+LSHIFT+LALT+BACKSPACE
-        if ((GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)) { break; }
+        // if ((GetKeyState(VK_LCONTROL) & 0x8000) && (GetKeyState(VK_LSHIFT) & 0x8000) && (GetKeyState(VK_LMENU) & 0x8000) && (GetKeyState(VK_BACK) & 0x8000)) { break; }
 
-        Sleep(10);
+        // Sleep(10);
     }
 
     std::cout << "\n\nquitting!\n";   
