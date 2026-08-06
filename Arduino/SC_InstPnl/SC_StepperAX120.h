@@ -26,7 +26,7 @@ StepperdataVID stepperdataVID[] =
 {
   //  {PIN Step PIN Dir}     arc    inverted   last
     { {    18,      19   },   315*12 ,  true,     0   },  // example OILPress
-    { {    16,      17   },   315*12 ,  true,     0   },  // nozzlepos
+    { {    16,      17   },   315*12-900 ,  true,     0   },  // nozzlepos
     { {    9,      8   },   315*12 ,  true,     0   },  // RPM
     { {    4,      3   },   315*12 ,  true,     0   }  //FTIT
 };
