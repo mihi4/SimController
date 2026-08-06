@@ -193,10 +193,7 @@ Byte mismatch error, bytes sent does not match var datatype
 #define OILPRESS            24
 #define NOZZLEPOS           25
 #define RPM                 26
-
-// LEAVE OUT 27 since it's the ESCAPE character
-
-#define FTIT                28
+#define FTIT                27
 
 // **********************
 // Right Instrument Panel 
