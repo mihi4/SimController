@@ -112,7 +112,7 @@ int main(int argc, char* argv[])
         appW.display();
     }
 
-    eHSI hsi(610, 1200, 1100);      
+    // eHSI hsi(610, 1200, 1100);      
 
     /****************************************
 
@@ -251,7 +251,7 @@ int main(int argc, char* argv[])
             if (!prevData.isSameAs(data)) {  // only send data if anything has changed                 
                 /*std::bitset<32> y(data.cautionPanelLights);
                 sprintf_s(buf, "CP: 0x%8x bits: ", data.cautionPanelLights); */
-                
+                std::cout << "flow: " << data.fuelFlow << std::endl;
                 cHandler.updateControllers(&data, &prevData);
 
 
