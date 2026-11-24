@@ -408,6 +408,7 @@ Byte mismatch error, bytes sent does not match var datatype
 #define ADIILSHORPOS      92
 #define ADIILSVERPOS      93
 #define ADISIDESLIP       94
+#define ADITURNRATE       95
 
 
 #define SIMVERSION          255  // at least available for BMS, let's see for DCS and MSFS

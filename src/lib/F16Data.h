@@ -70,6 +70,7 @@ public:
 			adiIlsHorPos == d.adiIlsHorPos &&
 			adiIlsVerPos == d.adiIlsVerPos &&
 			adiSideslip == d.adiSideslip &&
+			adiTurnRate == d.adiTurnRate &&
 			simVersion == d.simVersion
 			;
 	}
@@ -189,6 +190,7 @@ public:
 	int adiIlsHorPos = 0;
 	int adiIlsVerPos = 0;
 	int adiSideslip = 0;
+	int adiTurnRate = 0;
 
 
 	std::string simVersion = "";
