@@ -267,6 +267,7 @@ void BMSReader::readF16Data(F16Data* data) {
     if (flightData2->IsSetPower(flightData2->BusPowerEmergency)) setDatabit(data->powerStates, BUSEMER); else clearDatabit(data->powerStates, BUSEMER);
     if (flightData2->IsSetPower(flightData2->BusPowerEssential)) setDatabit(data->powerStates, BUSESSENTIAL); else clearDatabit(data->powerStates, BUSESSENTIAL);
     if (flightData2->IsSetPower(flightData2->BusPowerNonEssential)) setDatabit(data->powerStates, BUSNONESSENTIAL); else clearDatabit(data->powerStates, BUSNONESSENTIAL);
+    if (flightData2->IsSetPower(flightData2->JetFuelStarter)) setDatabit(data->powerStates, JETFUELSTARTER); else clearDatabit(data->powerStates, JETFUELSTARTER);
 
     // setPowerbits(data, flightData2);
 
@@ -276,7 +277,6 @@ void BMSReader::readF16Data(F16Data* data) {
     if (flightData->IsSet3(flightData->OnGround)) setDatabit(data->relayStates, RLYWEIGHTONWHEELS); else clearDatabit(data->relayStates, RLYWEIGHTONWHEELS);
     if (flightData->IsSet(flightData->AutoPilotOn)) setDatabit(data->relayStates, RLYAUTOPILOT); else clearDatabit(data->relayStates, RLYAUTOPILOT);
     if (flightData->IsSet3(flightData->ParkBrakeOn)) setDatabit(data->relayStates, RLYPARKINGBRAKE); else clearDatabit(data->relayStates, RLYPARKINGBRAKE);
-    if (flightData2->IsSetPower(flightData2->JetFuelStarter)) setDatabit(data->relayStates, RLYJFSTARTER); else clearDatabit(data->relayStates, RLYJFSTARTER);
     if (flightData->IsSet3(flightData->FlcsBitRun)) setDatabit(data->relayStates, RLYFLTCTLBIT); else clearDatabit(data->relayStates, RLYFLTCTLBIT);
     if (flightData->IsSet3(flightData->SpeedBrake)) setDatabit(data->relayStates, RLYSPEEDBRAKE); else clearDatabit(data->relayStates, RLYSPEEDBRAKE);
 

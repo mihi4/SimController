@@ -99,15 +99,15 @@ Byte mismatch error, bytes sent does not match var datatype
 #define BUSNONESSENTIAL	0x08    // true if at least the non-essential bus is powered
 #define MAINGENON       0x10
 #define STBYGENON       0x20
+#define JETFUELSTARTER  0x40
 
 #define RELAYSTATES         3
 // bits for relays
 #define RLYWEIGHTONWHEELS  0x01   // true, if WOW
 #define RLYAUTOPILOT       0x02    
 #define RLYPARKINGBRAKE    0x04
-#define RLYJFSTARTER       0x08
-#define RLYFLTCTLBIT       0x10
-#define RLYSPEEDBRAKE      0x20
+#define RLYFLTCTLBIT       0x08
+#define RLYSPEEDBRAKE      0x10
 
 
 //#define MAXPOWER
