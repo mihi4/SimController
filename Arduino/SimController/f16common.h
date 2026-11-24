@@ -305,6 +305,8 @@ Byte mismatch error, bytes sent does not match var datatype
 #define EBOXYLOW        0x1000000  // not sure, if this is in all block50/52s
 // CC
 #define MARKERBEACON    0x2000000
+#define TWPPOWER        0x4000000 // this will be used to light up the lower halves of the TWP buttons
+
 
 
 // REMEMBER TO LEAVE OUT 60 and 62 since those are the numbers for < and >

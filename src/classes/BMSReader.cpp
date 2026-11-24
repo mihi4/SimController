@@ -386,6 +386,7 @@ void BMSReader::readF16Data(F16Data* data) {
     if (flightData->IsSet2(flightData->Unk) && getBlinkStatus(flightData2, flightData2->Unk)) setDatabit(data->instPanelLights, TWPUNKNOWN); else clearDatabit(data->instPanelLights, TWPUNKNOWN);
     if (flightData->IsSet3(flightData->SysTest)) setDatabit(data->instPanelLights, TWPSYSTEST); else clearDatabit(data->instPanelLights, TWPSYSTEST);
     if (flightData->IsSet2(flightData->TgtSep)) setDatabit(data->instPanelLights, TWPTGTSEP); else clearDatabit(data->instPanelLights, TWPTGTSEP);
+    if (flightData->IsSet2(flightData->AuxPwr)) setDatabit(data->instPanelLights, TWPPOWER); else clearDatabit(data->instPanelLights, TWPPOWER);
     // ECM light
     if (flightData->IsSet2(flightData->EcmPwr)) setDatabit(data->instPanelLights, ECMON); else clearDatabit(data->instPanelLights, ECMON); //  FIXXXME, should only be the consent light  && getBlinkStatus(flightData2, flightData2->ECM_Oper)) setDatabit(data->instPanelLights, ECMON); else clearDatabit(data->instPanelLights, ECMON);
     // MISC Panel TFR light
